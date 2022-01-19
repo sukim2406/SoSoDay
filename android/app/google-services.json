@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1088745491792",
+    "project_id": "soso-day",
+    "storage_bucket": "soso-day.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088745491792:android:5ad3b17a1b0d3c651b3055",
+        "android_client_info": {
+          "package_name": "com.ssk.sosoDaily"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088745491792-4bnl67tht7r5e4l8gsf0lghbm6cgpb6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNvaDAl9kU4uAuiHgA3Q2G77u1qG7xATA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088745491792-4bnl67tht7r5e4l8gsf0lghbm6cgpb6h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1088745491792-pevm1i3j4ijv6fkmgoqab1khscm9o57i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ssk.sosoDaily"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
