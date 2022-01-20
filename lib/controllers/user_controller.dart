@@ -14,6 +14,7 @@ class UserController extends GetxController {
         Get.offAll(() => MainPage(
               user: AuthController.instance.auth.currentUser,
               connected: false,
+              matchDocId: '',
             ));
       });
     } catch (e) {
@@ -51,6 +52,17 @@ class UserController extends GetxController {
       //     print(element['halfEmail']);
       //   });
       // });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getUserDocumentByEmail(email) async {
+    try {
+      return await firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
     } catch (e) {
       print(e.toString());
     }

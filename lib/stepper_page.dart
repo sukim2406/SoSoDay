@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:soso_day/controllers/auth_controller.dart';
+import 'package:soso_day/controllers/match_controller.dart';
 import 'package:soso_day/controllers/user_controller.dart';
 
 import './widgets/log_input.dart';
@@ -193,12 +195,15 @@ class _StepperPageState extends State<StepperPage> {
                       ));
                 } else {
                   Map<String, String> userInfoMap = {
+                    'uid': widget.user.uid,
                     'name': usernameController.text,
                     'email': widget.user.email,
                     'halfEmail': halfEmailController.text,
                     'halfname': halfUsernameController.text,
                   };
                   UserController.instance.createUserDocument(userInfoMap);
+
+                  widget.user.reload();
                 }
                 // send data to server
               } else {

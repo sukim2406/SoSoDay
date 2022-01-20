@@ -33,12 +33,55 @@ class MatchController extends GetxController {
     }
   }
 
-  Future getUserDocumentByEmail(email) async {
+  Future getMatchDocument(uid) async {
     try {
       return await firestore
           .collection('matches')
-          .where('email', isEqualTo: email)
+          .where('couple', arrayContains: uid)
           .get();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void updateMatchDocument(docId, key, value) async {
+    try {
+      await firestore.collection('matches').doc(docId).update({key: value});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void sendMessage(docId, chat) async {
+    try {
+      var chatList = await getMessages(docId);
+      chatList.add(chat);
+      await firestore
+          .collection('matches')
+          .doc(docId)
+          .update({'chats': chatList});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getMessages(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['chats'];
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getMessageStream(docId) async {
+    try {
+      return await firestore.collection('matches').doc(docId).snapshots();
     } catch (e) {
       print(e.toString());
     }

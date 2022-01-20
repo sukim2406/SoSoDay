@@ -27,30 +27,66 @@ class AuthController extends GetxController {
       print('login page');
       Get.offAll(() => const LoginPage());
     } else {
-      var connected = false;
       print('main page');
       if (await UserController.instance.findUserDocument()) {
         if (!await MatchController.instance.findMatchDocument(user.uid)) {
           if (!await MatchController.instance.findMatchDocument(user.email)) {
-            var tempHalf = await UserController.instance.getUserDocument();
-            Map<String, List> matchInitMap = {
-              'couple': [user.uid, tempHalf.docs[0]['halfEmail']]
-            };
-            MatchController.instance.createMatchDocument(matchInitMap);
-            connected = false;
-          } else {
-            Map<String, List> temp;
-            var tempDoc = (await MatchController.instance
-                .getUserDocumentByEmail(user.email));
-            tempDoc.forEach((doc) {
-              temp = doc['couple'];
-              // doc.reference.updateData(<String, List>{'couple': });
+            var halfEmail;
+            (await UserController.instance.getUserDocument())
+                .docs
+                .forEach((doc) {
+              halfEmail = doc['halfEmail'];
             });
+
+            List<Map<String, dynamic>> chatInitData = [
+              {
+                'sender': 'System',
+                'message': 'Chatroom Created',
+                'time': Timestamp.now()
+              },
+            ];
+
+            Map<String, dynamic> matchInfoMap = {
+              'couple': [user.uid, halfEmail],
+              'connected': false,
+              'chats': chatInitData,
+            };
+
+            MatchController.instance.createMatchDocument(matchInfoMap);
+          } else {
+            var docId =
+                (await MatchController.instance.getMatchDocument(user.email))
+                    .docs[0]
+                    .id;
+            var couple =
+                (await MatchController.instance.getMatchDocument(user.email))
+                    .docs[0]['couple'];
+            var newCouple = [];
+            couple.forEach((person) {
+              if (person == user.email) {
+                newCouple.add(user.uid);
+              } else {
+                newCouple.add(person);
+              }
+            });
+            MatchController.instance
+                .updateMatchDocument(docId, 'couple', newCouple);
+            MatchController.instance
+                .updateMatchDocument(docId, 'connected', true);
           }
         }
+        var connected =
+            (await MatchController.instance.getMatchDocument(user.uid)).docs[0]
+                ['connected'];
+
+        var matchDocId =
+            (await MatchController.instance.getMatchDocument(user.uid))
+                .docs[0]
+                .id;
         Get.offAll(() => MainPage(
               user: user,
               connected: connected,
+              matchDocId: matchDocId,
             ));
       } else {
         Get.offAll(() => StepperPage(user: user));

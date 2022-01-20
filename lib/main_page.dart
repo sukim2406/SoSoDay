@@ -16,8 +16,13 @@ import './controllers/user_controller.dart';
 class MainPage extends StatefulWidget {
   final user;
   final connected;
+  final matchDocId;
 
-  MainPage({Key? key, required this.user, required this.connected})
+  MainPage(
+      {Key? key,
+      required this.user,
+      required this.connected,
+      required this.matchDocId})
       : super(key: key);
 
   @override
@@ -32,7 +37,7 @@ class _MainPageState extends State<MainPage> {
     _screens = [
       Center(child: WelcomePage(user: widget.user)),
       Center(child: PhotoPage()),
-      Center(child: ChatPage()),
+      Center(child: ChatPage(matchDocId: widget.matchDocId, user: widget.user)),
       Center(child: EventPage()),
       Center(child: SettingPage()),
     ];
@@ -54,7 +59,9 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: widget.connected ? _screens[_curIndex] : OnholdPage(),
+        child: widget.connected
+            ? _screens[_curIndex]
+            : OnholdPage(user: widget.user),
       ),
       bottomNavigationBar: BottomNavbar(
         currentIndex: _curIndex,
