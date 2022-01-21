@@ -81,7 +81,22 @@ class MatchController extends GetxController {
 
   Future getMessageStream(docId) async {
     try {
-      return await firestore.collection('matches').doc(docId).snapshots();
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .collection('chats');
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  getConversationMessages(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .collection('chats')
+          .snapshots();
     } catch (e) {
       print(e.toString());
     }

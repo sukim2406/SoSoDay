@@ -15,7 +15,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   // Widget ChatMessageList() {}
   var messageController = TextEditingController();
-  late Stream chatMessageStream;
 
   void sendMessage(matchDocId) async {
     Map<String, dynamic> messageMap = {
@@ -27,33 +26,48 @@ class _ChatPageState extends State<ChatPage> {
     MatchController.instance.sendMessage(widget.matchDocId, messageMap);
   }
 
-  // Widget ChatMessageList() {
-  //   return StreamBuilder(
-  //     stream: chatMessageStream,
-  //     builder: (context, snapshot) {
-  //       if(snapshot.hasData){
-  //         return ListView.builder(
-  //           itemCount: snapshot.data!.docs.length,
-  //           itemBuilder: (context, index) {return MessageTile(snap)},
-  //         );
-  //       }else{
-  //         return Text('Error');
-  //       }
-  //     },
-  //   );
-  // }
+  Stream<QuerySnapshot> getStream() async* {
+    yield* FirebaseFirestore.instance
+        .collection('matches')
+        .where('couple', arrayContains: 'Iv0HmdYyZXVeMzDW8s777tzAgk93')
+        //.doc('ATCPiWp5riDPtrpyF52D')
+        // .collection('chats')
+        .snapshots();
+  }
 
-  @override
-  void initState() {
-    MatchController.instance.getMessageStream(widget.matchDocId).then((value) {
-      setState(() {
-        chatMessageStream = value;
-        print('initstate');
-        print(chatMessageStream);
-      });
-      print('hi');
-      print(chatMessageStream.length);
-    });
+  Stream<QuerySnapshot> getSubStream() async* {
+    yield* FirebaseFirestore.instance
+        .collection('matches')
+        .doc('ATCPiWp5riDPtrpyF52D')
+        .collection('chats')
+        .orderBy('time', descending: false)
+        .snapshots();
+  }
+
+  Widget ChatMessageList() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: getStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error');
+          } else {
+            if (!snapshot.hasData) {
+              return Text('Empty');
+            }
+            snapshot.data!.docs.forEach((doc) {
+              print('testing');
+              print(doc['chats']);
+            });
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.first['chats'].length,
+              itemBuilder: (context, index) {
+                return MessageTile(
+                    message: snapshot.data!.docs.first['chats'][index]
+                        ['message']);
+              },
+            );
+          }
+        });
   }
 
   @override
@@ -61,6 +75,7 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
         child: Stack(
       children: [
+        Container(alignment: Alignment.center, child: ChatMessageList()),
         Container(
             alignment: Alignment.bottomCenter,
             child: Container(
