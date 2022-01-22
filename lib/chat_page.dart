@@ -14,6 +14,9 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   // Widget ChatMessageList() {}
+  final itemKey = GlobalKey();
+  ScrollController scrollController = ScrollController();
+
   var messageController = TextEditingController();
 
   void sendMessage(matchDocId) async {
@@ -24,27 +27,33 @@ class _ChatPageState extends State<ChatPage> {
     };
 
     MatchController.instance.sendMessage(widget.matchDocId, messageMap);
+
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   Stream<QuerySnapshot> getStream() async* {
+    // yield* FirebaseFirestore.instance
+    //     .collection('matches')
+    //     .doc(widget.matchDocId)
+    //     .collection('')
+    //     .snapshots();
     yield* FirebaseFirestore.instance
         .collection('matches')
-        .where('couple', arrayContains: 'Iv0HmdYyZXVeMzDW8s777tzAgk93')
-        //.doc('ATCPiWp5riDPtrpyF52D')
-        // .collection('chats')
+        .where('couple', arrayContains: widget.user.uid)
         .snapshots();
+    // yield* FirebaseFirestore.instance
+    //     .collection('matches')
+    //     .doc(widget.matchDocId)
+    //     .collection('chats')
+    //     .orderBy('time', descending: true)
+    //     .snapshots();
   }
 
-  Stream<QuerySnapshot> getSubStream() async* {
-    yield* FirebaseFirestore.instance
-        .collection('matches')
-        .doc('ATCPiWp5riDPtrpyF52D')
-        .collection('chats')
-        .orderBy('time', descending: false)
-        .snapshots();
-  }
-
-  Widget ChatMessageList() {
+  Widget ChatMessageList(controller) {
     return StreamBuilder<QuerySnapshot>(
         stream: getStream(),
         builder: (context, snapshot) {
@@ -54,16 +63,34 @@ class _ChatPageState extends State<ChatPage> {
             if (!snapshot.hasData) {
               return Text('Empty');
             }
-            snapshot.data!.docs.forEach((doc) {
-              print('testing');
-              print(doc['chats']);
-            });
+            print('test');
+            print(snapshot.data!.docs.length);
+            print(widget.matchDocId);
+            // return ListView.builder(
+            //   reverse: true,
+            //   itemCount: snapshot.data!.docs.length,
+            //   itemBuilder: (context, index) {
+            //     return MessageTile(
+            //         message: snapshot.data!.docs[index]['message'],
+            //         isMyMessage: (snapshot.data!.docs[index]['senter'] ==
+            //                 widget.user.email)
+            //             ? true
+            //             : false);
+            //   },
+            // );
             return ListView.builder(
+              reverse: false,
+              controller: controller,
               itemCount: snapshot.data!.docs.first['chats'].length,
               itemBuilder: (context, index) {
                 return MessageTile(
-                    message: snapshot.data!.docs.first['chats'][index]
-                        ['message']);
+                  message: snapshot.data!.docs.first['chats'][index]['message'],
+                  isMyMessage: (snapshot.data!.docs.first['chats'][index]
+                              ['sender'] ==
+                          widget.user.email)
+                      ? true
+                      : false,
+                );
               },
             );
           }
@@ -75,7 +102,11 @@ class _ChatPageState extends State<ChatPage> {
     return Container(
         child: Stack(
       children: [
-        Container(alignment: Alignment.center, child: ChatMessageList()),
+        Container(
+            padding: const EdgeInsets.only(bottom: 80),
+            color: Colors.black,
+            alignment: Alignment.center,
+            child: ChatMessageList(scrollController)),
         Container(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -120,12 +151,41 @@ class _ChatPageState extends State<ChatPage> {
 
 class MessageTile extends StatelessWidget {
   final String message;
-  const MessageTile({Key? key, required this.message}) : super(key: key);
+  final bool isMyMessage;
+  const MessageTile(
+      {Key? key, required this.message, required this.isMyMessage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(message),
+      padding: EdgeInsets.only(
+          left: isMyMessage ? 0 : 24, right: isMyMessage ? 24 : 0),
+      margin: EdgeInsets.symmetric(vertical: 8),
+      width: MediaQuery.of(context).size.width,
+      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isMyMessage
+                  ? [const Color(0xff007EF4), const Color(0xff2A75BC)]
+                  : [const Color(0x1AFFFFFF), const Color(0x1AFFFFFF)],
+            ),
+            borderRadius: isMyMessage
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                    bottomLeft: Radius.circular(23))
+                : BorderRadius.only(
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                    bottomRight: Radius.circular(23))),
+        child: Text(message,
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ),
     );
   }
 }
