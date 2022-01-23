@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 import './widgets/bottom_navbar.dart';
 import './welcome_page.dart';
@@ -35,7 +36,11 @@ class _MainPageState extends State<MainPage> {
 
   void _setScreens() {
     _screens = [
-      Center(child: WelcomePage(user: widget.user)),
+      Center(
+          child: WelcomePage(
+        user: widget.user,
+        matchDocId: widget.matchDocId,
+      )),
       Center(child: PhotoPage()),
       Center(child: ChatPage(matchDocId: widget.matchDocId, user: widget.user)),
       Center(child: EventPage()),

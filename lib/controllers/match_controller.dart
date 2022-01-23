@@ -101,4 +101,24 @@ class MatchController extends GetxController {
       print(e.toString());
     }
   }
+
+  getMyScreenName(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .collection('couple')
+          .snapshots();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  getMatchDocById(matchDocId) async {
+    try {
+      return await firestore.collection('matches').doc(matchDocId).get();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

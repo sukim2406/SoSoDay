@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:soso_day/controllers/match_controller.dart';
+import './widgets/message_tile.dart';
 
 class ChatPage extends StatefulWidget {
   final matchDocId;
@@ -29,28 +31,17 @@ class _ChatPageState extends State<ChatPage> {
     MatchController.instance.sendMessage(widget.matchDocId, messageMap);
 
     scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
+      scrollController.position.maxScrollExtent + 300,
       curve: Curves.easeOut,
       duration: const Duration(milliseconds: 300),
     );
   }
 
   Stream<QuerySnapshot> getStream() async* {
-    // yield* FirebaseFirestore.instance
-    //     .collection('matches')
-    //     .doc(widget.matchDocId)
-    //     .collection('')
-    //     .snapshots();
     yield* FirebaseFirestore.instance
         .collection('matches')
         .where('couple', arrayContains: widget.user.uid)
         .snapshots();
-    // yield* FirebaseFirestore.instance
-    //     .collection('matches')
-    //     .doc(widget.matchDocId)
-    //     .collection('chats')
-    //     .orderBy('time', descending: true)
-    //     .snapshots();
   }
 
   Widget ChatMessageList(controller) {
@@ -63,30 +54,19 @@ class _ChatPageState extends State<ChatPage> {
             if (!snapshot.hasData) {
               return Text('Empty');
             }
-            print('test');
-            print(snapshot.data!.docs.length);
-            print(widget.matchDocId);
-            // return ListView.builder(
-            //   reverse: true,
-            //   itemCount: snapshot.data!.docs.length,
-            //   itemBuilder: (context, index) {
-            //     return MessageTile(
-            //         message: snapshot.data!.docs[index]['message'],
-            //         isMyMessage: (snapshot.data!.docs[index]['senter'] ==
-            //                 widget.user.email)
-            //             ? true
-            //             : false);
-            //   },
-            // );
             return ListView.builder(
-              reverse: false,
-              controller: controller,
+              reverse: true,
+              // controller: controller,
               itemCount: snapshot.data!.docs.first['chats'].length,
               itemBuilder: (context, index) {
                 return MessageTile(
-                  message: snapshot.data!.docs.first['chats'][index]['message'],
-                  isMyMessage: (snapshot.data!.docs.first['chats'][index]
-                              ['sender'] ==
+                  message: snapshot.data!.docs.first['chats'][
+                          snapshot.data!.docs.first['chats'].length - 1 - index]
+                      ['message'],
+                  isMyMessage: (snapshot.data!.docs.first['chats'][
+                              snapshot.data!.docs.first['chats'].length -
+                                  1 -
+                                  index]['sender'] ==
                           widget.user.email)
                       ? true
                       : false,
@@ -146,46 +126,5 @@ class _ChatPageState extends State<ChatPage> {
             ))
       ],
     ));
-  }
-}
-
-class MessageTile extends StatelessWidget {
-  final String message;
-  final bool isMyMessage;
-  const MessageTile(
-      {Key? key, required this.message, required this.isMyMessage})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-          left: isMyMessage ? 0 : 24, right: isMyMessage ? 24 : 0),
-      margin: EdgeInsets.symmetric(vertical: 8),
-      width: MediaQuery.of(context).size.width,
-      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isMyMessage
-                  ? [const Color(0xff007EF4), const Color(0xff2A75BC)]
-                  : [const Color(0x1AFFFFFF), const Color(0x1AFFFFFF)],
-            ),
-            borderRadius: isMyMessage
-                ? BorderRadius.only(
-                    topLeft: Radius.circular(23),
-                    topRight: Radius.circular(23),
-                    bottomLeft: Radius.circular(23))
-                : BorderRadius.only(
-                    topLeft: Radius.circular(23),
-                    topRight: Radius.circular(23),
-                    bottomRight: Radius.circular(23))),
-        child: Text(message,
-            style: TextStyle(
-              color: Colors.white,
-            )),
-      ),
-    );
   }
 }
