@@ -10,7 +10,11 @@ class UserController extends GetxController {
 
   void createUserDocument(userMap) async {
     try {
-      await firestore.collection('users').add(userMap).then((result) {
+      await firestore
+          .collection('users')
+          .doc(AuthController.instance.getCurUserUid())
+          .set(userMap)
+          .then((result) {
         Get.offAll(() => MainPage(
               user: AuthController.instance.auth.currentUser,
               connected: false,
@@ -63,6 +67,14 @@ class UserController extends GetxController {
           .collection('users')
           .where('email', isEqualTo: email)
           .get();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void updateUserDocument(docId, key, value) async {
+    try {
+      await firestore.collection('users').doc(docId).update({key: value});
     } catch (e) {
       print(e.toString());
     }

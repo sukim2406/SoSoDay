@@ -7,13 +7,15 @@ class LogInput extends StatelessWidget {
   final Icon inputIcon;
   final TextEditingController controller;
   final bool obscure;
+  var enabled;
 
-  const LogInput(
+  LogInput(
       {Key? key,
       required this.inputIcon,
       required this.inputText,
       required this.controller,
-      required this.obscure})
+      required this.obscure,
+      this.enabled = true})
       : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class LogInput extends StatelessWidget {
         ],
       ),
       child: TextField(
+        enabled: enabled ? true : false,
         controller: controller,
         obscureText: obscure,
         decoration: InputDecoration(

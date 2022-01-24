@@ -195,7 +195,6 @@ class _StepperPageState extends State<StepperPage> {
                       ));
                 } else {
                   Map<String, String> userInfoMap = {
-                    'uid': widget.user.uid,
                     'name': usernameController.text,
                     'email': widget.user.email,
                     'halfEmail': halfEmailController.text,

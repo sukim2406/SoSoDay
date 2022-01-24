@@ -32,10 +32,12 @@ class AuthController extends GetxController {
         if (!await MatchController.instance.findMatchDocument(user.uid)) {
           if (!await MatchController.instance.findMatchDocument(user.email)) {
             var halfEmail;
+            var userScreenName;
             (await UserController.instance.getUserDocument())
                 .docs
                 .forEach((doc) {
               halfEmail = doc['halfEmail'];
+              userScreenName = doc['name'];
             });
 
             List<Map<String, dynamic>> chatInitData = [
@@ -50,10 +52,17 @@ class AuthController extends GetxController {
               'couple': [user.uid, halfEmail],
               'connected': false,
               'chats': chatInitData,
+              'screenNames': [userScreenName]
             };
 
             MatchController.instance.createMatchDocument(matchInfoMap);
           } else {
+            var userScreenName;
+            (await UserController.instance.getUserDocument())
+                .docs
+                .forEach((doc) {
+              userScreenName = doc['name'];
+            });
             var docId =
                 (await MatchController.instance.getMatchDocument(user.email))
                     .docs[0]
@@ -62,9 +71,13 @@ class AuthController extends GetxController {
                 (await MatchController.instance.getMatchDocument(user.email))
                     .docs[0]['couple'];
             var newCouple = [];
+            var screenNames =
+                (await MatchController.instance.getMatchDocument(user.email))
+                    .docs[0]['screenNames'];
             couple.forEach((person) {
               if (person == user.email) {
                 newCouple.add(user.uid);
+                screenNames.add(userScreenName);
               } else {
                 newCouple.add(person);
               }
@@ -73,6 +86,8 @@ class AuthController extends GetxController {
                 .updateMatchDocument(docId, 'couple', newCouple);
             MatchController.instance
                 .updateMatchDocument(docId, 'connected', true);
+            MatchController.instance
+                .updateMatchDocument(docId, 'screenNames', screenNames);
           }
         }
         var connected =
@@ -140,5 +155,10 @@ class AuthController extends GetxController {
   String? getCurUserEmail() {
     final user = auth.currentUser;
     return user?.email;
+  }
+
+  String? getCurUserUid() {
+    final user = auth.currentUser;
+    return user?.uid;
   }
 }

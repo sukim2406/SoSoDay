@@ -1,3 +1,9 @@
+/*
+for love icon img
+Paste this link on the website where your app is available for download or in the description section of the platform or marketplace you’re using.
+<a href="https://www.flaticon.com/free-icons/love" title="love icons">Love icons created by Freepik - Flaticon</a>
+*/
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:soso_day/controllers/auth_controller.dart';
@@ -26,11 +32,11 @@ class WelcomePage extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    return FutureBuilder(
-      future: FirebaseFirestore.instance
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
           .collection('matches')
           .doc(matchDocId)
-          .get(),
+          .snapshots(),
       // future: MatchController.instance.getMatchDocById(matchDocId),
       // future: getMyScreenName(),
       builder:
@@ -77,14 +83,27 @@ class WelcomePage extends StatelessWidget {
                           color: Colors.black,
                         )),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          data['couple'].toString(),
+                          data['screenNames'][0].toString(),
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[500],
                           ),
                         ),
+                        CircleAvatar(
+                          backgroundColor: Colors.white70,
+                          radius: 30,
+                          backgroundImage: AssetImage('img/give-love.png'),
+                        ),
+                        Text(
+                          data['screenNames'][1].toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[500],
+                          ),
+                        )
                       ],
                     )
                   ],
