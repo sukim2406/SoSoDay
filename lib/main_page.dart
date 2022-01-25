@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 import './widgets/bottom_navbar.dart';
-import './welcome_page.dart';
-import './photo_page.dart';
-import './chat_page.dart';
-import './event_page.dart';
-import './setting_page.dart';
-import './onhold_page.dart';
+import './main_page_subpages/welcome_page.dart';
+import './main_page_subpages/photo_page.dart';
+import './main_page_subpages/chat_page.dart';
+import './main_page_subpages/event_page.dart';
+import './main_page_subpages/setting_page.dart';
+import './main_page_subpages/onhold_page.dart';
 import './controllers/match_controller.dart';
 import './controllers/auth_controller.dart';
 import './controllers/user_controller.dart';

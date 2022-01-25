@@ -7,7 +7,7 @@ import 'package:soso_day/controllers/user_controller.dart';
 
 import './login_page.dart';
 import './signup_page.dart';
-import './welcome_page.dart';
+import './main_page_subpages/welcome_page.dart';
 import './splash_screen.dart';
 
 Future<void> main() async {

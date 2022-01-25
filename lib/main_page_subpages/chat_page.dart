@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:soso_day/controllers/match_controller.dart';
-import './widgets/message_tile.dart';
+import '../widgets/message_tile.dart';
 
 class ChatPage extends StatefulWidget {
   final matchDocId;
@@ -119,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
                             ]),
                             borderRadius: BorderRadius.circular(40)),
                         padding: const EdgeInsets.all(12),
-                        child: Image.asset('img/profile.png'),
+                        child: Icon(Icons.send),
                       ))
                 ],
               ),

@@ -161,4 +161,15 @@ class AuthController extends GetxController {
     final user = auth.currentUser;
     return user?.uid;
   }
+
+  void updatePassword(email, curPassword, newPassword) async {
+    try {
+      var credential =
+          EmailAuthProvider.credential(email: email, password: curPassword);
+      await auth.currentUser?.reauthenticateWithCredential(credential);
+      await auth.currentUser?.updatePassword(newPassword);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

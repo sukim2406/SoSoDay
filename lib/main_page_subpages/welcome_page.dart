@@ -10,7 +10,7 @@ import 'package:soso_day/controllers/auth_controller.dart';
 import 'package:soso_day/controllers/match_controller.dart';
 import 'package:soso_day/controllers/user_controller.dart';
 
-import './widgets/log_btn.dart';
+import '../widgets/log_btn.dart';
 
 class WelcomePage extends StatelessWidget {
   final user;
@@ -85,23 +85,34 @@ class WelcomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          data['screenNames'][0].toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[500],
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .3,
+                          child: Text(
+                            data['screenNames'][0].toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.right,
                           ),
                         ),
-                        CircleAvatar(
-                          backgroundColor: Colors.white70,
-                          radius: 30,
-                          backgroundImage: AssetImage('img/give-love.png'),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .2,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white70,
+                            radius: 30,
+                            backgroundImage: AssetImage('img/give-love.png'),
+                          ),
                         ),
-                        Text(
-                          data['screenNames'][1].toString(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[500],
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * .3,
+                          child: Text(
+                            data['screenNames'][1].toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.left,
                           ),
                         )
                       ],
