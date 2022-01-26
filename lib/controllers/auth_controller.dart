@@ -52,7 +52,8 @@ class AuthController extends GetxController {
               'couple': [user.uid, halfEmail],
               'connected': false,
               'chats': chatInitData,
-              'screenNames': [userScreenName]
+              'screenNames': [userScreenName],
+              'since': DateTime.now(),
             };
 
             MatchController.instance.createMatchDocument(matchInfoMap);

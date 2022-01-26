@@ -1,14 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:soso_day/main_page.dart';
 
-import '../widgets/log_input.dart';
-import '../widgets/log_btn.dart';
-import '../controllers/user_controller.dart';
-import '../controllers/match_controller.dart';
 import '../setting_page_subpages/account_info_page.dart';
 import '../setting_page_subpages/reset_password_page.dart';
+import '../setting_page_subpages/couple_info_page.dart';
 
 class SettingPage extends StatelessWidget {
   final matchDocId;
@@ -65,7 +60,11 @@ class SettingPage extends StatelessWidget {
                           ResetPasswordPage(
                             user: user,
                           ),
-                          Icon(Icons.arrow_upward)
+                          CoupleInfoPage(
+                            user: user,
+                            snapshot: snapshot,
+                            matchDocID: matchDocId,
+                          ),
                         ],
                       ))));
         });
