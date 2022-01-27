@@ -27,6 +27,13 @@ class WelcomePage extends StatelessWidget {
     return doc.docs[0]['couple'];
   }
 
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+
+    return (to.difference(from).inHours / 24).round();
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -119,6 +126,31 @@ class WelcomePage extends StatelessWidget {
                     )
                   ],
                 )),
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child: Column(
+                children: [
+                  RichText(
+                      text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: [
+                      TextSpan(text: 'Together since '),
+                      TextSpan(
+                          text: data['since']
+                              .toDate()
+                              .toString()
+                              .substring(0, 10)),
+                      TextSpan(text: ' counting '),
+                      TextSpan(
+                          text: daysBetween(
+                                  data['since'].toDate(), DateTime.now())
+                              .toString()),
+                      TextSpan(text: ' days!'),
+                    ],
+                  ))
+                ],
+              ),
+            ),
             SizedBox(height: 200),
             GestureDetector(
                 onTap: () {
