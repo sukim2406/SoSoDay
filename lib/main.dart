@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:soso_day/controllers/auth_controller.dart';
 import 'package:soso_day/controllers/match_controller.dart';
 import 'package:soso_day/controllers/user_controller.dart';
+import 'package:soso_day/controllers/storage_controller.dart';
 
 import './login_page.dart';
 import './signup_page.dart';
@@ -17,6 +18,7 @@ Future<void> main() async {
     Get.put(AuthController());
     Get.put(UserController());
     Get.put(MatchController());
+    Get.put(StorageController());
   });
   runApp(const MyApp());
 }
