@@ -1,4 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StorageController extends GetxController {
@@ -21,6 +22,15 @@ class StorageController extends GetxController {
       await storage.ref().listAll();
     } catch (e) {
       print('getList error');
+      print(e.toString());
+    }
+  }
+
+  Future<dynamic> loadImage(BuildContext context, String image) async {
+    try {
+      return storage.ref().child(image).getDownloadURL();
+    } catch (e) {
+      print('loadImage Error');
       print(e.toString());
     }
   }
