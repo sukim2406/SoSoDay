@@ -54,6 +54,7 @@ class AuthController extends GetxController {
               'chats': chatInitData,
               'screenNames': [userScreenName],
               'since': DateTime.now(),
+              'profileImage': null,
             };
 
             MatchController.instance.createMatchDocument(matchInfoMap);

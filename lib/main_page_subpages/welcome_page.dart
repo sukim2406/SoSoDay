@@ -2,6 +2,7 @@
 for love icon img
 Paste this link on the website where your app is available for download or in the description section of the platform or marketplace you’re using.
 <a href="https://www.flaticon.com/free-icons/love" title="love icons">Love icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Freepik - Flaticon</a>
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,8 +69,10 @@ class WelcomePage extends StatelessWidget {
                   ),
                   CircleAvatar(
                     backgroundColor: Colors.white70,
-                    radius: 60,
-                    backgroundImage: AssetImage('img/profile.png'),
+                    radius: 80,
+                    backgroundImage: (data['profileImage'] == null)
+                        ? AssetImage('img/profile.png')
+                        : NetworkImage(data['profileImage']) as ImageProvider,
                   )
                 ],
               ),
@@ -108,7 +111,7 @@ class WelcomePage extends StatelessWidget {
                           child: CircleAvatar(
                             backgroundColor: Colors.white70,
                             radius: 30,
-                            backgroundImage: AssetImage('img/give-love.png'),
+                            backgroundImage: AssetImage('img/heart.png'),
                           ),
                         ),
                         SizedBox(

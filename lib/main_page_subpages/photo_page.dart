@@ -49,6 +49,7 @@ class PhotoPage extends StatelessWidget {
                     onTap: () {
                       print(snapshot.data!.docs.first['images'][index]);
                       Get.to(() => SingleImagePage(
+                          imageUrl: snapshot.data!.docs.first['images'][index],
                           matchDocId: matchDocId,
                           user: user,
                           image: Image.network(

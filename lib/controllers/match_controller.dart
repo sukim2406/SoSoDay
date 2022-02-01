@@ -122,6 +122,20 @@ class MatchController extends GetxController {
     }
   }
 
+  Future getProfileUrl(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['profileImage'];
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future getImageUrls(docId) async {
     try {
       return await firestore
