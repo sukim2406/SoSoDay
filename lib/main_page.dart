@@ -47,7 +47,8 @@ class _MainPageState extends State<MainPage> {
         user: widget.user,
       )),
       Center(child: ChatPage(matchDocId: widget.matchDocId, user: widget.user)),
-      Center(child: EventPage()),
+      Center(
+          child: EventPage(matchDocId: widget.matchDocId, user: widget.user)),
       Center(
           child: SettingPage(
         user: widget.user,

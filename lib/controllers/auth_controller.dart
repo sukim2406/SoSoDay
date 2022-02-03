@@ -55,6 +55,8 @@ class AuthController extends GetxController {
               'screenNames': [userScreenName],
               'since': DateTime.now(),
               'profileImage': null,
+              'images': [],
+              'events': [],
             };
 
             MatchController.instance.createMatchDocument(matchInfoMap);
