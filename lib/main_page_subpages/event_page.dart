@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:soso_day/controllers/match_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import 'package:soso_day/controllers/match_controller.dart';
+import '../widgets/event_tile.dart';
 
 class EventPage extends StatefulWidget {
   final matchDocId;
@@ -24,6 +26,7 @@ class _EventPageState extends State<EventPage> {
   void initState() {
     // TODO: implement initState
     selectedEvents = {};
+    saveAsSelectedEvents();
     super.initState();
   }
 
@@ -31,35 +34,40 @@ class _EventPageState extends State<EventPage> {
     return selectedEvents[date] ?? [];
   }
 
-  void saveAsEvent(events) {
-    events.forEach((event) {
-      print('save as event');
-      print(event['selectedDay'].toDate());
-      if (selectedEvents[event['selectedDay'].toDate()] != null) {
-        selectedEvents[event['selectedDay'].toDate()]
-            ?.add(Event(event['title']));
-      } else {
-        selectedEvents[event['selectedDay'].toDate()] = [Event(event['title'])];
-      }
-    });
-    print('selctedEvents');
-    print(selectedEvents);
-  }
+  // void saveAsEvent(events) {
+  //   events.forEach((event) {
+  //     print('toUTC');
+  //     print(event['selectedDay'].toDate().toUtc());
+  //     if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
+  //       selectedEvents[event['selectedDay'].toDate().toUtc()]
+  //           ?.add(Event(event['title'], event['completed']));
+  //     } else {
+  //       selectedEvents[event['selectedDay'].toDate().toUtc()] = [
+  //         Event(event['title'], event['completed'])
+  //       ];
+  //     }
+  //   });
+  //   print('selctedEvents');
+  //   print(selectedEvents);
+  //   // setState(() {});
+  // }
 
   void saveAsSelectedEvents() async {
-    await MatchController.instance.getEvents(widget.matchDocId).then((data) {
-      data.forEach((event) {
-        if (selectedEvents[event['selectedDay'].toDate()] != null) {
-          selectedEvents[event['selectedDay'].toDate()]
-              ?.add(Event(event['title']));
-        } else {
-          selectedEvents[event['selectedDay'].toDate()] = [
-            Event(event['title'])
-          ];
-        }
-      });
+    var data = await MatchController.instance.getEvents(widget.matchDocId);
+    print('saveAsSelectedEvents');
+    print(data[0]['selectedDay'].toDate());
+    data.forEach((event) {
+      if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
+        selectedEvents[event['selectedDay'].toDate().toUtc()]?.add(
+            Event(event['title'], event['completed'], event['createdAt']));
+      } else {
+        selectedEvents[event['selectedDay'].toDate().toUtc()] = [
+          Event(event['title'], event['completed'], event['createdAt'])
+        ];
+      }
     });
-    print('saveAsSelectedEvents()');
+
+    print('ha');
     print(selectedEvents);
   }
 
@@ -86,11 +94,6 @@ class _EventPageState extends State<EventPage> {
         if (!snapshot.hasData) {
           return Text('Snapshot Empty');
         }
-        // print('testing');
-        // print(snapshot.data!.docs.first['events']);
-        // saveAsSelectedEvents();
-        // saveAsEvent(snapshot.data!.docs.first['events']);
-        // setState(() {});
 
         return TableCalendar(
           firstDay: DateTime.utc(2020, 01, 01),
@@ -127,42 +130,10 @@ class _EventPageState extends State<EventPage> {
       children: [
         SizedBox(height: 200),
         Calendar(),
-        ..._getEventsfromDay(_selectedDay)
-            .map((Event event) => ListTile(title: Text(event.title))),
-        // Column(
-        //   children: [
-        //     TableCalendar(
-        //       firstDay: DateTime.utc(2020, 01, 01),
-        //       lastDay: DateTime.utc(2030, 12, 31),
-        //       focusedDay: DateTime.now(),
-        //       selectedDayPredicate: (day) {
-        //         return isSameDay(_selectedDay, day);
-        //       },
-        //       onDaySelected: (selectedDay, focusedDay) {
-        //         setState(() {
-        //           _selectedDay = selectedDay;
-        //           _focusedDay = focusedDay;
-
-        //         });
-        //       },
-        //       calendarFormat: _calendarFormat,
-        //       onFormatChanged: (format) {
-        //         setState(() {
-        //           _calendarFormat = format;
-        //         });
-        //       },
-        //       onPageChanged: (focusedDay) {
-        //         _focusedDay = focusedDay;
-        //       },
-        //       eventLoader: _getEventsfromDay,
-        //     ),
-        //     ..._getEventsfromDay(_selectedDay).map(
-        //       (Event event) => ListTile(
-        //         title: Text(event.title),
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        ..._getEventsfromDay(_selectedDay).map((Event event) => EventTile(
+              event: event,
+              matchDocId: widget.matchDocId,
+            )),
         FloatingActionButton.extended(
             onPressed: () {
               showDialog(
@@ -178,22 +149,24 @@ class _EventPageState extends State<EventPage> {
                             onPressed: () {
                               if (_eventController.text.isEmpty) {
                               } else {
-                                print('Date check');
-                                print(_selectedDay);
-                                print(Timestamp.fromDate(_selectedDay));
                                 Map<String, dynamic> event = {
                                   'selectedDay':
                                       Timestamp.fromDate(_selectedDay),
                                   'title': _eventController.text,
+                                  'completed': false,
+                                  'createdAt': Timestamp.now(),
                                 };
-                                // if (selectedEvents[_selectedDay] != null) {
-                                //   selectedEvents[_selectedDay]
-                                //       ?.add(Event(_eventController.text));
-                                // } else {
-                                //   selectedEvents[_selectedDay] = [
-                                //     Event(_eventController.text)
-                                //   ];
-                                // }
+                                if (selectedEvents[_selectedDay] != null) {
+                                  selectedEvents[_selectedDay]?.add(Event(
+                                      _eventController.text,
+                                      false,
+                                      event['createdAt']));
+                                } else {
+                                  selectedEvents[_selectedDay] = [
+                                    Event(_eventController.text, false,
+                                        event['createdAt'])
+                                  ];
+                                }
                                 MatchController.instance
                                     .addEvent(widget.matchDocId, event);
                               }
@@ -217,9 +190,13 @@ class _EventPageState extends State<EventPage> {
 }
 
 class Event {
-  final String title;
+  final String _title;
+  final bool _completed;
+  final Timestamp _createdAt;
 
-  Event(this.title);
+  Event(this._title, this._completed, this._createdAt);
 
-  String toString() => title;
+  String get title => _title;
+  bool get completed => _completed;
+  Timestamp get createdAt => _createdAt;
 }

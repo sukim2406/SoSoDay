@@ -192,4 +192,25 @@ class MatchController extends GetxController {
       print(e.toString());
     }
   }
+
+  void modifyEvent(docId, event) async {
+    try {
+      var eventsList = await getEvents(docId);
+      eventsList.forEach((originalEvent) {
+        print(originalEvent);
+        print(event);
+        if (originalEvent['createdAt'] == event.createdAt) {
+          originalEvent['completed'] = true;
+          print('hello');
+        }
+      });
+      await firestore
+          .collection('matches')
+          .doc(docId)
+          .update({'events': eventsList});
+    } catch (e) {
+      print('modifyEvent error');
+      print(e.toString());
+    }
+  }
 }
