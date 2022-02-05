@@ -145,7 +145,15 @@ class _EventPageState extends State<EventPage> {
                         ),
                         actions: [
                           TextButton(
-                            child: Text('OK'),
+                              child: Text('Cancel'),
+                              onPressed: () => Navigator.pop(context)),
+                          TextButton(
+                              child: Text('Detailed View'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              }),
+                          TextButton(
+                            child: Text('Quick Save'),
                             onPressed: () {
                               if (_eventController.text.isEmpty) {
                               } else {
@@ -176,9 +184,6 @@ class _EventPageState extends State<EventPage> {
                               return;
                             },
                           ),
-                          TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () => Navigator.pop(context)),
                         ],
                       ));
             },
@@ -191,7 +196,7 @@ class _EventPageState extends State<EventPage> {
 
 class Event {
   final String _title;
-  final bool _completed;
+  bool _completed;
   final Timestamp _createdAt;
 
   Event(this._title, this._completed, this._createdAt);
@@ -199,4 +204,8 @@ class Event {
   String get title => _title;
   bool get completed => _completed;
   Timestamp get createdAt => _createdAt;
+
+  set completed(bool value) {
+    _completed = value;
+  }
 }

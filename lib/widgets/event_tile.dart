@@ -1,8 +1,10 @@
 // <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Maxim Basinski Premium - Flaticon</a>
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../controllers/match_controller.dart';
+import '../event_form_page.dart';
 
 class EventTile extends StatelessWidget {
   final event;
@@ -21,7 +23,12 @@ class EventTile extends StatelessWidget {
           child: ClipOval(child: Image.asset('img/user.png')),
         ),
       ),
-      title: Text(event.title),
+      title: GestureDetector(
+          onTap: () {
+            print('clicked');
+            Get.to(() => EventForm());
+          },
+          child: Text(event.title)),
       enabled: event.completed ? false : true,
       trailing: event.completed
           ? null
@@ -39,6 +46,7 @@ class EventTile extends StatelessWidget {
                                 print(event);
                                 MatchController.instance
                                     .modifyEvent(matchDocId, event);
+                                event.completed = true;
                                 Navigator.pop(context);
                               },
                             ),
