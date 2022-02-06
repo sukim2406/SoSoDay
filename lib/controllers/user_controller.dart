@@ -79,4 +79,18 @@ class UserController extends GetxController {
       print(e.toString());
     }
   }
+
+  Future getUsername(uid) async {
+    try {
+      return await firestore
+          .collection('users')
+          .doc(uid)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['name'];
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

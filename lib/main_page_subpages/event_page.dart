@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:get/get.dart';
 
 import 'package:soso_day/controllers/match_controller.dart';
+import '../controllers/user_controller.dart';
 import '../widgets/event_tile.dart';
+import '../event_form_page.dart';
 
 class EventPage extends StatefulWidget {
   final matchDocId;
@@ -17,6 +20,7 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   late Map<DateTime, List<Event>> selectedEvents;
+  late String userDoc;
   late DateTime _selectedDay = DateTime.now();
   var _focusedDay;
   var _calendarFormat = CalendarFormat.month;
@@ -26,6 +30,7 @@ class _EventPageState extends State<EventPage> {
   void initState() {
     // TODO: implement initState
     selectedEvents = {};
+    saveUserDoc();
     saveAsSelectedEvents();
     super.initState();
   }
@@ -34,41 +39,25 @@ class _EventPageState extends State<EventPage> {
     return selectedEvents[date] ?? [];
   }
 
-  // void saveAsEvent(events) {
-  //   events.forEach((event) {
-  //     print('toUTC');
-  //     print(event['selectedDay'].toDate().toUtc());
-  //     if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
-  //       selectedEvents[event['selectedDay'].toDate().toUtc()]
-  //           ?.add(Event(event['title'], event['completed']));
-  //     } else {
-  //       selectedEvents[event['selectedDay'].toDate().toUtc()] = [
-  //         Event(event['title'], event['completed'])
-  //       ];
-  //     }
-  //   });
-  //   print('selctedEvents');
-  //   print(selectedEvents);
-  //   // setState(() {});
-  // }
+  void saveUserDoc() async {
+    var data = await UserController.instance.getUsername(widget.user.uid);
+    userDoc = data;
+  }
 
   void saveAsSelectedEvents() async {
     var data = await MatchController.instance.getEvents(widget.matchDocId);
-    print('saveAsSelectedEvents');
-    print(data[0]['selectedDay'].toDate());
-    data.forEach((event) {
-      if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
-        selectedEvents[event['selectedDay'].toDate().toUtc()]?.add(
-            Event(event['title'], event['completed'], event['createdAt']));
-      } else {
-        selectedEvents[event['selectedDay'].toDate().toUtc()] = [
-          Event(event['title'], event['completed'], event['createdAt'])
-        ];
-      }
-    });
-
-    print('ha');
-    print(selectedEvents);
+    if (!data.isEmpty) {
+      data.forEach((event) {
+        if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
+          selectedEvents[event['selectedDay'].toDate().toUtc()]
+              ?.add(Event(event['title'], event['completed'], event['due']));
+        } else {
+          selectedEvents[event['selectedDay'].toDate().toUtc()] = [
+            Event(event['title'], event['completed'], event['due'])
+          ];
+        }
+      });
+    }
   }
 
   @override
@@ -150,7 +139,7 @@ class _EventPageState extends State<EventPage> {
                           TextButton(
                               child: Text('Detailed View'),
                               onPressed: () {
-                                Navigator.pop(context);
+                                Get.to(() => EventForm());
                               }),
                           TextButton(
                             child: Text('Quick Save'),
@@ -162,17 +151,20 @@ class _EventPageState extends State<EventPage> {
                                       Timestamp.fromDate(_selectedDay),
                                   'title': _eventController.text,
                                   'completed': false,
-                                  'createdAt': Timestamp.now(),
+                                  'due': Timestamp.now(),
+                                  'creator': userDoc,
+                                  'description': '',
                                 };
                                 if (selectedEvents[_selectedDay] != null) {
                                   selectedEvents[_selectedDay]?.add(Event(
                                       _eventController.text,
                                       false,
-                                      event['createdAt']));
+                                      event['due'],
+                                      event['creator']));
                                 } else {
                                   selectedEvents[_selectedDay] = [
                                     Event(_eventController.text, false,
-                                        event['createdAt'])
+                                        event['due'], event['creator'])
                                   ];
                                 }
                                 MatchController.instance
@@ -197,13 +189,15 @@ class _EventPageState extends State<EventPage> {
 class Event {
   final String _title;
   bool _completed;
-  final Timestamp _createdAt;
+  final Timestamp _due;
+  final String _creator;
 
-  Event(this._title, this._completed, this._createdAt);
+  Event(this._title, this._completed, this._due, this._creator);
 
   String get title => _title;
   bool get completed => _completed;
-  Timestamp get createdAt => _createdAt;
+  Timestamp get due => _due;
+  String get creator => _creator;
 
   set completed(bool value) {
     _completed = value;

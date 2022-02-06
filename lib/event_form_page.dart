@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import './widgets/log_btn.dart';
 
 class EventForm extends StatefulWidget {
-  const EventForm({Key? key}) : super(key: key);
+  var event;
+  EventForm({Key? key, this.event}) : super(key: key);
 
   @override
   _EventFormState createState() => _EventFormState();
@@ -11,6 +13,18 @@ class EventForm extends StatefulWidget {
 
 class _EventFormState extends State<EventForm> {
   final formKey = GlobalKey<FormState>();
+  String title = '';
+  String creator = '';
+  DateTime due = DateTime.now();
+  String description = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void initialData() {}
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +42,9 @@ class _EventFormState extends State<EventForm> {
                 ),
                 onSaved: (val) {},
                 validator: (val) {
-                  return null;
+                  if (val!.isEmpty) {
+                    return 'Title can not be empty';
+                  }
                 },
               ),
               TextFormField(
@@ -60,11 +76,18 @@ class _EventFormState extends State<EventForm> {
                       btnWidth: MediaQuery.of(context).size.width * .3,
                       btnHeight: MediaQuery.of(context).size.height * .03,
                       btnFontSize: 20),
-                  LogBtn(
-                      btnText: 'Save',
-                      btnWidth: MediaQuery.of(context).size.width * .3,
-                      btnHeight: MediaQuery.of(context).size.height * .03,
-                      btnFontSize: 20),
+                  GestureDetector(
+                    onTap: () async {
+                      if (this.formKey.currentState!.validate()) {
+                        Get.snackbar('Saved', 'Form Saved');
+                      }
+                    },
+                    child: LogBtn(
+                        btnText: 'Save',
+                        btnWidth: MediaQuery.of(context).size.width * .3,
+                        btnHeight: MediaQuery.of(context).size.height * .03,
+                        btnFontSize: 20),
+                  ),
                 ],
               ),
             ],
