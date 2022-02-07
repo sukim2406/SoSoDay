@@ -20,7 +20,7 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   late Map<DateTime, List<Event>> selectedEvents;
-  late String userDoc;
+  late String userName;
   late DateTime _selectedDay = DateTime.now();
   var _focusedDay;
   var _calendarFormat = CalendarFormat.month;
@@ -30,7 +30,8 @@ class _EventPageState extends State<EventPage> {
   void initState() {
     // TODO: implement initState
     selectedEvents = {};
-    saveUserDoc();
+    userName = '';
+    saveUserName();
     saveAsSelectedEvents();
     super.initState();
   }
@@ -39,21 +40,27 @@ class _EventPageState extends State<EventPage> {
     return selectedEvents[date] ?? [];
   }
 
-  void saveUserDoc() async {
+  void saveUserName() async {
     var data = await UserController.instance.getUsername(widget.user.uid);
-    userDoc = data;
+    userName = data;
   }
 
   void saveAsSelectedEvents() async {
     var data = await MatchController.instance.getEvents(widget.matchDocId);
     if (!data.isEmpty) {
       data.forEach((event) {
+        print(event['due']);
         if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
-          selectedEvents[event['selectedDay'].toDate().toUtc()]
-              ?.add(Event(event['title'], event['completed'], event['due']));
+          selectedEvents[event['selectedDay'].toDate().toUtc()]?.add(Event(
+              event['title'],
+              event['completed'],
+              event['due'],
+              event['creator'],
+              event['description']));
         } else {
           selectedEvents[event['selectedDay'].toDate().toUtc()] = [
-            Event(event['title'], event['completed'], event['due'])
+            Event(event['title'], event['completed'], event['due'],
+                event['creator'], event['description'])
           ];
         }
       });
@@ -139,7 +146,9 @@ class _EventPageState extends State<EventPage> {
                           TextButton(
                               child: Text('Detailed View'),
                               onPressed: () {
-                                Get.to(() => EventForm());
+                                Get.to(() => EventForm(
+                                      matchDocId: widget.matchDocId,
+                                    ));
                               }),
                           TextButton(
                             child: Text('Quick Save'),
@@ -152,7 +161,7 @@ class _EventPageState extends State<EventPage> {
                                   'title': _eventController.text,
                                   'completed': false,
                                   'due': Timestamp.now(),
-                                  'creator': userDoc,
+                                  'creator': userName,
                                   'description': '',
                                 };
                                 if (selectedEvents[_selectedDay] != null) {
@@ -160,11 +169,16 @@ class _EventPageState extends State<EventPage> {
                                       _eventController.text,
                                       false,
                                       event['due'],
-                                      event['creator']));
+                                      userName,
+                                      event['description']));
                                 } else {
                                   selectedEvents[_selectedDay] = [
-                                    Event(_eventController.text, false,
-                                        event['due'], event['creator'])
+                                    Event(
+                                        _eventController.text,
+                                        false,
+                                        event['due'],
+                                        userName,
+                                        event['description'])
                                   ];
                                 }
                                 MatchController.instance
@@ -189,17 +203,28 @@ class _EventPageState extends State<EventPage> {
 class Event {
   final String _title;
   bool _completed;
-  final Timestamp _due;
+  Timestamp _due;
   final String _creator;
+  String _description;
 
-  Event(this._title, this._completed, this._due, this._creator);
+  Event(this._title, this._completed, this._due, this._creator,
+      this._description);
 
   String get title => _title;
   bool get completed => _completed;
   Timestamp get due => _due;
   String get creator => _creator;
+  String get description => _description;
 
   set completed(bool value) {
     _completed = value;
+  }
+
+  set due(Timestamp value) {
+    _due = value;
+  }
+
+  set description(String value) {
+    _description = value;
   }
 }

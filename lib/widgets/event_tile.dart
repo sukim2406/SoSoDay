@@ -26,7 +26,11 @@ class EventTile extends StatelessWidget {
       title: GestureDetector(
           onTap: () {
             print('clicked');
-            Get.to(() => EventForm());
+            print(event.title);
+            Get.to(() => EventForm(
+                  event: event,
+                  matchDocId: matchDocId,
+                ));
           },
           child: Text(event.title)),
       enabled: event.completed ? false : true,
@@ -45,7 +49,7 @@ class EventTile extends StatelessWidget {
                                 print('onClick');
                                 print(event);
                                 MatchController.instance
-                                    .modifyEvent(matchDocId, event);
+                                    .setEventComplete(matchDocId, event);
                                 event.completed = true;
                                 Navigator.pop(context);
                               },
