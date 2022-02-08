@@ -23,16 +23,7 @@ class EventTile extends StatelessWidget {
           child: ClipOval(child: Image.asset('img/user.png')),
         ),
       ),
-      title: GestureDetector(
-          onTap: () {
-            print('clicked');
-            print(event.title);
-            Get.to(() => EventForm(
-                  event: event,
-                  matchDocId: matchDocId,
-                ));
-          },
-          child: Text(event.title)),
+      title: Text(event.title),
       enabled: event.completed ? false : true,
       trailing: event.completed
           ? null
@@ -44,7 +35,13 @@ class EventTile extends StatelessWidget {
                           title: Text('Set as Completed?'),
                           actions: [
                             TextButton(
-                              child: Text('Set'),
+                              child: Text('Cancel'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            TextButton(
+                              child: Text('Ok'),
                               onPressed: () {
                                 print('onClick');
                                 print(event);
@@ -54,16 +51,10 @@ class EventTile extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                             ),
-                            TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            )
                           ],
                         ));
               },
-              child: Text('temp'),
+              child: Text('Finished'),
             ),
     );
   }

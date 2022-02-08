@@ -20,6 +20,7 @@ class _EventFormState extends State<EventForm> {
   String creator = '';
   DateTime due = DateTime.now();
   String description = '';
+  bool completed = false;
 
   TextEditingController titleController = TextEditingController();
 
@@ -37,6 +38,7 @@ class _EventFormState extends State<EventForm> {
       title = widget.event.title;
       creator = widget.event.creator;
       due = widget.event.due.toDate().toUtc();
+      completed = widget.event.completed;
       if (widget.event.description == null) {
         description = '';
       } else {
@@ -96,8 +98,9 @@ class _EventFormState extends State<EventForm> {
                     return null;
                   }),
               TextFormField(
-                  key: Key(due.toString()),
-                  onTap: () => _selectDate(context),
+                  // key: Key(due.toString()),
+                  // onTap: () => _selectDate(context),
+                  enabled: false,
                   initialValue: due.toString(),
                   decoration: InputDecoration(labelText: 'Due Date'),
                   onSaved: (val) {},
@@ -116,17 +119,38 @@ class _EventFormState extends State<EventForm> {
                   validator: (val) {
                     return null;
                   }),
+              Row(
+                children: [
+                  Text('Set completed'),
+                  Checkbox(
+                      value: completed,
+                      onChanged: (bool? val) {
+                        setState(() {
+                          completed = val!;
+                        });
+                      })
+                ],
+              ),
               SizedBox(
                 height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  LogBtn(
-                      btnText: 'Cancel',
-                      btnWidth: MediaQuery.of(context).size.width * .3,
-                      btnHeight: MediaQuery.of(context).size.height * .03,
-                      btnFontSize: 20),
+                  GestureDetector(
+                    onTap: () async {
+                      MatchController.instance
+                          .deleteEvent(widget.matchDocId, widget.event)
+                          .then((result) {
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: LogBtn(
+                        btnText: 'Delete',
+                        btnWidth: MediaQuery.of(context).size.width * .3,
+                        btnHeight: MediaQuery.of(context).size.height * .03,
+                        btnFontSize: 20),
+                  ),
                   GestureDetector(
                     onTap: () async {
                       if (this.formKey.currentState!.validate()) {
@@ -134,14 +158,19 @@ class _EventFormState extends State<EventForm> {
                           'title': title,
                           'due': Timestamp.fromDate(due),
                           'description': description,
+                          'completed': completed,
                         };
                         print('new data');
                         print(title);
                         print(due);
                         print(description);
-                        MatchController.instance.modifyEvent(
-                            widget.matchDocId, widget.event, newData);
-                        Get.snackbar('Saved', 'Form Saved');
+                        MatchController.instance
+                            .modifyEvent(
+                                widget.matchDocId, widget.event, newData)
+                            .then((result) {
+                          Navigator.pop(context);
+                        });
+                        // Get.snackbar('Saved', 'Form Saved');
                       }
                     },
                     child: LogBtn(

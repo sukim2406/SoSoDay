@@ -179,7 +179,7 @@ class MatchController extends GetxController {
     }
   }
 
-  void addEvent(docId, event) async {
+  Future<void> addEvent(docId, event) async {
     try {
       var eventsList = await getEvents(docId);
       if (eventsList.isEmpty) {
@@ -198,7 +198,7 @@ class MatchController extends GetxController {
     }
   }
 
-  void modifyEvent(docId, event, newData) async {
+  Future<void> modifyEvent(docId, event, newData) async {
     try {
       var eventsList = await getEvents(docId);
       eventsList.forEach((originalEvent) {
@@ -206,7 +206,7 @@ class MatchController extends GetxController {
           originalEvent['title'] = newData['title'];
           originalEvent['due'] = newData['due'];
           originalEvent['description'] = newData['description'];
-          originalEvent['selectedDay'] = newData['due'];
+          originalEvent['completed'] = newData['completed'];
         }
       });
       await firestore
@@ -236,6 +236,21 @@ class MatchController extends GetxController {
           .update({'events': eventsList});
     } catch (e) {
       print('setEventComplete error');
+      print(e.toString());
+    }
+  }
+
+  Future<void> deleteEvent(docId, event) async {
+    try {
+      var eventsList = await getEvents(docId);
+      eventsList
+          .removeWhere((originalEvent) => originalEvent['due'] == event.due);
+      await firestore
+          .collection('matches')
+          .doc(docId)
+          .update({'events': eventsList});
+    } catch (e) {
+      print('deleteEvent error');
       print(e.toString());
     }
   }

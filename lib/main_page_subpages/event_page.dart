@@ -46,10 +46,10 @@ class _EventPageState extends State<EventPage> {
   }
 
   void saveAsSelectedEvents() async {
+    selectedEvents = {};
     var data = await MatchController.instance.getEvents(widget.matchDocId);
     if (!data.isEmpty) {
       data.forEach((event) {
-        print(event['due']);
         if (selectedEvents[event['selectedDay'].toDate().toUtc()] != null) {
           selectedEvents[event['selectedDay'].toDate().toUtc()]?.add(Event(
               event['title'],
@@ -126,9 +126,24 @@ class _EventPageState extends State<EventPage> {
       children: [
         SizedBox(height: 200),
         Calendar(),
-        ..._getEventsfromDay(_selectedDay).map((Event event) => EventTile(
-              event: event,
-              matchDocId: widget.matchDocId,
+        ..._getEventsfromDay(_selectedDay).map((Event event) => GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EventForm(
+                              matchDocId: widget.matchDocId,
+                              event: event,
+                            ))).then((value) {
+                  setState(() {
+                    saveAsSelectedEvents();
+                  });
+                });
+              },
+              child: EventTile(
+                event: event,
+                matchDocId: widget.matchDocId,
+              ),
             )),
         FloatingActionButton.extended(
             onPressed: () {
@@ -182,11 +197,15 @@ class _EventPageState extends State<EventPage> {
                                   ];
                                 }
                                 MatchController.instance
-                                    .addEvent(widget.matchDocId, event);
+                                    .addEvent(widget.matchDocId, event)
+                                    .then((result) {
+                                  setState(() {
+                                    saveAsSelectedEvents();
+                                  });
+                                });
                               }
                               Navigator.pop(context);
                               _eventController.clear();
-                              // setState(() {});
                               return;
                             },
                           ),
