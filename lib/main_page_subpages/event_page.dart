@@ -20,6 +20,7 @@ class EventPage extends StatefulWidget {
 
 class _EventPageState extends State<EventPage> {
   late Map<DateTime, List<Event>> selectedEvents;
+  late Map<DateTime, List<Map>> selectEvents;
   late String userName;
   late DateTime _selectedDay = DateTime.now();
   var _focusedDay;
@@ -30,14 +31,19 @@ class _EventPageState extends State<EventPage> {
   void initState() {
     // TODO: implement initState
     selectedEvents = {};
+    selectEvents = {};
     userName = '';
     saveUserName();
     saveAsSelectedEvents();
     super.initState();
   }
 
-  List<Event> _getEventsfromDay(DateTime date) {
-    return selectedEvents[date] ?? [];
+  // List<Event> _getEventsfromDay(DateTime date) {
+  //   return selectedEvents[date] ?? [];
+  // }
+
+  List<Map> _getEventsFromDay(DateTime date) {
+    return selectEvents[date] ?? [];
   }
 
   void saveUserName() async {
@@ -91,6 +97,20 @@ class _EventPageState extends State<EventPage> {
           return Text('Snapshot Empty');
         }
 
+        snapshot.data!.docs.first['events'].forEach((event) {
+          if (selectEvents[event['selectedDay'].toDate().toUtc()] != null) {
+            selectEvents[event['selectedDay'].toDate().toUtc()]!
+                .forEach((data) {
+              if (data['selectedDay'] == event['selectedDay']) {
+              } else {
+                selectEvents[event['selectedDay'].toDate().toUtc()]!.add(event);
+              }
+            });
+          } else {
+            selectEvents[event['selectedDay'].toDate().toUtc()] = [event];
+          }
+        });
+
         return TableCalendar(
           firstDay: DateTime.utc(2020, 01, 01),
           lastDay: DateTime.utc(2030, 12, 31),
@@ -113,7 +133,7 @@ class _EventPageState extends State<EventPage> {
           onPageChanged: (focusedDay) {
             _focusedDay = focusedDay;
           },
-          eventLoader: _getEventsfromDay,
+          eventLoader: _getEventsFromDay,
         );
       },
     );
@@ -126,7 +146,8 @@ class _EventPageState extends State<EventPage> {
       children: [
         SizedBox(height: 200),
         Calendar(),
-        ..._getEventsfromDay(_selectedDay).map((Event event) => GestureDetector(
+        ..._getEventsFromDay(_selectedDay).map((Map event) => GestureDetector(
+              // ..._getEventsfromDay(_selectedDay).map((Event event) => GestureDetector(
               onTap: () {
                 Navigator.push(
                     context,

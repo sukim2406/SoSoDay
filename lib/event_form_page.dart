@@ -32,17 +32,15 @@ class _EventFormState extends State<EventForm> {
   }
 
   void initialData() {
-    print('here');
-    print(widget.event.description);
     if (widget.event != null) {
-      title = widget.event.title;
-      creator = widget.event.creator;
-      due = widget.event.due.toDate().toUtc();
-      completed = widget.event.completed;
-      if (widget.event.description == null) {
+      title = widget.event['title'];
+      creator = widget.event['creator'];
+      due = widget.event['due'].toDate().toUtc();
+      completed = widget.event['completed'];
+      if (widget.event['description'] == null) {
         description = '';
       } else {
-        description = widget.event.description;
+        description = widget.event['description'];
       }
     }
   }
@@ -159,17 +157,18 @@ class _EventFormState extends State<EventForm> {
                           'due': Timestamp.fromDate(due),
                           'description': description,
                           'completed': completed,
+                          'selectedDay': Timestamp.now(),
                         };
-                        print('new data');
-                        print(title);
-                        print(due);
-                        print(description);
-                        MatchController.instance
-                            .modifyEvent(
-                                widget.matchDocId, widget.event, newData)
-                            .then((result) {
-                          Navigator.pop(context);
-                        });
+                        if (widget.event != null) {
+                          MatchController.instance
+                              .modifyEvent(
+                                  widget.matchDocId, widget.event, newData)
+                              .then((result) {});
+                        } else {
+                          MatchController.instance
+                              .addEvent(widget.matchDocId, newData);
+                        }
+                        Navigator.pop(context);
                         // Get.snackbar('Saved', 'Form Saved');
                       }
                     },

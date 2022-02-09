@@ -23,9 +23,9 @@ class EventTile extends StatelessWidget {
           child: ClipOval(child: Image.asset('img/user.png')),
         ),
       ),
-      title: Text(event.title),
-      enabled: event.completed ? false : true,
-      trailing: event.completed
+      title: Text(event['title']),
+      enabled: event['completed'] ? false : true,
+      trailing: event['completed']
           ? null
           : TextButton(
               onPressed: () {
@@ -43,8 +43,6 @@ class EventTile extends StatelessWidget {
                             TextButton(
                               child: Text('Ok'),
                               onPressed: () {
-                                print('onClick');
-                                print(event);
                                 MatchController.instance
                                     .setEventComplete(matchDocId, event);
                                 event.completed = true;

@@ -186,6 +186,8 @@ class MatchController extends GetxController {
         List newEventList = [];
         eventsList = newEventList;
       }
+      print('add check');
+      print(event);
       eventsList.add(event);
 
       await firestore
@@ -202,7 +204,7 @@ class MatchController extends GetxController {
     try {
       var eventsList = await getEvents(docId);
       eventsList.forEach((originalEvent) {
-        if (originalEvent['due'] == event.due) {
+        if (originalEvent['due'] == event['due']) {
           originalEvent['title'] = newData['title'];
           originalEvent['due'] = newData['due'];
           originalEvent['description'] = newData['description'];
