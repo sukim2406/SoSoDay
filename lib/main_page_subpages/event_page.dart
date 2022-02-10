@@ -34,7 +34,7 @@ class _EventPageState extends State<EventPage> {
     selectEvents = {};
     userName = '';
     saveUserName();
-    saveAsSelectedEvents();
+    // saveAsSelectedEvents();
     super.initState();
   }
 
@@ -98,17 +98,32 @@ class _EventPageState extends State<EventPage> {
         }
 
         snapshot.data!.docs.first['events'].forEach((event) {
-          if (selectEvents[event['selectedDay'].toDate().toUtc()] != null) {
+          if (selectEvents[event['selectedDay'].toDate().toUtc()] == null) {
+            selectEvents[event['selectedDay'].toDate().toUtc()] = [event];
+          } else {
+            bool duplicateCheck = false;
             selectEvents[event['selectedDay'].toDate().toUtc()]!
                 .forEach((data) {
-              if (data['selectedDay'] == event['selectedDay']) {
-              } else {
-                selectEvents[event['selectedDay'].toDate().toUtc()]!.add(event);
+              if (data['due'] == event['due']) {
+                duplicateCheck = true;
               }
             });
-          } else {
-            selectEvents[event['selectedDay'].toDate().toUtc()] = [event];
+            if (!duplicateCheck) {
+              selectEvents[event['selectedDay'].toDate().toUtc()]!.add(event);
+            }
           }
+          // if (selectEvents[event['selectedDay'].toDate().toUtc()] != null) {
+          //   selectEvents[event['selectedDay'].toDate().toUtc()]!
+          //       .forEach((data) {
+          //     if (data['selectedDay'] == event['selectedDay']) {
+          //     } else {
+          //       selectEvents[event['selectedDay'].toDate().toUtc()]!.add(event);
+          //     }
+          //   });
+          // } else {
+          //   selectEvents[event['selectedDay'].toDate().toUtc()] = [event];
+          // }
+          // print(selectEvents);
         });
 
         return TableCalendar(
@@ -139,6 +154,17 @@ class _EventPageState extends State<EventPage> {
     );
   }
 
+  Widget TileList() {
+    return ListView.builder(
+      itemCount: _getEventsFromDay(_selectedDay).length,
+      itemBuilder: (context, index) {
+        return EventTile(
+            event: _getEventsFromDay(_selectedDay)[index],
+            matchDocId: widget.matchDocId);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -146,26 +172,35 @@ class _EventPageState extends State<EventPage> {
       children: [
         SizedBox(height: 200),
         Calendar(),
-        ..._getEventsFromDay(_selectedDay).map((Map event) => GestureDetector(
-              // ..._getEventsfromDay(_selectedDay).map((Event event) => GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EventForm(
-                              matchDocId: widget.matchDocId,
-                              event: event,
-                            ))).then((value) {
-                  setState(() {
-                    saveAsSelectedEvents();
-                  });
-                });
-              },
-              child: EventTile(
-                event: event,
-                matchDocId: widget.matchDocId,
-              ),
-            )),
+        // ListView.builder(
+        //     itemCount: _getEventsFromDay(_selectedDay).length,
+        //     itemBuilder: (context, index) {
+        //       return EventTile(
+        //         event: _getEventsFromDay(_selectedDay),
+        //         matchDocId: widget.matchDocId,
+        //       );
+        //     }),
+        // Container(
+        //   height: MediaQuery.of(context).size.height * .3,
+        //   child: ListView(
+        //     children: <Widget>_getEventsFromDay(_selectedDay).map((Map event) => EventTile(event: event, matchDocId: widget.matchDocId)),
+        //   ),
+        // ),
+        // ..._getEventsFromDay(_selectedDay).map((Map event) => GestureDetector(
+        //       onTap: () {
+        //         Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //                 builder: (context) => EventForm(
+        //                       matchDocId: widget.matchDocId,
+        //                       event: event,
+        //                     )));
+        //       },
+        //       child: EventTile(
+        //         event: event,
+        //         matchDocId: widget.matchDocId,
+        //       ),
+        //     )),
         FloatingActionButton.extended(
             onPressed: () {
               showDialog(
@@ -182,9 +217,24 @@ class _EventPageState extends State<EventPage> {
                           TextButton(
                               child: Text('Detailed View'),
                               onPressed: () {
-                                Get.to(() => EventForm(
-                                      matchDocId: widget.matchDocId,
-                                    ));
+                                Map<String, dynamic> event = {
+                                  'selectedDay':
+                                      Timestamp.fromDate(_selectedDay),
+                                  'title': '',
+                                  'completed': false,
+                                  'due': Timestamp.now(),
+                                  'creator': userName,
+                                  'description': '',
+                                };
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EventForm(
+                                              matchDocId: widget.matchDocId,
+                                              event: event,
+                                            ))).then((value) {
+                                  Navigator.pop(context);
+                                });
                               }),
                           TextButton(
                             child: Text('Quick Save'),
@@ -200,29 +250,29 @@ class _EventPageState extends State<EventPage> {
                                   'creator': userName,
                                   'description': '',
                                 };
-                                if (selectedEvents[_selectedDay] != null) {
-                                  selectedEvents[_selectedDay]?.add(Event(
-                                      _eventController.text,
-                                      false,
-                                      event['due'],
-                                      userName,
-                                      event['description']));
-                                } else {
-                                  selectedEvents[_selectedDay] = [
-                                    Event(
-                                        _eventController.text,
-                                        false,
-                                        event['due'],
-                                        userName,
-                                        event['description'])
-                                  ];
-                                }
+                                // if (selectedEvents[_selectedDay] != null) {
+                                //   selectedEvents[_selectedDay]?.add(Event(
+                                //       _eventController.text,
+                                //       false,
+                                //       event['due'],
+                                //       userName,
+                                //       event['description']));
+                                // } else {
+                                //   selectedEvents[_selectedDay] = [
+                                //     Event(
+                                //         _eventController.text,
+                                //         false,
+                                //         event['due'],
+                                //         userName,
+                                //         event['description'])
+                                //   ];
+                                // }
                                 MatchController.instance
                                     .addEvent(widget.matchDocId, event)
                                     .then((result) {
-                                  setState(() {
-                                    saveAsSelectedEvents();
-                                  });
+                                  // setState(() {
+                                  //   saveAsSelectedEvents();
+                                  // });
                                 });
                               }
                               Navigator.pop(context);

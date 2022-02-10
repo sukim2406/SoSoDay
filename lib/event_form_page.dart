@@ -157,9 +157,10 @@ class _EventFormState extends State<EventForm> {
                           'due': Timestamp.fromDate(due),
                           'description': description,
                           'completed': completed,
-                          'selectedDay': Timestamp.now(),
+                          'selectedDay': widget.event['selectedDay'],
+                          'creator': widget.event['creator']
                         };
-                        if (widget.event != null) {
+                        if (widget.event['title'] != '') {
                           MatchController.instance
                               .modifyEvent(
                                   widget.matchDocId, widget.event, newData)
