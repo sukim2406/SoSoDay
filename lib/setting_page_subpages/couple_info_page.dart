@@ -123,6 +123,42 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                 btnFontSize: 15,
               ),
             ),
+          ),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: Text('Clear all data'),
+                        content: Text(
+                            'Clearing data cannot be undone, are you sure?'),
+                        actions: [
+                          TextButton(
+                              child: Text('Cancel'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              }),
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              MatchController.instance
+                                  .clearAllData(widget.matchDocID);
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ));
+            },
+            child: Container(
+              margin: EdgeInsets.all(15),
+              alignment: Alignment.center,
+              child: LogBtn(
+                btnText: 'Clear All Data',
+                btnWidth: MediaQuery.of(context).size.width * .7,
+                btnHeight: MediaQuery.of(context).size.height * .05,
+                btnFontSize: 15,
+              ),
+            ),
           )
         ],
       ),

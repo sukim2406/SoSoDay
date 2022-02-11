@@ -86,45 +86,37 @@ class WelcomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Welcome',
-                        style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        )),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .3,
-                          child: Text(
-                            data['screenNames'][0].toString(),
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[500],
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .2,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white70,
-                            radius: 30,
-                            backgroundImage: AssetImage('img/heart.png'),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .3,
-                          child: Text(
-                            data['screenNames'][1].toString(),
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[500],
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        )
+                        Container(
+                            child: Text(
+                          data['screenNames'][0].toString(),
+                          style: TextStyle(
+                              fontSize: 25,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        )),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            child: Image(
+                          image: AssetImage('img/heart-small.png'),
+                        )),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            child: Text(data['screenNames'][1].toString(),
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))),
                       ],
                     )
                   ],
@@ -137,13 +129,17 @@ class WelcomePage extends StatelessWidget {
                       text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
                     children: [
-                      TextSpan(text: 'Together since '),
+                      TextSpan(
+                          text: 'Together since ',
+                          style: TextStyle(color: Colors.grey[500])),
                       TextSpan(
                           text: data['since']
                               .toDate()
                               .toString()
                               .substring(0, 10)),
-                      TextSpan(text: ' counting '),
+                      TextSpan(
+                          text: ' counting ',
+                          style: TextStyle(color: Colors.grey[500])),
                       TextSpan(
                           text: daysBetween(
                                   data['since'].toDate(), DateTime.now())
@@ -154,82 +150,20 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 200),
-            GestureDetector(
-                onTap: () {
-                  AuthController.instance.logout();
-                },
-                child: LogBtn(
-                  btnText: 'SignOut',
-                  btnHeight: height * .08,
-                  btnWidth: width * .5,
-                  btnFontSize: 36,
-                ))
+            // SizedBox(height: 200),
+            // GestureDetector(
+            //     onTap: () {
+            //       AuthController.instance.logout();
+            //     },
+            //     child: LogBtn(
+            //       btnText: 'SignOut',
+            //       btnHeight: height * .08,
+            //       btnWidth: width * .5,
+            //       btnFontSize: 36,
+            //     ))
           ],
         );
       },
     );
-    // return Column(
-    //   children: [
-    //     Container(
-    //       width: width,
-    //       height: height * .35,
-    //       decoration: BoxDecoration(
-    //           image: DecorationImage(
-    //               image: AssetImage('img/signup.png'), fit: BoxFit.cover)),
-    //       child: Column(
-    //         children: [
-    //           SizedBox(
-    //             height: height * .15,
-    //           ),
-    //           CircleAvatar(
-    //             backgroundColor: Colors.white70,
-    //             radius: 60,
-    //             backgroundImage: AssetImage('img/profile.png'),
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //     SizedBox(
-    //       height: 70,
-    //     ),
-    //     Container(
-    //         width: width,
-    //         margin: const EdgeInsets.only(left: 20),
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text('Welcome',
-    //                 style: TextStyle(
-    //                   fontSize: 36,
-    //                   fontWeight: FontWeight.bold,
-    //                   color: Colors.black,
-    //                 )),
-    //             Row(
-    //               children: [
-    //                 Text(
-    //                   'haha',
-    //                   style: TextStyle(
-    //                     fontSize: 18,
-    //                     color: Colors.grey[500],
-    //                   ),
-    //                 ),
-    //               ],
-    //             )
-    //           ],
-    //         )),
-    //     SizedBox(height: 200),
-    //     GestureDetector(
-    //         onTap: () {
-    //           AuthController.instance.logout();
-    //         },
-    //         child: LogBtn(
-    //           btnText: 'SignOut',
-    //           btnHeight: height * .08,
-    //           btnWidth: width * .5,
-    //           btnFontSize: 36,
-    //         ))
-    //   ],
-    // );
   }
 }

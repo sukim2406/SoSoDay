@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:soso_day/controllers/auth_controller.dart';
+import 'package:soso_day/controllers/user_controller.dart';
+
+import '../controllers/storage_controller.dart';
 
 class MatchController extends GetxController {
   static MatchController instance = Get.find();
@@ -251,6 +255,31 @@ class MatchController extends GetxController {
           .update({'events': eventsList});
     } catch (e) {
       print('deleteEvent error');
+      print(e.toString());
+    }
+  }
+
+  Future<void> deleteMatchDoc(docId) async {
+    try {
+      await firestore.collection('matches').doc(docId).delete();
+    } catch (e) {
+      print('deleteMatchDoc Error');
+      print(e.toString());
+    }
+  }
+
+  Future<void> clearAllData(docId) async {
+    try {
+      var imageUrls = await getImageUrls(docId);
+      imageUrls.forEach((img) {
+        StorageController.instance.deleteImage(img);
+      });
+      updateMatchDocument(docId, 'images', []);
+      await deleteMatchDoc(docId).then((result) {
+        AuthController.instance.logout();
+      });
+    } catch (e) {
+      print('clearAllData eror');
       print(e.toString());
     }
   }

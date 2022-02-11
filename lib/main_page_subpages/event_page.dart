@@ -170,22 +170,35 @@ class _EventPageState extends State<EventPage> {
     return Container(
         child: Column(
       children: [
-        SizedBox(height: 200),
-        Calendar(),
-        // ListView.builder(
+        SizedBox(height: 150),
+        Container(
+          child: Calendar(),
+        ),
+        ConstrainedBox(
+          constraints: new BoxConstraints(minHeight: 0, maxHeight: 200),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _getEventsFromDay(_selectedDay).length,
+            itemBuilder: (context, index) {
+              return EventTile(
+                  event: _getEventsFromDay(_selectedDay)[index],
+                  matchDocId: widget.matchDocId);
+            },
+          ),
+        ),
+        // Container(
+        //   height: 200,
+        //   child: ListView.builder(
+        //     shrinkWrap: true,
         //     itemCount: _getEventsFromDay(_selectedDay).length,
         //     itemBuilder: (context, index) {
         //       return EventTile(
-        //         event: _getEventsFromDay(_selectedDay),
-        //         matchDocId: widget.matchDocId,
-        //       );
-        //     }),
-        // Container(
-        //   height: MediaQuery.of(context).size.height * .3,
-        //   child: ListView(
-        //     children: <Widget>_getEventsFromDay(_selectedDay).map((Map event) => EventTile(event: event, matchDocId: widget.matchDocId)),
+        //           event: _getEventsFromDay(_selectedDay)[index],
+        //           matchDocId: widget.matchDocId);
+        //     },
         //   ),
         // ),
+
         // ..._getEventsFromDay(_selectedDay).map((Map event) => GestureDetector(
         //       onTap: () {
         //         Navigator.push(

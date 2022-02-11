@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:soso_day/controllers/auth_controller.dart';
 
 import '../widgets/log_input.dart';
 import '../widgets/log_btn.dart';
@@ -103,6 +104,19 @@ class AccountInfoPage extends StatelessWidget {
                 btnWidth: MediaQuery.of(context).size.width * .7,
                 btnHeight: MediaQuery.of(context).size.height * .05,
                 btnFontSize: 20),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            AuthController.instance.logout();
+          },
+          child: Container(
+            alignment: Alignment.center,
+            child: LogBtn(
+                btnText: 'Log Out',
+                btnWidth: MediaQuery.of(context).size.width * .5,
+                btnHeight: MediaQuery.of(context).size.height * .04,
+                btnFontSize: 15),
           ),
         )
       ],

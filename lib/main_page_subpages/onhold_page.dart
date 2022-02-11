@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:soso_day/controllers/auth_controller.dart';
 
 class OnholdPage extends StatelessWidget {
   final user;
@@ -10,6 +11,15 @@ class OnholdPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              AuthController.instance.logout();
+            },
+          ),
           IconButton(
             icon: const Icon(
               Icons.refresh,

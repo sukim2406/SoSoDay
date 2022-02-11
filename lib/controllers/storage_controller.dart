@@ -53,6 +53,7 @@ class StorageController extends GetxController {
       await storage.refFromURL(url).delete();
       print('deleted');
     } catch (e) {
+      print('deleteImage error');
       print(e.toString());
     }
     // Reference ref = storage.refFromURL(url);
