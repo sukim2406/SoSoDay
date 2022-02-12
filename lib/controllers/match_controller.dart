@@ -126,6 +126,21 @@ class MatchController extends GetxController {
     }
   }
 
+  Future getCoupleIds(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['couple'];
+      });
+    } catch (e) {
+      print('getCoupleIds error');
+      print(e.toString());
+    }
+  }
+
   Future getProfileUrl(docId) async {
     try {
       return await firestore
@@ -268,13 +283,26 @@ class MatchController extends GetxController {
     }
   }
 
+  Future<void> deleteUserDoc(docId) async {
+    try {
+      await firestore.collection('users').doc(docId).delete();
+    } catch (e) {
+      print('deleteUserDoc Error');
+      print(e.toString());
+    }
+  }
+
   Future<void> clearAllData(docId) async {
     try {
       var imageUrls = await getImageUrls(docId);
+      var coupleIds = await getCoupleIds(docId);
       imageUrls.forEach((img) {
         StorageController.instance.deleteImage(img);
       });
       updateMatchDocument(docId, 'images', []);
+      coupleIds.forEach((coupleId) {
+        deleteUserDoc(coupleId);
+      });
       await deleteMatchDoc(docId).then((result) {
         AuthController.instance.logout();
       });

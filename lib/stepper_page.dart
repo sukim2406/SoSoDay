@@ -81,13 +81,13 @@ class _StepperPageState extends State<StepperPage> {
                 const SizedBox(
                   height: 30,
                 ),
-                const Text('Your half\'s screen name?'),
-                const SizedBox(height: 10),
-                LogInput(
-                    inputIcon: const Icon(Icons.account_box),
-                    inputText: 'Your half\'s username',
-                    controller: halfUsernameController,
-                    obscure: false),
+                // const Text('Your half\'s screen name?'),
+                // const SizedBox(height: 10),
+                // LogInput(
+                //     inputIcon: const Icon(Icons.account_box),
+                //     inputText: 'Your half\'s username',
+                //     controller: halfUsernameController,
+                //     obscure: false),
               ],
             ),
           ),
@@ -139,22 +139,22 @@ class _StepperPageState extends State<StepperPage> {
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.normal))
                     ])),
-                const SizedBox(height: 30),
-                RichText(
-                    text: TextSpan(
-                        text: 'Your half\'s Screen name',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                        children: [
-                      const TextSpan(text: '\t\t\t\t\t'),
-                      TextSpan(
-                          text: halfUsernameController.text,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.normal))
-                    ]))
+                // const SizedBox(height: 30),
+                // RichText(
+                //     text: TextSpan(
+                //         text: 'Your half\'s Screen name',
+                //         style: const TextStyle(
+                //           color: Colors.black,
+                //           fontWeight: FontWeight.bold,
+                //           fontSize: 15,
+                //         ),
+                //         children: [
+                //       const TextSpan(text: '\t\t\t\t\t'),
+                //       TextSpan(
+                //           text: halfUsernameController.text,
+                //           style: const TextStyle(
+                //               fontSize: 20, fontWeight: FontWeight.normal))
+                //     ]))
               ],
             ),
           ),
@@ -181,8 +181,7 @@ class _StepperPageState extends State<StepperPage> {
               final isLastStep = _currentStep == _getSteps().length - 1;
               if (isLastStep) {
                 if (usernameController.text.isEmpty ||
-                    halfEmailController.text.isEmpty ||
-                    halfUsernameController.text.isEmpty) {
+                    halfEmailController.text.isEmpty) {
                   print('Empty field detected');
                   Get.snackbar('Input', 'Empty Field',
                       backgroundColor: Colors.redAccent,
@@ -198,7 +197,7 @@ class _StepperPageState extends State<StepperPage> {
                     'name': usernameController.text,
                     'email': widget.user.email,
                     'halfEmail': halfEmailController.text,
-                    'halfname': halfUsernameController.text,
+                    // 'halfname': halfUsernameController.text,
                   };
                   UserController.instance.createUserDocument(userInfoMap);
 

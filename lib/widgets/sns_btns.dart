@@ -10,13 +10,30 @@ class SnsBtns extends StatelessWidget {
       children: List<Widget>.generate(3, (index) {
         return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.grey[500],
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('img/' + snsImages[index]),
-                )));
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                            title: Text('In development'),
+                            content: Text('In development! Coming soon'),
+                            actions: [
+                              TextButton(
+                                child: Text('Got it'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ]));
+              },
+              child: CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.grey[500],
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage('img/' + snsImages[index]),
+                  )),
+            ));
       }),
     );
   }

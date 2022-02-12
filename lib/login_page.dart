@@ -82,9 +82,27 @@ class _LoginPageState extends State<LoginPage> {
                       Expanded(
                         child: Container(),
                       ),
-                      Text("Forgot your password?",
-                          style:
-                              TextStyle(fontSize: 20, color: Colors.grey[500])),
+                      TextButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                      title: Text('In development'),
+                                      content:
+                                          Text('In development! Coming soon'),
+                                      actions: [
+                                        TextButton(
+                                          child: Text('Got it'),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ]));
+                        },
+                        child: Text("Forgot your password?",
+                            style: TextStyle(
+                                fontSize: 20, color: Colors.grey[500])),
+                      ),
                     ],
                   ),
                 ],
