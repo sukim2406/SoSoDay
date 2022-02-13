@@ -24,93 +24,144 @@ class PhotoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
+    return Scaffold(
+        appBar: AppBar(
+          actions: [
+            GestureDetector(
+                onTap: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                      allowMultiple: false,
+                      type: FileType.custom,
+                      allowedExtensions: ['png', 'jpg']);
+
+                  if (result == null) {
+                    Get.snackbar('File Picker', 'File message',
+                        backgroundColor: Colors.redAccent,
+                        snackPosition: SnackPosition.BOTTOM,
+                        titleText: const Text(
+                          'No file selected',
+                          style: TextStyle(color: Colors.white),
+                        ));
+                  }
+
+                  final path = result!.files.single.path;
+                  final fileName = result!.files.single.name;
+
+                  print('file picker test');
+                  print(path);
+                  print(fileName);
+                  String downloadUrl = 'empty';
+
+                  StorageController.instance
+                      .uploadFile(path.toString(), fileName)
+                      .then((value) async {
+                    downloadUrl =
+                        await StorageController.instance.downloadUrl(fileName);
+                    print('download Url = ');
+                    print(downloadUrl);
+                  }).then((value) {
+                    MatchController.instance
+                        .updateImageUrls(matchDocId, downloadUrl);
+                    print('came here');
+                    print(matchDocId);
+                  });
+                },
+                child: Icon(Icons.upload)),
+            Text(
+              'padd',
+              style: TextStyle(color: Colors.blue),
+            )
+          ],
         ),
-        Container(
-          height: MediaQuery.of(context).size.height * .5,
-          child: StreamBuilder<QuerySnapshot>(
-            stream: getStream(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error');
-              }
-              if (!snapshot.hasData) {
-                return Text('Empty');
-              }
-              return GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                children: List.generate(
-                    snapshot.data!.docs.first['images'].length, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      print(snapshot.data!.docs.first['images'][index]);
-                      Get.to(() => SingleImagePage(
-                          imageUrl: snapshot.data!.docs.first['images'][index],
-                          matchDocId: matchDocId,
-                          user: user,
-                          image: Image.network(
-                              snapshot.data!.docs.first['images'][index])));
-                    },
-                    child: Image.network(
-                      snapshot.data!.docs.first['images'][index],
-                      height: 100,
-                      width: 100,
-                    ),
-                  );
-                }),
-              );
-            },
-          ),
-        ),
-        GestureDetector(
-          onTap: () async {
-            final result = await FilePicker.platform.pickFiles(
-                allowMultiple: false,
-                type: FileType.custom,
-                allowedExtensions: ['png', 'jpg']);
-
-            if (result == null) {
-              Get.snackbar('File Picker', 'File message',
-                  backgroundColor: Colors.redAccent,
-                  snackPosition: SnackPosition.BOTTOM,
-                  titleText: const Text(
-                    'No file selected',
-                    style: TextStyle(color: Colors.white),
-                  ));
-            }
-
-            final path = result!.files.single.path;
-            final fileName = result!.files.single.name;
-
-            print('file picker test');
-            print(path);
-            print(fileName);
-            String downloadUrl = 'empty';
-
-            StorageController.instance
-                .uploadFile(path.toString(), fileName)
-                .then((value) async {
-              downloadUrl =
-                  await StorageController.instance.downloadUrl(fileName);
-              print('download Url = ');
-              print(downloadUrl);
-            }).then((value) {
-              MatchController.instance.updateImageUrls(matchDocId, downloadUrl);
-              print('came here');
-              print(matchDocId);
-            });
-          },
-          child: LogBtn(
-              btnText: 'Upload Image',
-              btnWidth: MediaQuery.of(context).size.width * .5,
-              btnHeight: MediaQuery.of(context).size.height * .03,
-              btnFontSize: 15),
-        )
-      ],
-    );
+        body: Container());
   }
+  //   return Column(
+  //     children: [
+  //       SizedBox(
+  //         height: 200,
+  //       ),
+  //       Container(
+  //         height: MediaQuery.of(context).size.height * .5,
+  //         child: StreamBuilder<QuerySnapshot>(
+  //           stream: getStream(),
+  //           builder: (context, snapshot) {
+  //             if (snapshot.hasError) {
+  //               return Text('Error');
+  //             }
+  //             if (!snapshot.hasData) {
+  //               return Text('Empty');
+  //             }
+  //             return GridView.count(
+  //               shrinkWrap: true,
+  //               crossAxisCount: 2,
+  //               children: List.generate(
+  //                   snapshot.data!.docs.first['images'].length, (index) {
+  //                 return GestureDetector(
+  //                   onTap: () {
+  //                     print(snapshot.data!.docs.first['images'][index]);
+  //                     Get.to(() => SingleImagePage(
+  //                         imageUrl: snapshot.data!.docs.first['images'][index],
+  //                         matchDocId: matchDocId,
+  //                         user: user,
+  //                         image: Image.network(
+  //                             snapshot.data!.docs.first['images'][index])));
+  //                   },
+  //                   child: Image.network(
+  //                     snapshot.data!.docs.first['images'][index],
+  //                     height: 100,
+  //                     width: 100,
+  //                   ),
+  //                 );
+  //               }),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //       GestureDetector(
+  //         onTap: () async {
+  //           final result = await FilePicker.platform.pickFiles(
+  //               allowMultiple: false,
+  //               type: FileType.custom,
+  //               allowedExtensions: ['png', 'jpg']);
+
+  //           if (result == null) {
+  //             Get.snackbar('File Picker', 'File message',
+  //                 backgroundColor: Colors.redAccent,
+  //                 snackPosition: SnackPosition.BOTTOM,
+  //                 titleText: const Text(
+  //                   'No file selected',
+  //                   style: TextStyle(color: Colors.white),
+  //                 ));
+  //           }
+
+  //           final path = result!.files.single.path;
+  //           final fileName = result!.files.single.name;
+
+  //           print('file picker test');
+  //           print(path);
+  //           print(fileName);
+  //           String downloadUrl = 'empty';
+
+  //           StorageController.instance
+  //               .uploadFile(path.toString(), fileName)
+  //               .then((value) async {
+  //             downloadUrl =
+  //                 await StorageController.instance.downloadUrl(fileName);
+  //             print('download Url = ');
+  //             print(downloadUrl);
+  //           }).then((value) {
+  //             MatchController.instance.updateImageUrls(matchDocId, downloadUrl);
+  //             print('came here');
+  //             print(matchDocId);
+  //           });
+  //         },
+  //         child: LogBtn(
+  //             btnText: 'Upload Image',
+  //             btnWidth: MediaQuery.of(context).size.width * .5,
+  //             btnHeight: MediaQuery.of(context).size.height * .03,
+  //             btnFontSize: 15),
+  //       )
+  //     ],
+  //   );
+  // }
 }
