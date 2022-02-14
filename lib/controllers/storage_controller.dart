@@ -26,7 +26,7 @@ class StorageController extends GetxController {
     try {
       await storage.ref('pictures/$fileName').putFile(file);
     } catch (e) {
-      print('upload Error');
+      print('uploadFile Error');
       print(e.toString());
     }
   }

@@ -155,6 +155,35 @@ class MatchController extends GetxController {
     }
   }
 
+  Future getImages(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['images'];
+      });
+    } catch (e) {
+      print('getImages Error');
+      print(e.toString());
+    }
+  }
+
+  Future addImage(docId, newImage) async {
+    try {
+      var imageList = await getImages(docId);
+      imageList.add(newImage);
+      await firestore
+          .collection('matches')
+          .doc(docId)
+          .update({'images': imageList});
+    } catch (e) {
+      print('addImage error');
+      print(e.toString());
+    }
+  }
+
   Future getImageUrls(docId) async {
     try {
       return await firestore
