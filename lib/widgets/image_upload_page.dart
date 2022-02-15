@@ -10,11 +10,14 @@ class ImageUploadPage extends StatefulWidget {
   final path;
   final fileName;
   final matchDocId;
+  final userData;
+
   const ImageUploadPage(
       {Key? key,
       required this.path,
       required this.fileName,
-      required this.matchDocId})
+      required this.matchDocId,
+      required this.userData})
       : super(key: key);
 
   @override
@@ -54,6 +57,7 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
                     'time': Timestamp.now(),
                     'downloadUrl': downloadUrl,
                     'comments': [],
+                    'creator': widget.userData,
                   };
                   MatchController.instance
                       .addImage(widget.matchDocId, imageData);

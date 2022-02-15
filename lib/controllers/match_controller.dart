@@ -173,6 +173,8 @@ class MatchController extends GetxController {
   Future addImage(docId, newImage) async {
     try {
       var imageList = await getImages(docId);
+      print('image data chekc');
+      print(newImage);
       imageList.add(newImage);
       await firestore
           .collection('matches')

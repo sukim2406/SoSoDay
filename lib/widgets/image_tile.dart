@@ -21,26 +21,70 @@ class ImageTile extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.only(left: 15),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('img/profile.png'),
-                ),
-                Text(data['images'][index]['title'])
+                Text(
+                  data['images'][index]['title'],
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                )
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.only(right: 15),
+            child: Row(
+              children: [
+                Expanded(child: Container()),
+                Text(
+                  data['images'][index]['time']
+                      .toDate()
+                      .toString()
+                      .substring(0, 10),
+                  style: TextStyle(color: Colors.grey),
+                ),
+                Container(
+                  width: 20,
+                ),
+                Text(data['images'][index]['creator']),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 15, right: 15),
             child: Image.network(data['images'][index]['downloadUrl']),
           ),
           Container(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.only(left: 15, right: 15, top: 10),
             child: Text(data['images'][index]['about']),
           ),
-          Container(child: Text('comments here')),
+          Container(
+              padding: EdgeInsets.only(left: 15),
+              child: Row(
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        print('hi?');
+                      },
+                      child: Text('view comments here')),
+                ],
+              )),
+          Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(fontSize: 15, height: 1),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'write comments here'),
+                  ),
+                ),
+                Icon(Icons.send),
+              ],
+            ),
+          )
         ],
       ),
     );

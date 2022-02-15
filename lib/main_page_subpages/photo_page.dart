@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/user_controller.dart';
 import '../controllers/storage_controller.dart';
 import '../widgets/log_btn.dart';
 import '../controllers/match_controller.dart';
@@ -24,13 +25,25 @@ class PhotoPage extends StatefulWidget {
 class _PhotoPageState extends State<PhotoPage> {
   var path;
   var fileName;
+  late var userName;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     path = '';
     fileName = '';
+    getUserName();
     // TODO: implement initState
     super.initState();
+  }
+
+  void setPosition() {
+    scrollController.animateTo(scrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+  }
+
+  void getUserName() async {
+    userName = await UserController.instance.getUsername(widget.user.uid);
   }
 
   Stream<QuerySnapshot> getStream() async* {
@@ -69,6 +82,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                 path: result!.files.single.path,
                                 fileName: result!.files.single.name,
                                 matchDocId: widget.matchDocId,
+                                userData: userName,
                               )));
                   // setState(() {
                   //   path = result!.files.single.path;
@@ -101,29 +115,44 @@ class _PhotoPageState extends State<PhotoPage> {
             )
           ],
         ),
-        body: Container(
-          height: MediaQuery.of(context).size.height * .5,
-          child: StreamBuilder<QuerySnapshot>(
-            stream: getStream(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error');
-              }
-              if (!snapshot.hasData) {
-                return Text('Empty');
-              }
-              return ListView.builder(
-                itemCount: snapshot.data!.docs.first['images'].length,
-                itemBuilder: (context, index) {
-                  return ImageTile(
-                      data: snapshot.data!.docs.first,
-                      matchDocId: widget.matchDocId,
-                      user: widget.user,
-                      index: index);
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * .75,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: getStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error');
+                  }
+                  if (!snapshot.hasData) {
+                    return Text('Empty');
+                  }
+                  if (snapshot.data!.docs.first['images'].length == 0) {
+                    return Text('Upload your first images');
+                  }
+                  return ListView.builder(
+                    // reverse: true,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.first['images'].length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: SingleChildScrollView(
+                          child: ImageTile(
+                              data: snapshot.data!.docs.first,
+                              matchDocId: widget.matchDocId,
+                              user: widget.user,
+                              index: index),
+                        ),
+                      );
+                    },
+                  );
                 },
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ));
     // (path != '' && fileName != '')
     //     ? Container(
