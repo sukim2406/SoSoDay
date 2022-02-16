@@ -214,6 +214,36 @@ class MatchController extends GetxController {
     }
   }
 
+  Future getCommentsFromImage(docId, index) async {
+    try {
+      var imageList = await getImages(docId);
+      return imageList[index]['comments'];
+    } catch (e) {
+      print('getCommentsFromImage Error');
+      print(e.toString());
+    }
+  }
+
+  Future<void> updateComments(docId, index, commentData) async {
+    try {
+      var commentList = await getCommentsFromImage(docId, index);
+      if (commentList.length == 0) {
+        commentList = [commentData];
+      } else {
+        commentList.add(commentData);
+      }
+      var imageList = await getImages(docId);
+      imageList[index]['comments'] = commentList;
+      await firestore
+          .collection('matches')
+          .doc(docId)
+          .update({'images': imageList});
+    } catch (e) {
+      print('updateComments error');
+      print(e.toString());
+    }
+  }
+
   Future getEvents(docId) async {
     try {
       return await firestore

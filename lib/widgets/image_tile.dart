@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:soso_day/controllers/match_controller.dart';
+import '../controllers/user_controller.dart';
+import '../widgets/comment_page.dart';
 
 class ImageTile extends StatelessWidget {
   final data;
@@ -17,6 +21,8 @@ class ImageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController commentController = TextEditingController();
+
     return Container(
       child: Column(
         children: [
@@ -59,29 +65,109 @@ class ImageTile extends StatelessWidget {
             child: Text(data['images'][index]['about']),
           ),
           Container(
-              padding: EdgeInsets.only(left: 15),
+              padding: EdgeInsets.only(left: 15, bottom: 0),
               child: Row(
                 children: [
-                  TextButton(
-                      onPressed: () {
-                        print('hi?');
-                      },
-                      child: Text('view comments here')),
+                  (data['images'][index]['comments'].length > 0)
+                      ? (data['images'][index]['comments'].length == 1)
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CommentPage(
+                                            data: data,
+                                            index: index,
+                                            matchDocId: matchDocId,
+                                            user: user)));
+                              },
+                              child: Text(data['images'][index]['comments'][
+                                  data['images'][index]['comments'].length -
+                                      1]['comment']))
+                          : TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CommentPage(
+                                            data: data,
+                                            index: index,
+                                            matchDocId: matchDocId,
+                                            user: user)));
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                    text: 'View all ',
+                                    style: TextStyle(color: Colors.grey[500]),
+                                    children: [
+                                      TextSpan(
+                                          text: data['images'][index]
+                                                  ['comments']
+                                              .length
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: Colors.grey[500])),
+                                      TextSpan(
+                                          text: ' comments',
+                                          style: TextStyle(
+                                              color: Colors.grey[500]))
+                                    ]),
+                              ))
+                      : Text('no comments yet'),
                 ],
               )),
           Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: EdgeInsets.only(left: 20, right: 20, top: 0),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
+                    controller: commentController,
                     style: TextStyle(fontSize: 15, height: 1),
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'write comments here'),
                   ),
                 ),
-                Icon(Icons.send),
+                GestureDetector(
+                    onTap: () async {
+                      if (commentController.text.length > 0) {
+                        Map<String, dynamic> commentData = {
+                          'comment': commentController.text,
+                          'time': Timestamp.now(),
+                          'creator': await UserController.instance
+                              .getUsername(user.uid),
+                        };
+
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                    title: Text('Post Comment'),
+                                    content: Text(commentData['comment']),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Cancel')),
+                                      TextButton(
+                                          onPressed: () async {
+                                            await MatchController.instance
+                                                .updateComments(matchDocId,
+                                                    index, commentData)
+                                                .then((result) {
+                                              print('hi');
+                                              commentController.clear();
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('OK')),
+                                    ]));
+
+                        print(commentData);
+                      }
+                    },
+                    child: Icon(Icons.send)),
               ],
             ),
           )

@@ -115,44 +115,44 @@ class _PhotoPageState extends State<PhotoPage> {
             )
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * .75,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: getStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error');
-                  }
-                  if (!snapshot.hasData) {
-                    return Text('Empty');
-                  }
-                  if (snapshot.data!.docs.first['images'].length == 0) {
-                    return Text('Upload your first images');
-                  }
-                  return ListView.builder(
-                    // reverse: true,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.docs.first['images'].length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: EdgeInsets.only(bottom: 30),
-                        child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * .75,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: getStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error');
+                    }
+                    if (!snapshot.hasData) {
+                      return Text('Empty');
+                    }
+                    if (snapshot.data!.docs.first['images'].length == 0) {
+                      return Text('Upload your first images');
+                    }
+                    return ListView.builder(
+                      // reverse: true,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.docs.first['images'].length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: EdgeInsets.only(bottom: 30),
                           child: ImageTile(
                               data: snapshot.data!.docs.first,
                               matchDocId: widget.matchDocId,
                               user: widget.user,
                               index: index),
-                        ),
-                      );
-                    },
-                  );
-                },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
     // (path != '' && fileName != '')
     //     ? Container(
