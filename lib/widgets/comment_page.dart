@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import './comment_tile.dart';
 
 class CommentPage extends StatefulWidget {
   final matchDocId;
@@ -18,11 +21,37 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
+  Stream<QuerySnapshot> getStream() async* {
+    yield* FirebaseFirestore.instance
+        .collection('matches')
+        .where('couple', arrayContains: widget.user.uid)
+        .snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Comments'),
+        actions: [
+          DropdownButton<String>(
+              icon: const Icon(Icons.more_vert),
+              items: [
+                'Set as profile image',
+                'Set as background image',
+                'Delete image'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                    value: value, child: Text(value));
+              }).toList(),
+              onChanged: (String? newValue) {
+                print(newValue);
+              }),
+          Text(
+            'pa',
+            style: TextStyle(color: Colors.blue),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -49,7 +78,43 @@ class _CommentPageState extends State<CommentPage> {
                   widget.data['images'][widget.index]['downloadUrl'])),
           Container(
             child: Text(widget.data['images'][widget.index]['about']),
-          )
+          ),
+          Container(
+              padding: EdgeInsets.all(15),
+              height: MediaQuery.of(context).size.height * .5,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: getStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error');
+                  }
+                  if (!snapshot.hasData) {
+                    return Text('Empty');
+                  }
+                  if (snapshot.data!.docs
+                          .first['images'][widget.index]['comments'].length ==
+                      0) {
+                    return Text('no comments yet');
+                  }
+                  return ListView.builder(
+                    // reverse: true,
+                    // shrinkWrap: true,
+                    itemCount: snapshot.data!.docs
+                        .first['images'][widget.index]['comments'].length,
+                    itemBuilder: (context, index) {
+                      return CommentTile(
+                        matchDocId: widget.matchDocId,
+                        user: widget.user,
+                        imageData: widget.data,
+                        imageIndex: widget.index,
+                        commentIndex: index,
+                      );
+                      // return Text(snapshot.data!.docs.first['images']
+                      //     [widget.index]['comments'][index]['comment']);
+                    },
+                  );
+                },
+              ))
         ],
       ),
     );

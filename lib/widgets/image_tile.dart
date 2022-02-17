@@ -70,20 +70,54 @@ class ImageTile extends StatelessWidget {
                 children: [
                   (data['images'][index]['comments'].length > 0)
                       ? (data['images'][index]['comments'].length == 1)
-                          ? TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CommentPage(
-                                            data: data,
-                                            index: index,
-                                            matchDocId: matchDocId,
-                                            user: user)));
-                              },
-                              child: Text(data['images'][index]['comments'][
-                                  data['images'][index]['comments'].length -
-                                      1]['comment']))
+                          ? Container(
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 15,
+                                    child: Image(
+                                        image: AssetImage('img/profile.png')),
+                                  ),
+                                  Container(
+                                      padding: EdgeInsets.only(left: 10),
+                                      width: MediaQuery.of(context).size.width *
+                                          .6,
+                                      // child: Text(data['images'][index]
+                                      //     ['comments'][0]['comment']
+                                      child: RichText(
+                                          text: TextSpan(
+                                        text: data['images'][index]['comments']
+                                            [0]['comment'],
+                                        style: TextStyle(color: Colors.black),
+                                      ))
+                                      // children: [
+                                      //   TextSpan(
+                                      //       text: data['images'][index]
+                                      //                   ['comments'][0]
+                                      //               ['time']
+                                      //           .toDate()
+                                      //           .toString()
+                                      //           .substring(0, 10),
+                                      //       style: TextStyle(
+                                      //           color: Colors.grey[500]))
+                                      // ]),
+                                      ),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          .25,
+                                      child: RichText(
+                                        text: TextSpan(
+                                            text: data['images'][index]
+                                                    ['comments'][0]['time']
+                                                .toDate()
+                                                .toString()
+                                                .substring(0, 10),
+                                            style: TextStyle(
+                                                color: Colors.grey[500])),
+                                      )),
+                                ],
+                              ),
+                            )
                           : TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -113,7 +147,8 @@ class ImageTile extends StatelessWidget {
                                               color: Colors.grey[500]))
                                     ]),
                               ))
-                      : Text('no comments yet'),
+                      : Text('no comments yet',
+                          style: TextStyle(color: Colors.grey[500])),
                 ],
               )),
           Container(
