@@ -224,6 +224,24 @@ class MatchController extends GetxController {
     }
   }
 
+  Future<void> deleteComments(docId, imageIndex, commentIndex) async {
+    try {
+      var commentsList = await getCommentsFromImage(docId, imageIndex);
+      var imageList = await getImages(docId);
+
+      print(commentsList);
+      commentsList.removeAt(commentIndex);
+      imageList[imageIndex]['comments'] = commentsList;
+      await firestore
+          .collection('matches')
+          .doc(docId)
+          .update({'images': imageList});
+    } catch (e) {
+      print('delete Comment error');
+      print(e.toString());
+    }
+  }
+
   Future<void> updateComments(docId, index, commentData) async {
     try {
       var commentList = await getCommentsFromImage(docId, index);

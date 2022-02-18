@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import './comment_tile.dart';
+import '../controllers/user_controller.dart';
 
 class CommentPage extends StatefulWidget {
   final matchDocId;
@@ -21,6 +22,42 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
+  var userDoc;
+  late List dropdownList;
+
+  @override
+  void initState() {
+    dropdownList = [
+      () {
+        print('hi1');
+      },
+      () {
+        print('hi2');
+      },
+      () {
+        print('hi3');
+      },
+    ];
+    setuserDoc();
+    super.initState();
+  }
+
+  void setuserDoc() async {
+    userDoc = await UserController.instance.getUserDoc(widget.user.uid);
+  }
+
+  Map<String, dynamic> dropdownFunctions = {
+    'Set as profile image': () {
+      print('test1');
+    },
+    'Set as background image': () {
+      print('test2');
+    },
+    'Delete image': () {
+      print('test3');
+    }
+  };
+
   Stream<QuerySnapshot> getStream() async* {
     yield* FirebaseFirestore.instance
         .collection('matches')
@@ -45,7 +82,13 @@ class _CommentPageState extends State<CommentPage> {
                     value: value, child: Text(value));
               }).toList(),
               onChanged: (String? newValue) {
-                print(newValue);
+                if (newValue == 'Set as profile image') {
+                  dropdownList[0]();
+                } else if (newValue == 'Set as background image') {
+                  dropdownList[1]();
+                } else {
+                  dropdownList[2]();
+                }
               }),
           Text(
             'pa',
@@ -102,9 +145,11 @@ class _CommentPageState extends State<CommentPage> {
                     itemCount: snapshot.data!.docs
                         .first['images'][widget.index]['comments'].length,
                     itemBuilder: (context, index) {
+                      print('hi?');
+                      print(userDoc);
                       return CommentTile(
                         matchDocId: widget.matchDocId,
-                        user: widget.user,
+                        user: userDoc,
                         imageData: widget.data,
                         imageIndex: widget.index,
                         commentIndex: index,
