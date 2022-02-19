@@ -22,7 +22,6 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
-  var userDoc;
   late List dropdownList;
 
   @override
@@ -38,12 +37,7 @@ class _CommentPageState extends State<CommentPage> {
         print('hi3');
       },
     ];
-    setuserDoc();
     super.initState();
-  }
-
-  void setuserDoc() async {
-    userDoc = await UserController.instance.getUserDoc(widget.user.uid);
   }
 
   Map<String, dynamic> dropdownFunctions = {
@@ -61,7 +55,7 @@ class _CommentPageState extends State<CommentPage> {
   Stream<QuerySnapshot> getStream() async* {
     yield* FirebaseFirestore.instance
         .collection('matches')
-        .where('couple', arrayContains: widget.user.uid)
+        .where('couple', arrayContains: widget.user['uid'])
         .snapshots();
   }
 
@@ -146,10 +140,9 @@ class _CommentPageState extends State<CommentPage> {
                         .first['images'][widget.index]['comments'].length,
                     itemBuilder: (context, index) {
                       print('hi?');
-                      print(userDoc);
                       return CommentTile(
                         matchDocId: widget.matchDocId,
-                        user: userDoc,
+                        user: widget.user,
                         imageData: widget.data,
                         imageIndex: widget.index,
                         commentIndex: index,

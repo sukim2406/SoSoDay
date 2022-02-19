@@ -57,39 +57,39 @@ class CommentTile extends StatelessWidget {
                 ),
               ],
             ),
-            // (imageData['images'][imageIndex]['comments'][commentIndex]
-            //             ['creator'] ==
-            //         user['name'])
-            //     ? Container(
-            //         child: GestureDetector(
-            //             onTap: () {
-            //               showDialog(
-            //                   context: context,
-            //                   builder: (context) => AlertDialog(
-            //                           title: Text('Delete Comment?'),
-            //                           actions: [
-            //                             TextButton(
-            //                               onPressed: () {
-            //                                 Navigator.pop(context);
-            //                               },
-            //                               child: Text('Cancel'),
-            //                             ),
-            //                             TextButton(
-            //                                 onPressed: () async {
-            //                                   await MatchController.instance
-            //                                       .deleteComments(matchDocId,
-            //                                           imageIndex, commentIndex);
-            //                                 },
-            //                                 child: Text('OK'))
-            //                           ]));
-            //               // await MatchController.instance
-            //               //     .deleteComments(matchDocId, imageIndex, commentIndex);
-            //             },
-            //             child: Icon(Icons.delete)),
-            //       )
-            //     : Container(
-            //         child: Icon(Icons.access_alarm),
-            //       )
+            (imageData['images'][imageIndex]['comments'][commentIndex]
+                        ['creator'] ==
+                    user['name'])
+                ? Container(
+                    child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                      title: Text('Delete Comment?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                            onPressed: () async {
+                                              await MatchController.instance
+                                                  .deleteComments(matchDocId,
+                                                      imageIndex, commentIndex);
+                                            },
+                                            child: Text('OK'))
+                                      ]));
+                          // await MatchController.instance
+                          //     .deleteComments(matchDocId, imageIndex, commentIndex);
+                        },
+                        child: Icon(Icons.delete)),
+                  )
+                : Container(
+                    child: Icon(Icons.access_alarm),
+                  )
           ],
         ));
   }

@@ -80,8 +80,13 @@ class ImageTile extends StatelessWidget {
                                   ),
                                   Container(
                                       padding: EdgeInsets.only(left: 10),
-                                      width: MediaQuery.of(context).size.width *
-                                          .6,
+                                      width: (data['images'][index]['comments']
+                                                  [0]['creator'] ==
+                                              user['name'])
+                                          ? MediaQuery.of(context).size.width *
+                                              .5
+                                          : MediaQuery.of(context).size.width *
+                                              .6,
                                       // child: Text(data['images'][index]
                                       //     ['comments'][0]['comment']
                                       child: RichText(
@@ -89,19 +94,7 @@ class ImageTile extends StatelessWidget {
                                         text: data['images'][index]['comments']
                                             [0]['comment'],
                                         style: TextStyle(color: Colors.black),
-                                      ))
-                                      // children: [
-                                      //   TextSpan(
-                                      //       text: data['images'][index]
-                                      //                   ['comments'][0]
-                                      //               ['time']
-                                      //           .toDate()
-                                      //           .toString()
-                                      //           .substring(0, 10),
-                                      //       style: TextStyle(
-                                      //           color: Colors.grey[500]))
-                                      // ]),
-                                      ),
+                                      ))),
                                   Container(
                                       width: MediaQuery.of(context).size.width *
                                           .25,
@@ -115,6 +108,46 @@ class ImageTile extends StatelessWidget {
                                             style: TextStyle(
                                                 color: Colors.grey[500])),
                                       )),
+                                  (data['images'][index]['comments'][0]
+                                              ['creator'] ==
+                                          user['name'])
+                                      ? Container(
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: Text(
+                                                              'Delete Comment?'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text(
+                                                                  'Cancel'),
+                                                            ),
+                                                            TextButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await MatchController
+                                                                      .instance
+                                                                      .deleteComments(
+                                                                          matchDocId,
+                                                                          index,
+                                                                          0);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child:
+                                                                    Text('OK')),
+                                                          ],
+                                                        ));
+                                              },
+                                              child: Icon(Icons.delete)))
+                                      : Container(),
                                 ],
                               ),
                             )
@@ -170,8 +203,7 @@ class ImageTile extends StatelessWidget {
                         Map<String, dynamic> commentData = {
                           'comment': commentController.text,
                           'time': Timestamp.now(),
-                          'creator': await UserController.instance
-                              .getUsername(user.uid),
+                          'creator': user['creator'],
                         };
 
                         showDialog(

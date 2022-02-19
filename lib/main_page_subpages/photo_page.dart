@@ -26,12 +26,14 @@ class _PhotoPageState extends State<PhotoPage> {
   var path;
   var fileName;
   late var userName;
+  late var userDoc;
   ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     path = '';
     fileName = '';
+    getUserDoc();
     getUserName();
     // TODO: implement initState
     super.initState();
@@ -40,6 +42,14 @@ class _PhotoPageState extends State<PhotoPage> {
   void setPosition() {
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+  }
+
+  void getUserDoc() async {
+    await UserController.instance.getUserDoc(widget.user.uid).then((data) {
+      setState(() {
+        userDoc = data;
+      });
+    });
   }
 
   void getUserName() async {
@@ -82,7 +92,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                 path: result!.files.single.path,
                                 fileName: result!.files.single.name,
                                 matchDocId: widget.matchDocId,
-                                userData: userName,
+                                userData: userDoc['name'],
                               )));
                   // setState(() {
                   //   path = result!.files.single.path;
@@ -133,6 +143,10 @@ class _PhotoPageState extends State<PhotoPage> {
                     if (snapshot.data!.docs.first['images'].length == 0) {
                       return Text('Upload your first images');
                     }
+                    if (snapshot.connectionState == ConnectionState.active ||
+                        snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
                     return ListView.builder(
                       // reverse: true,
                       shrinkWrap: true,
@@ -143,7 +157,7 @@ class _PhotoPageState extends State<PhotoPage> {
                           child: ImageTile(
                               data: snapshot.data!.docs.first,
                               matchDocId: widget.matchDocId,
-                              user: widget.user,
+                              user: userDoc,
                               index: index),
                         );
                       },
