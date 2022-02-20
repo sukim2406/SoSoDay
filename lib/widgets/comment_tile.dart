@@ -79,6 +79,7 @@ class CommentTile extends StatelessWidget {
                                               await MatchController.instance
                                                   .deleteComments(matchDocId,
                                                       imageIndex, commentIndex);
+                                              Navigator.pop(context);
                                             },
                                             child: Text('OK'))
                                       ]));

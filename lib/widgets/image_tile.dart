@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:soso_day/controllers/match_controller.dart';
 import '../controllers/user_controller.dart';
 import '../widgets/comment_page.dart';
+import '../widgets/dropdown_menu.dart';
 
 class ImageTile extends StatelessWidget {
   final data;
@@ -33,7 +34,15 @@ class ImageTile extends StatelessWidget {
                 Text(
                   data['images'][index]['title'],
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                )
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                DropdownMenu(
+                    matchDocId: matchDocId,
+                    user: user,
+                    data: data,
+                    index: index)
               ],
             ),
           ),
@@ -58,7 +67,20 @@ class ImageTile extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.only(left: 15, right: 15),
-            child: Image.network(data['images'][index]['downloadUrl']),
+            child: Image.network(
+              data['images'][index]['downloadUrl'],
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                    child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ));
+              },
+            ),
           ),
           Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 10),
@@ -203,7 +225,7 @@ class ImageTile extends StatelessWidget {
                         Map<String, dynamic> commentData = {
                           'comment': commentController.text,
                           'time': Timestamp.now(),
-                          'creator': user['creator'],
+                          'creator': user['name'],
                         };
 
                         showDialog(

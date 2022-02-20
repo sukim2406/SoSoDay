@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import './comment_tile.dart';
 import '../controllers/user_controller.dart';
+import './dropdown_menu.dart';
 
 class CommentPage extends StatefulWidget {
   final matchDocId;
@@ -22,24 +23,6 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
-  late List dropdownList;
-
-  @override
-  void initState() {
-    dropdownList = [
-      () {
-        print('hi1');
-      },
-      () {
-        print('hi2');
-      },
-      () {
-        print('hi3');
-      },
-    ];
-    super.initState();
-  }
-
   Map<String, dynamic> dropdownFunctions = {
     'Set as profile image': () {
       print('test1');
@@ -65,25 +48,11 @@ class _CommentPageState extends State<CommentPage> {
       appBar: AppBar(
         title: Text('Comments'),
         actions: [
-          DropdownButton<String>(
-              icon: const Icon(Icons.more_vert),
-              items: [
-                'Set as profile image',
-                'Set as background image',
-                'Delete image'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                    value: value, child: Text(value));
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue == 'Set as profile image') {
-                  dropdownList[0]();
-                } else if (newValue == 'Set as background image') {
-                  dropdownList[1]();
-                } else {
-                  dropdownList[2]();
-                }
-              }),
+          DropdownMenu(
+              matchDocId: widget.matchDocId,
+              user: widget.user,
+              data: widget.data,
+              index: widget.index),
           Text(
             'pa',
             style: TextStyle(color: Colors.blue),
@@ -93,22 +62,41 @@ class _CommentPageState extends State<CommentPage> {
       body: Column(
         children: [
           Container(
-            child: RichText(
-                text: TextSpan(
-                    text: widget.data['images'][widget.index]['title'],
-                    style: TextStyle(fontSize: 15),
-                    children: [
-                  TextSpan(
-                    text: widget.data['images'][widget.index]['time']
-                        .toDate()
-                        .toString()
-                        .substring(0, 10),
-                    style: TextStyle(color: Colors.grey[500]),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 15),
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: Text(
+                    widget.data['images'][widget.index]['title'],
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                      text: widget.data['images'][widget.index]['creator'],
-                      style: TextStyle(color: Colors.grey[500]))
-                ])),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                Container(
+                    width: MediaQuery.of(context).size.width * .3,
+                    child: Text(widget.data['images'][widget.index]['creator'],
+                        style:
+                            TextStyle(fontSize: 15, color: Colors.grey[500]))),
+                Expanded(
+                  child: Container(),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: Text(
+                      widget.data['images'][widget.index]['time']
+                          .toDate()
+                          .toString()
+                          .substring(0, 10),
+                      style: TextStyle(fontSize: 15, color: Colors.grey[500])),
+                )
+              ],
+            ),
           ),
           Container(
               child: Image.network(
