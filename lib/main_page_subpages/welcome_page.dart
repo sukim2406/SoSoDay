@@ -58,71 +58,28 @@ class WelcomePage extends StatelessWidget {
           children: [
             Container(
               width: width,
-              height: height * .35,
+              height: height * .60,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('img/signup.png'), fit: BoxFit.cover)),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: height * .15,
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.white70,
-                    radius: 80,
-                    backgroundImage: (data['profileImage'] == null)
-                        ? AssetImage('img/profile.png')
-                        : NetworkImage(data['profileImage']) as ImageProvider,
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 70,
+              // child: Column(
+              //   children: [
+              //     SizedBox(
+              //       height: height * .30,
+              //     ),
+              //     CircleAvatar(
+              //       backgroundColor: Colors.white70,
+              //       radius: 80,
+              //       backgroundImage: (data['profileImage'] == null)
+              //           ? AssetImage('img/profile.png')
+              //           : NetworkImage(data['profileImage']) as ImageProvider,
+              //     ),
+              //     Row()
+              //   ],
+              // ),
             ),
             Container(
-                width: width,
-                margin: const EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            child: Text(
-                          data['screenNames'][0].toString(),
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        )),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            child: Image(
-                          image: AssetImage('img/heart-small.png'),
-                        )),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            child: Text(data['screenNames'][1].toString(),
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold))),
-                      ],
-                    )
-                  ],
-                )),
-            Container(
-              margin: EdgeInsets.only(top: 20),
+              // decoration: BoxDecoration(color: Colors.cyan),
               child: Column(
                 children: [
                   RichText(
@@ -150,6 +107,151 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
             ),
+            Container(
+              height: height * .20,
+              // decoration: BoxDecoration(color: Colors.grey),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(),
+                  ),
+                  Container(
+                    width: width * .3,
+                    // decoration: BoxDecoration(color: Colors.amber),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey[500],
+                          radius: width * .14,
+                          backgroundImage: (data['userDocs'][0]
+                                          [data['couple'][0]]['profilePicture']
+                                      .toString() ==
+                                  '')
+                              ? AssetImage('img/profile.png')
+                              : NetworkImage(data['profileImage'])
+                                  as ImageProvider,
+                        ),
+                        Text(
+                          data['userDocs'][0][data['couple'][0]]['name']
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                      width: width * .1,
+                      // decoration: BoxDecoration(color: Colors.blue),
+                      child: Image(
+                        image: AssetImage('img/heart-small.png'),
+                      )),
+                  Container(
+                    width: width * .3,
+                    // decoration: BoxDecoration(color: Colors.amber),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey[500],
+                          radius: width * .14,
+                          backgroundImage: (data['userDocs'][1]
+                                          [data['couple'][1]]['profilePicture']
+                                      .toString() ==
+                                  '')
+                              ? AssetImage('img/profile.png')
+                              : NetworkImage(data['profileImage'])
+                                  as ImageProvider,
+                        ),
+                        Text(
+                          data['userDocs'][1][data['couple'][1]]['name']
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(),
+                  )
+                ],
+              ),
+            )
+            // SizedBox(
+            //   height: 70,
+            // ),
+            // Container(
+            //     width: width,
+            //     margin: const EdgeInsets.only(left: 20),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Container(
+            //                 child: Text(
+            //               data['screenNames'][0].toString(),
+            //               style: TextStyle(
+            //                   fontSize: 25,
+            //                   color: Colors.black,
+            //                   fontWeight: FontWeight.bold),
+            //             )),
+            //           ],
+            //         ),
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Container(
+            //                 child: Image(
+            //               image: AssetImage('img/heart-small.png'),
+            //             )),
+            //           ],
+            //         ),
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Container(
+            //                 child: Text(data['screenNames'][1].toString(),
+            //                     style: TextStyle(
+            //                         fontSize: 25,
+            //                         color: Colors.black,
+            //                         fontWeight: FontWeight.bold))),
+            //           ],
+            //         )
+            //       ],
+            //     )),
+            // Container(
+            //   margin: EdgeInsets.only(top: 20),
+            //   child: Column(
+            //     children: [
+            //       RichText(
+            //           text: TextSpan(
+            //         style: DefaultTextStyle.of(context).style,
+            //         children: [
+            //           TextSpan(
+            //               text: 'Together since ',
+            //               style: TextStyle(color: Colors.grey[500])),
+            //           TextSpan(
+            //               text: data['since']
+            //                   .toDate()
+            //                   .toString()
+            //                   .substring(0, 10)),
+            //           TextSpan(
+            //               text: ' counting ',
+            //               style: TextStyle(color: Colors.grey[500])),
+            //           TextSpan(
+            //               text: daysBetween(
+            //                       data['since'].toDate(), DateTime.now())
+            //                   .toString()),
+            //           TextSpan(text: ' days!'),
+            //         ],
+            //       ))
+            //     ],
+            //   ),
+            // ),
             // SizedBox(height: 200),
             // GestureDetector(
             //     onTap: () {

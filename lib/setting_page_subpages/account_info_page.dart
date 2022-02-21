@@ -76,11 +76,18 @@ class AccountInfoPage extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
+            var userDocs = snapshot.data![0]['userDocs'];
+            userDocs.forEach((myDoc) {
+              if (myDoc[user.uid] != null) {
+                myDoc[user.uid]['name'] = screenNameController.text;
+              }
+            });
             var screenNames = snapshot.data![0]['screenNames'];
             var newScreenNames = [];
             UserController.instance.updateUserDocument(
                 snapshot.data![1].id, 'name', screenNameController.text);
-
+            MatchController.instance
+                .updateMatchDocument(matchDocId, 'userDocs', userDocs);
             screenNames.forEach((user) {
               print('user');
               print(user);

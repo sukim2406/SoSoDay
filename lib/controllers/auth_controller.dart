@@ -33,12 +33,18 @@ class AuthController extends GetxController {
           if (!await MatchController.instance.findMatchDocument(user.email)) {
             var halfEmail;
             var userScreenName;
+            var userDoc;
             (await UserController.instance.getUserDocument())
                 .docs
                 .forEach((doc) {
               halfEmail = doc['halfEmail'];
               userScreenName = doc['name'];
             });
+
+            (await UserController.instance.getUserDoc(user.uid).then((data) {
+              data['profilePicture'] = '';
+              userDoc = {user.uid: data};
+            }));
 
             List<Map<String, dynamic>> chatInitData = [
               {
@@ -53,6 +59,7 @@ class AuthController extends GetxController {
               'connected': false,
               'chats': chatInitData,
               'screenNames': [userScreenName],
+              'userDocs': [userDoc],
               'since': DateTime.now(),
               'profileImage': null,
               'images': [],
@@ -78,10 +85,20 @@ class AuthController extends GetxController {
             var screenNames =
                 (await MatchController.instance.getMatchDocument(user.email))
                     .docs[0]['screenNames'];
+            var userDocs =
+                (await MatchController.instance.getMatchDocument(user.email))
+                    .docs[0]['userDocs'];
+            var userDoc;
+            await UserController.instance.getUserDoc(user.uid).then((data) {
+              data['profilePicture'] = '';
+              userDoc = {user.uid: data};
+            });
+
             couple.forEach((person) {
               if (person == user.email) {
                 newCouple.add(user.uid);
                 screenNames.add(userScreenName);
+                userDocs.add(userDoc);
               } else {
                 newCouple.add(person);
               }
@@ -92,6 +109,8 @@ class AuthController extends GetxController {
                 .updateMatchDocument(docId, 'connected', true);
             MatchController.instance
                 .updateMatchDocument(docId, 'screenNames', screenNames);
+            MatchController.instance
+                .updateMatchDocument(docId, 'userDocs', userDocs);
           }
         }
         var connected =
