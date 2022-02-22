@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:soso_day/controllers/match_controller.dart';
 
 class DropdownMenu extends StatelessWidget {
   final matchDocId;
@@ -17,10 +18,57 @@ class DropdownMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     List dropdownList = [
       () {
-        print('menu 1');
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Set as profile picture?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          var userDocs = await MatchController.instance
+                              .getUserDocs(matchDocId);
+                          userDocs.forEach((userDoc) {
+                            if (userDoc[user['uid']] != null) {
+                              userDoc[user['uid']]['profilePicture'] =
+                                  data['images'][index]['downloadUrl'];
+                            }
+                          });
+                          MatchController.instance.updateMatchDocument(
+                              matchDocId, 'userDocs', userDocs);
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'))
+                  ],
+                ));
       },
       () {
-        print('menu 2');
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                    title: Text('Set as background picture?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                          onPressed: () async {
+                            MatchController.instance.updateMatchDocument(
+                                matchDocId,
+                                'backgroundImage',
+                                data['images'][index]['downloadUrl']);
+                            Navigator.pop(context);
+                          },
+                          child: Text('OK'))
+                    ]));
       },
       () {
         print('menu 3');

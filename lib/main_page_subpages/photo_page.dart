@@ -27,6 +27,7 @@ class _PhotoPageState extends State<PhotoPage> {
   var fileName;
   late var userName;
   late var userDoc;
+  late var userDocs;
   ScrollController scrollController = ScrollController();
 
   @override
@@ -36,6 +37,7 @@ class _PhotoPageState extends State<PhotoPage> {
     fileName = '';
     getUserDoc();
     getUserName();
+    getUserDocs();
     // TODO: implement initState
   }
 
@@ -48,6 +50,15 @@ class _PhotoPageState extends State<PhotoPage> {
     await UserController.instance.getUserDoc(widget.user.uid).then((data) {
       setState(() {
         userDoc = data;
+        userDoc['uid'] = widget.user.uid;
+      });
+    });
+  }
+
+  void getUserDocs() async {
+    await MatchController.instance.getUserDocs(widget.matchDocId).then((data) {
+      setState(() {
+        userDocs = data;
       });
     });
   }
@@ -145,6 +156,8 @@ class _PhotoPageState extends State<PhotoPage> {
                               itemCount:
                                   snapshot.data!.docs.first['images'].length,
                               itemBuilder: (context, index) {
+                                print('userDoc = ');
+                                print(userDoc);
                                 return Container(
                                   padding: EdgeInsets.only(bottom: 15, top: 15),
                                   child: ImageTile(

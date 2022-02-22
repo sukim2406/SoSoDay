@@ -25,6 +25,26 @@ class AccountInfoPage extends StatelessWidget {
     final emailController = TextEditingController();
     final screenNameController = TextEditingController();
 
+    var tempDoc;
+    var tempUserDocs = [];
+
+    print(snapshot.data![0]['userDocs'][0][user.uid]['name']);
+    print(user.uid);
+    print(snapshot.data![1]['name']);
+
+    snapshot.data![0]['userDocs'].forEach((userDoc) {
+      if (userDoc[user.uid] != null) {
+        tempDoc = userDoc;
+      }
+    });
+    // snapshot.data![0]['userDocs'].forEach((userDoc) {
+    //   if (userDoc[user.uid]['name'] == snapshot.data![1]['name']) {
+    //     tempDoc = userDoc[user.uid];
+    //   }
+    // });
+
+    print(tempDoc);
+
     return Container(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -37,6 +57,76 @@ class AccountInfoPage extends StatelessWidget {
                 fontSize: 25,
               )),
         ),
+        Container(
+            margin: EdgeInsets.all(15),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Profile Image'),
+              Row(
+                children: [
+                  Expanded(child: Container()),
+                  Column(
+                    children: [
+                      CircleAvatar(
+                          backgroundColor: Colors.grey[500],
+                          radius: MediaQuery.of(context).size.width * .14,
+                          backgroundImage:
+                              (tempDoc[user.uid]['profilePicture'] == '')
+                                  ? AssetImage('img/profile.png')
+                                  : NetworkImage(
+                                          tempDoc[user.uid]['profilePicture'])
+                                      as ImageProvider),
+                      TextButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text('Unset Profile Picture?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          snapshot.data![0]['userDocs']
+                                              .forEach((userDoc) {
+                                            if (userDoc[user.uid] != null) {
+                                              userDoc[user.uid]
+                                                  ['profilePicture'] = '';
+                                              tempUserDocs.add(userDoc);
+                                            } else
+                                              tempUserDocs.add(userDoc);
+                                          });
+                                          MatchController.instance
+                                              .updateMatchDocument(
+                                                  snapshot.data![0].id,
+                                                  'userDocs',
+                                                  tempUserDocs);
+                                          Get.offAll(() => MainPage(
+                                              user: user,
+                                              connected: true,
+                                              matchDocId: matchDocId));
+                                        },
+                                        child: Text(
+                                          'OK',
+                                        ),
+                                      )
+                                    ],
+                                  ));
+
+                          // tempDoc[user.uid]['profilePicture'] = '';
+                        },
+                        child: Text('unset'),
+                      )
+                    ],
+                  ),
+                  Expanded(child: Container())
+                ],
+              )
+            ])),
         Container(
           margin: EdgeInsets.all(15),
           // height:

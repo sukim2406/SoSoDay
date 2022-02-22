@@ -390,4 +390,19 @@ class MatchController extends GetxController {
       print(e.toString());
     }
   }
+
+  Future getUserDocs(docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['userDocs'];
+      });
+    } catch (e) {
+      print('getUserDocs error');
+      print(e.toString());
+    }
+  }
 }

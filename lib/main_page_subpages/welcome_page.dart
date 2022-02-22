@@ -61,7 +61,12 @@ class WelcomePage extends StatelessWidget {
               height: height * .60,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('img/signup.png'), fit: BoxFit.cover)),
+                      image: (data['backgroundImage'].toString == '')
+                          ? AssetImage('img/signup.png')
+                          : NetworkImage(data['backgroundImage'])
+                              as ImageProvider,
+                      // image: AssetImage('img/signup.png'),
+                      fit: BoxFit.cover)),
               // child: Column(
               //   children: [
               //     SizedBox(
@@ -129,7 +134,8 @@ class WelcomePage extends StatelessWidget {
                                       .toString() ==
                                   '')
                               ? AssetImage('img/profile.png')
-                              : NetworkImage(data['profileImage'])
+                              : NetworkImage(data['userDocs'][0]
+                                      [data['couple'][0]]['profilePicture'])
                                   as ImageProvider,
                         ),
                         Text(
@@ -157,11 +163,11 @@ class WelcomePage extends StatelessWidget {
                           backgroundColor: Colors.grey[500],
                           radius: width * .14,
                           backgroundImage: (data['userDocs'][1]
-                                          [data['couple'][1]]['profilePicture']
-                                      .toString() ==
+                                      [data['couple'][1]]['profilePicture'] ==
                                   '')
                               ? AssetImage('img/profile.png')
-                              : NetworkImage(data['profileImage'])
+                              : NetworkImage(data['userDocs'][1]
+                                      [data['couple'][1]]['profilePicture'])
                                   as ImageProvider,
                         ),
                         Text(
