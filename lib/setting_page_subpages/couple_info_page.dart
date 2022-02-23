@@ -74,6 +74,60 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Text('Background Image'),
+                      Expanded(child: Container()),
+                      TextButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                        title: Text('Unset Background Image?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              MatchController.instance
+                                                  .updateMatchDocument(
+                                                      widget.matchDocID,
+                                                      'backgroundImage',
+                                                      '');
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('OK'),
+                                          )
+                                        ]));
+                          },
+                          child: Text('unset'))
+                    ],
+                  ),
+                  // Text(widget.snapshot.data![0]['backgroundImage']),
+                  Container(
+                    height: MediaQuery.of(context).size.height * .2,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(color: Colors.grey),
+                    child: Image(
+                      image: (widget.snapshot.data![0]['backgroundImage'] == '')
+                          ? AssetImage('img/signup.png')
+                          : NetworkImage(
+                                  widget.snapshot.data![0]['backgroundImage'])
+                              as ImageProvider,
+                    ),
+                    // child: (widget.snapshot[0]['backgroundImage'] == '') ? NetworkImage(widget.snapshot[0]['backgroundImage']) as ImageProvider : AssetImage('img/signup.png'),
+                  )
+                ],
+              )),
+          Container(
+              margin: EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

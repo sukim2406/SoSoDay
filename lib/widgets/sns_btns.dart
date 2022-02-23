@@ -28,7 +28,7 @@ class SnsBtns extends StatelessWidget {
               },
               child: CircleAvatar(
                   radius: 25,
-                  backgroundColor: Colors.grey[500],
+                  backgroundColor: Colors.amber.shade100,
                   child: CircleAvatar(
                     radius: 20,
                     backgroundImage: AssetImage('img/' + snsImages[index]),

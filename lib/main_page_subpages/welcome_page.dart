@@ -61,7 +61,7 @@ class WelcomePage extends StatelessWidget {
               height: height * .60,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: (data['backgroundImage'].toString == '')
+                      image: (data['backgroundImage'] == '')
                           ? AssetImage('img/signup.png')
                           : NetworkImage(data['backgroundImage'])
                               as ImageProvider,
