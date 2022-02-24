@@ -28,7 +28,7 @@ class AccountInfoPage extends StatelessWidget {
     var tempDoc;
     var tempUserDocs = [];
 
-    print(snapshot.data![0]['userDocs'][0][user.uid]['name']);
+    // print(snapshot.data![0]['userDocs'][0][user.uid]['name']);
     print(user.uid);
     print(snapshot.data![1]['name']);
 

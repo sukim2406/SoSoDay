@@ -64,6 +64,7 @@ class AuthController extends GetxController {
               'profileImage': null,
               'images': [],
               'events': [],
+              'backgroundImage': '',
             };
 
             MatchController.instance.createMatchDocument(matchInfoMap);
