@@ -30,9 +30,8 @@ class _StepperPageState extends State<StepperPage> {
             style: TextStyle(fontSize: 10),
           ),
           content: Container(
-            margin: const EdgeInsets.only(left: 20, right: 20),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * .5,
+            height: MediaQuery.of(context).size.height * .65,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,11 +40,22 @@ class _StepperPageState extends State<StepperPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                LogInput(
-                  inputIcon: const Icon(Icons.account_box),
-                  inputText: 'Your Username',
+                TextField(
+                  style: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
                   controller: usernameController,
-                  obscure: false,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      hintStyle:
+                          TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(85, 74, 53, 1))),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromRGBO(85, 74, 53, 1)))),
                 ),
               ],
             ),
@@ -61,9 +71,9 @@ class _StepperPageState extends State<StepperPage> {
             ),
           ),
           content: Container(
-            margin: const EdgeInsets.only(left: 20, right: 20),
+            // margin: const EdgeInsets.only(left: 20, right: 20),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * .5,
+            height: MediaQuery.of(context).size.height * .65,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,22 +82,26 @@ class _StepperPageState extends State<StepperPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                LogInput(
-                  inputIcon: const Icon(Icons.email),
-                  inputText: 'Your half\'s email',
+                TextField(
+                  style: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
                   controller: halfEmailController,
-                  obscure: false,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      hintStyle:
+                          TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(85, 74, 53, 1))),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromRGBO(85, 74, 53, 1)))),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
-                // const Text('Your half\'s screen name?'),
-                // const SizedBox(height: 10),
-                // LogInput(
-                //     inputIcon: const Icon(Icons.account_box),
-                //     inputText: 'Your half\'s username',
-                //     controller: halfUsernameController,
-                //     obscure: false),
+                // const SizedBox(
+                //   height: 30,
+                // ),
               ],
             ),
           ),
@@ -101,9 +115,9 @@ class _StepperPageState extends State<StepperPage> {
             ),
           ),
           content: Container(
-            margin: const EdgeInsets.only(left: 20, right: 20),
+            // margin: const EdgeInsets.only(left: 20, right: 20),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * .5,
+            height: MediaQuery.of(context).size.height * .65,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,8 +179,16 @@ class _StepperPageState extends State<StepperPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Before we start...'),
-          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('img/app-bar.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // title: const Text('Before we start...'),
+          // centerTitle: true,
         ),
         body: Theme(
           data: Theme.of(context).copyWith(
@@ -224,30 +246,39 @@ class _StepperPageState extends State<StepperPage> {
                 margin: const EdgeInsets.only(top: 20),
                 child: Row(
                   children: [
-                    GestureDetector(
-                        onTap: controls.onStepContinue,
-                        child: LogBtn(
-                          btnText: isLastStep ? 'Confirm' : 'Next',
-                          btnHeight: MediaQuery.of(context).size.height * .04,
-                          btnWidth: _currentStep == 0
-                              ? MediaQuery.of(context).size.width * .8
-                              : MediaQuery.of(context).size.width * .4,
-                          btnFontSize: 15,
-                          // btnWidth: MediaQuery.of(context).size.width * .4,
-                        )),
-                    const SizedBox(
-                      width: 20,
-                    ),
                     if (_currentStep != 0)
                       GestureDetector(
                         onTap: controls.onStepCancel,
-                        child: LogBtn(
-                          btnText: 'Back',
-                          btnHeight: MediaQuery.of(context).size.height * .04,
-                          btnWidth: MediaQuery.of(context).size.width * .4,
-                          btnFontSize: 15,
+                        child: Container(
+                          // padding: EdgeInsets.all(5),
+                          child: Container(
+                              child: Image(
+                                  image: AssetImage('img/backBtn.png'),
+                                  fit: BoxFit.fill),
+                              height: MediaQuery.of(context).size.height * .03,
+                              width: MediaQuery.of(context).size.width * .4),
                         ),
                       ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    GestureDetector(
+                      onTap: controls.onStepContinue,
+                      child: Container(
+                        child: Container(
+                          child: Image(
+                            image: isLastStep
+                                ? AssetImage('img/confirmBtn.png')
+                                : AssetImage('img/nextBtn.png'),
+                            fit: BoxFit.fill,
+                          ),
+                          height: MediaQuery.of(context).size.height * .03,
+                          width: _currentStep == 0
+                              ? MediaQuery.of(context).size.width * .4
+                              : MediaQuery.of(context).size.width * .4,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               );

@@ -78,38 +78,62 @@ class _PhotoPageState extends State<PhotoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color.fromRGBO(255, 222, 158, 1),
+          leading: GestureDetector(
+              onTap: () async {
+                final result = await FilePicker.platform.pickFiles(
+                    allowMultiple: false,
+                    type: FileType.custom,
+                    allowedExtensions: ['png', 'jpg']);
+
+                if (result == null) {
+                  Get.snackbar('File Picker', 'File message',
+                      backgroundColor: Colors.redAccent,
+                      snackPosition: SnackPosition.BOTTOM,
+                      titleText: const Text(
+                        'No file selected',
+                        style: TextStyle(color: Colors.white),
+                      ));
+                }
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ImageUploadPage(
+                              path: result!.files.single.path,
+                              fileName: result!.files.single.name,
+                              matchDocId: widget.matchDocId,
+                              userData: userDoc['name'],
+                            )));
+              },
+              child: Icon(
+                Icons.upload,
+                color: Color.fromRGBO(85, 74, 53, 1),
+              )),
           actions: [
             GestureDetector(
                 onTap: () async {
-                  final result = await FilePicker.platform.pickFiles(
-                      allowMultiple: false,
-                      type: FileType.custom,
-                      allowedExtensions: ['png', 'jpg']);
-
-                  if (result == null) {
-                    Get.snackbar('File Picker', 'File message',
-                        backgroundColor: Colors.redAccent,
-                        snackPosition: SnackPosition.BOTTOM,
-                        titleText: const Text(
-                          'No file selected',
-                          style: TextStyle(color: Colors.white),
-                        ));
-                  }
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ImageUploadPage(
-                                path: result!.files.single.path,
-                                fileName: result!.files.single.name,
-                                matchDocId: widget.matchDocId,
-                                userData: userDoc['name'],
-                              )));
+                  print('grid view');
                 },
-                child: Icon(Icons.upload)),
+                child: Icon(
+                  Icons.grid_on,
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                )),
+            Text(
+              'pa',
+              style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)),
+            ),
+            GestureDetector(
+                onTap: () async {
+                  print('list view');
+                },
+                child: Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                )),
             Text(
               'padd',
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)),
             )
           ],
         ),

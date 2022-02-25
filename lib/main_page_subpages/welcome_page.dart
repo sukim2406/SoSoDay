@@ -61,12 +61,12 @@ class WelcomePage extends StatelessWidget {
               height: height * .60,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: (data['backgroundImage'] == '')
-                          ? AssetImage('img/signup.png')
-                          : NetworkImage(data['backgroundImage'])
-                              as ImageProvider,
-                      // image: AssetImage('img/signup.png'),
-                      fit: BoxFit.cover)),
+                image: (data['backgroundImage'] == '')
+                    ? AssetImage('img/welcomepage.png')
+                    : NetworkImage(data['backgroundImage']) as ImageProvider,
+                // image: AssetImage('img/signup.png'),
+                fit: BoxFit.cover,
+              )),
               // child: Column(
               //   children: [
               //     SizedBox(
@@ -84,7 +84,8 @@ class WelcomePage extends StatelessWidget {
               // ),
             ),
             Container(
-              // decoration: BoxDecoration(color: Colors.cyan),
+              width: width,
+              color: Colors.white,
               child: Column(
                 children: [
                   RichText(
@@ -113,7 +114,9 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
             Container(
+              width: width,
               height: height * .20,
+              color: Colors.white,
               // decoration: BoxDecoration(color: Colors.grey),
               child: Row(
                 children: [
@@ -184,91 +187,10 @@ class WelcomePage extends StatelessWidget {
                   )
                 ],
               ),
+            ),
+            Expanded(
+              child: Container(color: Colors.white),
             )
-            // SizedBox(
-            //   height: 70,
-            // ),
-            // Container(
-            //     width: width,
-            //     margin: const EdgeInsets.only(left: 20),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             Container(
-            //                 child: Text(
-            //               data['screenNames'][0].toString(),
-            //               style: TextStyle(
-            //                   fontSize: 25,
-            //                   color: Colors.black,
-            //                   fontWeight: FontWeight.bold),
-            //             )),
-            //           ],
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             Container(
-            //                 child: Image(
-            //               image: AssetImage('img/heart-small.png'),
-            //             )),
-            //           ],
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             Container(
-            //                 child: Text(data['screenNames'][1].toString(),
-            //                     style: TextStyle(
-            //                         fontSize: 25,
-            //                         color: Colors.black,
-            //                         fontWeight: FontWeight.bold))),
-            //           ],
-            //         )
-            //       ],
-            //     )),
-            // Container(
-            //   margin: EdgeInsets.only(top: 20),
-            //   child: Column(
-            //     children: [
-            //       RichText(
-            //           text: TextSpan(
-            //         style: DefaultTextStyle.of(context).style,
-            //         children: [
-            //           TextSpan(
-            //               text: 'Together since ',
-            //               style: TextStyle(color: Colors.grey[500])),
-            //           TextSpan(
-            //               text: data['since']
-            //                   .toDate()
-            //                   .toString()
-            //                   .substring(0, 10)),
-            //           TextSpan(
-            //               text: ' counting ',
-            //               style: TextStyle(color: Colors.grey[500])),
-            //           TextSpan(
-            //               text: daysBetween(
-            //                       data['since'].toDate(), DateTime.now())
-            //                   .toString()),
-            //           TextSpan(text: ' days!'),
-            //         ],
-            //       ))
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 200),
-            // GestureDetector(
-            //     onTap: () {
-            //       AuthController.instance.logout();
-            //     },
-            //     child: LogBtn(
-            //       btnText: 'SignOut',
-            //       btnHeight: height * .08,
-            //       btnWidth: width * .5,
-            //       btnFontSize: 36,
-            //     ))
           ],
         );
       },

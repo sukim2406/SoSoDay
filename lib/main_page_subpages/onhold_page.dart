@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:soso_day/controllers/auth_controller.dart';
+import '../stepper_page.dart';
 
 class OnholdPage extends StatelessWidget {
   final user;
@@ -9,7 +12,20 @@ class OnholdPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('img/app-bar.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.skip_previous, color: Colors.black),
+          onPressed: () {
+            Get.to(() => StepperPage(user: user));
+          },
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
