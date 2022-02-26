@@ -11,12 +11,14 @@ class ImageTile extends StatelessWidget {
   final data;
   final index;
   final matchDocId;
-  final user;
+  final userDoc;
+  final userId;
   const ImageTile(
       {Key? key,
+      required this.userId,
       required this.data,
       required this.matchDocId,
-      required this.user,
+      required this.userDoc,
       required this.index})
       : super(key: key);
 
@@ -39,8 +41,9 @@ class ImageTile extends StatelessWidget {
                   child: Container(),
                 ),
                 DropdownMenu(
+                    userId: userId,
                     matchDocId: matchDocId,
-                    user: user,
+                    user: userDoc,
                     data: data,
                     index: index)
               ],
@@ -97,14 +100,24 @@ class ImageTile extends StatelessWidget {
                                 children: [
                                   CircleAvatar(
                                     radius: 15,
-                                    child: Image(
-                                        image: AssetImage('img/profile.png')),
+                                    backgroundImage:
+                                        (userDoc['profilePicture'] == null)
+                                            ? AssetImage('img/profile.png')
+                                            : NetworkImage(
+                                                    userDoc['profilePicture'])
+                                                as ImageProvider,
+                                    // child: Image(
+                                    //   image: (user['profilePicture'] == null)
+                                    //       ? AssetImage('img/profile.png')
+                                    //       : NetworkImage(user['profilePicture'])
+                                    //           as ImageProvider,
+                                    // ),
                                   ),
                                   Container(
                                       padding: EdgeInsets.only(left: 10),
                                       width: (data['images'][index]['comments']
                                                   [0]['creator'] ==
-                                              user['name'])
+                                              userDoc['name'])
                                           ? MediaQuery.of(context).size.width *
                                               .5
                                           : MediaQuery.of(context).size.width *
@@ -132,7 +145,7 @@ class ImageTile extends StatelessWidget {
                                       )),
                                   (data['images'][index]['comments'][0]
                                               ['creator'] ==
-                                          user['name'])
+                                          userDoc['name'])
                                       ? Container(
                                           child: GestureDetector(
                                               onTap: () {
@@ -179,10 +192,11 @@ class ImageTile extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => CommentPage(
+                                            userId: userId,
                                             data: data,
                                             index: index,
                                             matchDocId: matchDocId,
-                                            user: user)));
+                                            user: userDoc)));
                               },
                               child: RichText(
                                 text: TextSpan(
@@ -225,7 +239,7 @@ class ImageTile extends StatelessWidget {
                         Map<String, dynamic> commentData = {
                           'comment': commentController.text,
                           'time': Timestamp.now(),
-                          'creator': user['name'],
+                          'creator': userDoc['name'],
                         };
 
                         showDialog(
@@ -256,10 +270,13 @@ class ImageTile extends StatelessWidget {
                         print(commentData);
                       }
                     },
-                    child: Icon(Icons.send)),
+                    child: Icon(
+                      Icons.send,
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    )),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

@@ -11,6 +11,7 @@ import '../controllers/match_controller.dart';
 import '../single_image_page.dart';
 import '../widgets/image_upload_page.dart';
 import '../widgets/image_tile.dart';
+import '../widgets/comment_page.dart';
 
 class PhotoPage extends StatefulWidget {
   final matchDocId;
@@ -23,11 +24,13 @@ class PhotoPage extends StatefulWidget {
 }
 
 class _PhotoPageState extends State<PhotoPage> {
+  bool listView = true;
   var path;
   var fileName;
   late var userName;
   late var userDoc;
   late var userDocs;
+  late var curUserDoc;
   ScrollController scrollController = ScrollController();
 
   @override
@@ -38,6 +41,7 @@ class _PhotoPageState extends State<PhotoPage> {
     getUserDoc();
     getUserName();
     getUserDocs();
+    // getUserDocsIndex();
     // TODO: implement initState
   }
 
@@ -60,6 +64,17 @@ class _PhotoPageState extends State<PhotoPage> {
       setState(() {
         userDocs = data;
       });
+    });
+    getUserDocsIndex();
+  }
+
+  void getUserDocsIndex() {
+    userDocs.forEach((doc) {
+      if (doc[widget.user.uid] != null) {
+        setState(() {
+          curUserDoc = doc[widget.user.uid];
+        });
+      }
     });
   }
 
@@ -111,26 +126,32 @@ class _PhotoPageState extends State<PhotoPage> {
                 color: Color.fromRGBO(85, 74, 53, 1),
               )),
           actions: [
-            GestureDetector(
-                onTap: () async {
-                  print('grid view');
-                },
-                child: Icon(
-                  Icons.grid_on,
-                  color: Color.fromRGBO(85, 74, 53, 1),
-                )),
-            Text(
-              'pa',
-              style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)),
-            ),
-            GestureDetector(
-                onTap: () async {
-                  print('list view');
-                },
-                child: Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(85, 74, 53, 1),
-                )),
+            (listView)
+                ? GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        listView = false;
+                      });
+                    },
+                    child: Icon(
+                      Icons.grid_on,
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ))
+                :
+                // Text(
+                //   'pa',
+                //   style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)),
+                // ),
+                GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        listView = true;
+                      });
+                    },
+                    child: Icon(
+                      Icons.menu,
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    )),
             Text(
               'padd',
               style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)),
@@ -174,24 +195,67 @@ class _PhotoPageState extends State<PhotoPage> {
                             //     snapshot.connectionState == ConnectionState.waiting) {
                             //   return CircularProgressIndicator();
                             // }
-                            return ListView.builder(
-                              // reverse: true,
-                              shrinkWrap: true,
-                              itemCount:
-                                  snapshot.data!.docs.first['images'].length,
-                              itemBuilder: (context, index) {
-                                print('userDoc = ');
-                                print(userDoc);
-                                return Container(
-                                  padding: EdgeInsets.only(bottom: 15, top: 15),
-                                  child: ImageTile(
-                                      data: snapshot.data!.docs.first,
-                                      matchDocId: widget.matchDocId,
-                                      user: userDoc,
-                                      index: index),
-                                );
-                              },
-                            );
+                            return (listView)
+                                ? ListView.builder(
+                                    // reverse: true,
+                                    shrinkWrap: true,
+                                    itemCount: snapshot
+                                        .data!.docs.first['images'].length,
+                                    itemBuilder: (context, index) {
+                                      print('userDoc = ');
+                                      print(curUserDoc);
+                                      return Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: 15, top: 15),
+                                        child: ImageTile(
+                                            data: snapshot.data!.docs.first,
+                                            matchDocId: widget.matchDocId,
+                                            userDoc: curUserDoc,
+                                            userId: widget.user.uid,
+                                            index: index),
+                                      );
+                                    },
+                                  )
+                                : GridView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot
+                                        .data!.docs.first['images'].length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      mainAxisSpacing: 10,
+                                      crossAxisSpacing: 10,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CommentPage(
+                                                          userId:
+                                                              widget.user.uid,
+                                                          matchDocId:
+                                                              widget.matchDocId,
+                                                          user: curUserDoc,
+                                                          data: snapshot
+                                                              .data!.docs.first,
+                                                          index: index)));
+                                        },
+                                        child: Container(
+                                          child: Image.network(snapshot
+                                                  .data!.docs.first['images']
+                                              [index]['downloadUrl']),
+                                        ),
+                                      );
+                                    },
+                                  );
+                            // : GridView.count(
+                            //     crossAxisCount: 4,
+                            //     shrinkWrap: true,
+                            //     children: List<Widget>.generate(snapshot.data!.docs.first['images'].length, (index) => null),
+                            //   );
                           },
                         ),
                       ),

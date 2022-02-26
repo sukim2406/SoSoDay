@@ -54,6 +54,8 @@ class WelcomePage extends StatelessWidget {
         }
         Map<String, dynamic> data =
             snapshot.data!.data() as Map<String, dynamic>;
+        print('hhhhhhhhh');
+        print(data['userDocs'][0][data['couple'][0]]);
         return Column(
           children: [
             Container(

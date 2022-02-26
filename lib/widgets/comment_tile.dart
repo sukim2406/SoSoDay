@@ -28,8 +28,11 @@ class CommentTile extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(right: 15),
               child: CircleAvatar(
-                  radius: 20,
-                  child: Image(image: AssetImage('img/profile.png'))),
+                radius: 20,
+                backgroundImage: (user['profilePicture'] == '')
+                    ? AssetImage('img/profile.png')
+                    : NetworkImage(user['profilePicture']) as ImageProvider,
+              ),
             ),
             Column(
               children: [
