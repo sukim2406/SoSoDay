@@ -9,11 +9,13 @@ class CommentTile extends StatelessWidget {
   final imageData;
   final imageIndex;
   final commentIndex;
+  final userId;
 
   const CommentTile(
       {Key? key,
       required this.matchDocId,
       required this.user,
+      required this.userId,
       required this.imageData,
       required this.imageIndex,
       required this.commentIndex})
@@ -29,9 +31,16 @@ class CommentTile extends StatelessWidget {
               padding: EdgeInsets.only(right: 15),
               child: CircleAvatar(
                 radius: 20,
-                backgroundImage: (user['profilePicture'] == '')
+                // backgroundImage: (user['profilePicture'] == '')
+                backgroundImage: (imageData['userMaps'][imageData['images']
+                                    [imageIndex]['comments'][commentIndex]
+                                ['creator']]['profilePicture']
+                            .toString() ==
+                        '')
                     ? AssetImage('img/profile.png')
-                    : NetworkImage(user['profilePicture']) as ImageProvider,
+                    : NetworkImage(imageData['userMaps'][imageData['images']
+                            [imageIndex]['comments'][commentIndex]['creator']]
+                        ['profilePicture']) as ImageProvider,
               ),
             ),
             Column(
@@ -62,7 +71,7 @@ class CommentTile extends StatelessWidget {
             ),
             (imageData['images'][imageIndex]['comments'][commentIndex]
                         ['creator'] ==
-                    user['name'])
+                    userId)
                 ? Container(
                     child: GestureDetector(
                         onTap: () {
@@ -82,6 +91,7 @@ class CommentTile extends StatelessWidget {
                                               await MatchController.instance
                                                   .deleteComments(matchDocId,
                                                       imageIndex, commentIndex);
+                                              Navigator.pop(context);
                                               Navigator.pop(context);
                                             },
                                             child: Text('OK'))

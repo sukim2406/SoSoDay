@@ -96,7 +96,8 @@ class _CommentPageState extends State<CommentPage> {
                   Container(
                       width: MediaQuery.of(context).size.width * .3,
                       child: Text(
-                          widget.data['images'][widget.index]['creator'],
+                          widget.data['userMaps'][widget.data['images']
+                              [widget.index]['creator']]['name'],
                           style: TextStyle(
                               fontSize: 15, color: Colors.grey[500]))),
                   Expanded(
@@ -147,6 +148,7 @@ class _CommentPageState extends State<CommentPage> {
                       print('hi?');
                       return CommentTile(
                         matchDocId: widget.matchDocId,
+                        userId: widget.userId,
                         user: widget.user,
                         imageData: widget.data,
                         imageIndex: widget.index,
@@ -180,7 +182,7 @@ class _CommentPageState extends State<CommentPage> {
                             Map<String, dynamic> commentData = {
                               'comment': commentController.text,
                               'time': Timestamp.now(),
-                              'creator': widget.user['name'],
+                              'creator': widget.userId,
                             };
 
                             showDialog(
@@ -206,6 +208,23 @@ class _CommentPageState extends State<CommentPage> {
                                                   commentController.clear();
                                                 });
                                                 Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             CommentPage(
+                                                //                 userId:
+                                                //                     widget
+                                                //                         .userId,
+                                                //                 matchDocId: widget
+                                                //                     .matchDocId,
+                                                //                 user:
+                                                //                     widget.user,
+                                                //                 data:
+                                                //                     widget.data,
+                                                //                 index: widget
+                                                //                     .index)));
                                               },
                                               child: Text('OK')),
                                         ]));

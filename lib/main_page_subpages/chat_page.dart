@@ -23,7 +23,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void sendMessage(matchDocId) async {
     Map<String, dynamic> messageMap = {
-      'sender': widget.user.email,
+      'sender': widget.user,
       'message': messageController.text,
       'time': Timestamp.now()
     };
@@ -40,7 +40,7 @@ class _ChatPageState extends State<ChatPage> {
   Stream<QuerySnapshot> getStream() async* {
     yield* FirebaseFirestore.instance
         .collection('matches')
-        .where('couple', arrayContains: widget.user.uid)
+        .where('couple', arrayContains: widget.user)
         .snapshots();
   }
 
@@ -67,7 +67,7 @@ class _ChatPageState extends State<ChatPage> {
                               snapshot.data!.docs.first['chats'].length -
                                   1 -
                                   index]['sender'] ==
-                          widget.user.email)
+                          widget.user)
                       ? true
                       : false,
                 );
@@ -83,44 +83,38 @@ class _ChatPageState extends State<ChatPage> {
         child: Stack(
       children: [
         Container(
-            padding: const EdgeInsets.only(bottom: 80),
-            color: Colors.black,
+            padding: const EdgeInsets.only(bottom: 50),
+            color: Color.fromRGBO(242, 236, 217, 1),
             alignment: Alignment.center,
             child: ChatMessageList(scrollController)),
         Container(
             alignment: Alignment.bottomCenter,
             child: Container(
-              color: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 children: [
                   Expanded(
                       child: TextField(
                     controller: messageController,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
                     decoration: InputDecoration(
                         hintText: 'Message',
-                        hintStyle: TextStyle(color: Colors.white54),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
                         border: InputBorder.none),
                   )),
                   GestureDetector(
-                      onTap: () {
-                        if (messageController.text.isNotEmpty) {
-                          sendMessage(widget.matchDocId);
-                        }
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            gradient: const LinearGradient(colors: [
-                              Color(0x36FFFFFF),
-                              Color(0x0FFFFFFF),
-                            ]),
-                            borderRadius: BorderRadius.circular(40)),
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(Icons.send),
-                      ))
+                    onTap: () {
+                      if (messageController.text.isNotEmpty) {
+                        sendMessage(widget.matchDocId);
+                      }
+                    },
+                    child: Icon(
+                      Icons.send,
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  )
                 ],
               ),
             ))

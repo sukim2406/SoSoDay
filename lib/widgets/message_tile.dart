@@ -21,8 +21,14 @@ class MessageTile extends StatelessWidget {
         decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: isMyMessage
-                  ? [const Color(0xff007EF4), const Color(0xff2A75BC)]
-                  : [const Color(0x1AFFFFFF), const Color(0x1AFFFFFF)],
+                  ? [
+                      const Color.fromRGBO(255, 222, 158, 1),
+                      const Color.fromRGBO(255, 222, 158, 1)
+                    ]
+                  : [
+                      const Color.fromRGBO(85, 74, 53, 1),
+                      const Color.fromRGBO(85, 74, 53, 1)
+                    ],
             ),
             borderRadius: isMyMessage
                 ? BorderRadius.only(
@@ -33,10 +39,18 @@ class MessageTile extends StatelessWidget {
                     topLeft: Radius.circular(23),
                     topRight: Radius.circular(23),
                     bottomRight: Radius.circular(23))),
-        child: Text(message,
-            style: TextStyle(
-              color: Colors.white,
-            )),
+        child: isMyMessage
+            ? Text(
+                message,
+                style: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                    fontWeight: FontWeight.bold),
+              )
+            : Text(message,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                )),
       ),
     );
   }

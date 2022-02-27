@@ -27,6 +27,7 @@ class ImageTile extends StatelessWidget {
     TextEditingController commentController = TextEditingController();
 
     return Container(
+      color: Color.fromRGBO(242, 236, 217, 1),
       child: Column(
         children: [
           Container(
@@ -64,7 +65,8 @@ class ImageTile extends StatelessWidget {
                 Container(
                   width: 20,
                 ),
-                Text(data['images'][index]['creator']),
+                Text(
+                    data['userMaps'][data['images'][index]['creator']]['name']),
               ],
             ),
           ),
@@ -100,12 +102,18 @@ class ImageTile extends StatelessWidget {
                                 children: [
                                   CircleAvatar(
                                     radius: 15,
-                                    backgroundImage:
-                                        (userDoc['profilePicture'] == null)
-                                            ? AssetImage('img/profile.png')
-                                            : NetworkImage(
-                                                    userDoc['profilePicture'])
-                                                as ImageProvider,
+                                    backgroundImage: (data['userMaps'][data['images']
+                                                            [index]['comments']
+                                                        [0]['creator']]
+                                                    ['profilePicture']
+                                                .toString() ==
+                                            '')
+                                        // (userDoc['profilePicture'] == null)
+                                        ? AssetImage('img/profile.png')
+                                        : NetworkImage(data['userMaps'][
+                                                data['images'][index]
+                                                    ['comments'][0]['creator']]
+                                            ['profilePicture']) as ImageProvider,
                                     // child: Image(
                                     //   image: (user['profilePicture'] == null)
                                     //       ? AssetImage('img/profile.png')
@@ -117,7 +125,7 @@ class ImageTile extends StatelessWidget {
                                       padding: EdgeInsets.only(left: 10),
                                       width: (data['images'][index]['comments']
                                                   [0]['creator'] ==
-                                              userDoc['name'])
+                                              userId)
                                           ? MediaQuery.of(context).size.width *
                                               .5
                                           : MediaQuery.of(context).size.width *
@@ -145,7 +153,7 @@ class ImageTile extends StatelessWidget {
                                       )),
                                   (data['images'][index]['comments'][0]
                                               ['creator'] ==
-                                          userDoc['name'])
+                                          userId)
                                       ? Container(
                                           child: GestureDetector(
                                               onTap: () {
@@ -239,7 +247,7 @@ class ImageTile extends StatelessWidget {
                         Map<String, dynamic> commentData = {
                           'comment': commentController.text,
                           'time': Timestamp.now(),
-                          'creator': userDoc['name'],
+                          'creator': userId,
                         };
 
                         showDialog(

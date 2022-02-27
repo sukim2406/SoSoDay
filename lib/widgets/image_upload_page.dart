@@ -10,14 +10,14 @@ class ImageUploadPage extends StatefulWidget {
   final path;
   final fileName;
   final matchDocId;
-  final userData;
+  final creatorUid;
 
   const ImageUploadPage(
       {Key? key,
       required this.path,
       required this.fileName,
       required this.matchDocId,
-      required this.userData})
+      required this.creatorUid})
       : super(key: key);
 
   @override
@@ -40,6 +40,10 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(85, 74, 53, 1),
+        ),
+        backgroundColor: Color.fromRGBO(255, 222, 158, 1),
         actions: [
           GestureDetector(
               onTap: () async {
@@ -57,7 +61,7 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
                     'time': Timestamp.now(),
                     'downloadUrl': downloadUrl,
                     'comments': [],
-                    'creator': widget.userData,
+                    'creator': widget.creatorUid,
                   };
                   MatchController.instance
                       .addImage(widget.matchDocId, imageData);
@@ -65,8 +69,12 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
                   Navigator.pop(context);
                 });
               },
-              child: Icon(Icons.check)),
-          Text('padding', style: TextStyle(color: Colors.blue))
+              child: Icon(
+                Icons.check,
+                color: Color.fromRGBO(85, 74, 53, 1),
+              )),
+          Text('padd',
+              style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)))
         ],
       ),
       body: Column(
@@ -91,13 +99,24 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
           Container(
             padding: EdgeInsets.all(15),
             child: TextFormField(
+              style: const TextStyle(
+                color: Color.fromRGBO(85, 74, 53, 1),
+              ),
+              cursorColor: Color.fromRGBO(85, 74, 53, 1),
               keyboardType: TextInputType.multiline,
-              maxLines: 5,
+              maxLines: 10,
               decoration: InputDecoration(
                 labelText: '...',
                 border: InputBorder.none,
                 filled: true,
-                fillColor: Colors.grey[200],
+                fillColor: Color.fromRGBO(242, 236, 217, 1),
+                labelStyle: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromRGBO(85, 74, 53, 1)),
+                ),
               ),
               onChanged: (val) {
                 setState(() {

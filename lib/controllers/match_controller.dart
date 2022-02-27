@@ -391,6 +391,49 @@ class MatchController extends GetxController {
     }
   }
 
+  Future<void> deleteAnImage(docId, imageUrl) async {
+    try {
+      var imageUrls = await getImageUrls(docId);
+      var userMaps = await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['userMaps'];
+      });
+      var couple = await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['couple'];
+      });
+      var backgroundImage = await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['backgroundImage'];
+      });
+      if (backgroundImage == imageUrl) {
+        backgroundImage = '';
+      }
+      couple.forEach((uid) {
+        if (userMaps[uid]['profilePicture'] == imageUrl) {
+          userMaps[uid]['profilePicture'] = '';
+        }
+      });
+      imageUrls.removeWhere((image) => image['downloadUrl'] == imageUrl);
+      updateMatchDocument(docId, 'backgroundImage', backgroundImage);
+      updateMatchDocument(docId, 'userMaps', userMaps);
+      updateMatchDocument(docId, 'images', imageUrls);
+      StorageController.instance.deleteImage(imageUrl);
+    } catch (e) {
+      print('deleteAnImage Error');
+      print(e.toString());
+    }
+  }
+
   Future getUserDocs(docId) async {
     try {
       return await firestore

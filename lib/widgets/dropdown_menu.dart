@@ -35,44 +35,12 @@ class DropdownMenu extends StatelessWidget {
                     ),
                     TextButton(
                         onPressed: () async {
-                          user['profilePicture'] =
+                          var tempUserMaps = data['userMaps'];
+                          tempUserMaps[userId]['profilePicture'] =
                               data['images'][index]['downloadUrl'];
-                          // print(data['userDocs']);
-                          var tempUserDocs = data['userDocs'];
-                          tempUserDocs.forEach((tempDoc) {
-                            if (tempDoc[userId] != null) {
-                              tempDoc[userId]['profilePicture'] =
-                                  data['images'][index]['downloadUrl'];
-                            }
-                          });
-                          print('test');
-                          print(data['userDocs'][1][data['couple'][1]]
-                              ['downloadUrl']);
-                          print(data['userDocs'][0][data['couple'][0]]
-                              ['downloadUrl']);
+
                           MatchController.instance.updateMatchDocument(
-                              matchDocId, 'userDocs', tempUserDocs);
-                          // UserController.instance.updateUserDocument(
-                          //     userId,
-                          //     'profilePicture',
-                          //     data['images'][index]['downloadUrl']);
-                          // MatchController.instance.updateMatchDocument(matchDocId, , value)
-                          // UserController.instance.updateUserDocument(
-                          //     user['uid'],
-                          //     'profilePicture',
-                          //     data['images'][index]['downloadUrl']);
-                          // var userDocs = await MatchController.instance
-                          //     .getUserDocs(matchDocId);
-                          // userDocs.forEach((userDoc) {
-                          //   if (userDoc[user['uid']] != null) {
-                          //     userDoc[user['uid']]['profilePicture'] =
-                          //         data['images'][index]['downloadUrl'];
-                          //   }
-                          // });
-                          // print('userDocs');
-                          // print(userDocs);
-                          // MatchController.instance.updateMatchDocument(
-                          //     matchDocId, 'userDocs', userDocs);
+                              matchDocId, 'userMaps', tempUserMaps);
                           Navigator.pop(context);
                         },
                         child: Text('OK'))
@@ -103,7 +71,26 @@ class DropdownMenu extends StatelessWidget {
                     ]));
       },
       () {
-        print('menu 3');
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Delete this iamge?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          MatchController.instance.deleteAnImage(
+                              matchDocId, data['images'][index]['downloadUrl']);
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK')),
+                  ],
+                ));
       },
     ];
     return Container(
@@ -113,7 +100,7 @@ class DropdownMenu extends StatelessWidget {
             Icons.more_vert,
             color: Color.fromRGBO(85, 74, 53, 1),
           ),
-          items: (data['images'][index]['creator'] == user['name'])
+          items: (data['images'][index]['creator'] == userId)
               ? [
                   'Set as profile image',
                   'Set as background image',

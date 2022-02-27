@@ -54,8 +54,6 @@ class WelcomePage extends StatelessWidget {
         }
         Map<String, dynamic> data =
             snapshot.data!.data() as Map<String, dynamic>;
-        print('hhhhhhhhh');
-        print(data['userDocs'][0][data['couple'][0]]);
         return Column(
           children: [
             Container(
@@ -132,19 +130,22 @@ class WelcomePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.grey[500],
+                          backgroundColor: Color.fromRGBO(242, 236, 217, 1),
                           radius: width * .14,
-                          backgroundImage: (data['userDocs'][0]
-                                          [data['couple'][0]]['profilePicture']
+                          // backgroundImage: (data['userDocs'][0]
+                          //                 [data['couple'][0]]['profilePicture']
+                          //             .toString() ==
+                          //         '')
+                          backgroundImage: (data['userMaps'][data['couple'][0]]
+                                          ['profilePicture']
                                       .toString() ==
                                   '')
                               ? AssetImage('img/profile.png')
-                              : NetworkImage(data['userDocs'][0]
-                                      [data['couple'][0]]['profilePicture'])
-                                  as ImageProvider,
+                              : NetworkImage(data['userMaps'][data['couple'][0]]
+                                  ['profilePicture']) as ImageProvider,
                         ),
                         Text(
-                          data['userDocs'][0][data['couple'][0]]['name']
+                          data['userMaps'][data['couple'][0]]['name']
                               .toString(),
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
@@ -165,18 +166,17 @@ class WelcomePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.grey[500],
+                          backgroundColor: Color.fromRGBO(242, 236, 217, 1),
                           radius: width * .14,
-                          backgroundImage: (data['userDocs'][1]
-                                      [data['couple'][1]]['profilePicture'] ==
+                          backgroundImage: (data['userMaps'][data['couple'][1]]
+                                      ['profilePicture'] ==
                                   '')
                               ? AssetImage('img/profile.png')
-                              : NetworkImage(data['userDocs'][1]
-                                      [data['couple'][1]]['profilePicture'])
-                                  as ImageProvider,
+                              : NetworkImage(data['userMaps'][data['couple'][1]]
+                                  ['profilePicture']) as ImageProvider,
                         ),
                         Text(
-                          data['userDocs'][1][data['couple'][1]]['name']
+                          data['userMaps'][data['couple'][1]]['name']
                               .toString(),
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),

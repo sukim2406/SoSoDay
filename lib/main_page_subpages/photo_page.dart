@@ -51,10 +51,10 @@ class _PhotoPageState extends State<PhotoPage> {
   }
 
   void getUserDoc() async {
-    await UserController.instance.getUserDoc(widget.user.uid).then((data) {
+    await UserController.instance.getUserDoc(widget.user).then((data) {
       setState(() {
         userDoc = data;
-        userDoc['uid'] = widget.user.uid;
+        userDoc['uid'] = widget.user;
       });
     });
   }
@@ -70,22 +70,22 @@ class _PhotoPageState extends State<PhotoPage> {
 
   void getUserDocsIndex() {
     userDocs.forEach((doc) {
-      if (doc[widget.user.uid] != null) {
+      if (doc[widget.user] != null) {
         setState(() {
-          curUserDoc = doc[widget.user.uid];
+          curUserDoc = doc[widget.user];
         });
       }
     });
   }
 
   void getUserName() async {
-    userName = await UserController.instance.getUsername(widget.user.uid);
+    userName = await UserController.instance.getUsername(widget.user);
   }
 
   Stream<QuerySnapshot> getStream() async* {
     yield* FirebaseFirestore.instance
         .collection('matches')
-        .where('couple', arrayContains: widget.user.uid)
+        .where('couple', arrayContains: widget.user)
         .snapshots();
   }
 
@@ -109,17 +109,17 @@ class _PhotoPageState extends State<PhotoPage> {
                         'No file selected',
                         style: TextStyle(color: Colors.white),
                       ));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ImageUploadPage(
+                                path: result!.files.single.path,
+                                fileName: result!.files.single.name,
+                                matchDocId: widget.matchDocId,
+                                creatorUid: widget.user,
+                              )));
                 }
-
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ImageUploadPage(
-                              path: result!.files.single.path,
-                              fileName: result!.files.single.name,
-                              matchDocId: widget.matchDocId,
-                              userData: userDoc['name'],
-                            )));
               },
               child: Icon(
                 Icons.upload,
@@ -160,7 +160,7 @@ class _PhotoPageState extends State<PhotoPage> {
         ),
         body: SingleChildScrollView(
           child: FutureBuilder<dynamic>(
-            future: UserController.instance.getUserDoc(widget.user.uid),
+            future: UserController.instance.getUserDoc(widget.user),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -189,7 +189,8 @@ class _PhotoPageState extends State<PhotoPage> {
                             }
                             if (snapshot.data!.docs.first['images'].length ==
                                 0) {
-                              return Text('Upload your first images');
+                              return Center(
+                                  child: Text('Upload your first images'));
                             }
                             // if (snapshot.connectionState == ConnectionState.active ||
                             //     snapshot.connectionState == ConnectionState.waiting) {
@@ -211,7 +212,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                             data: snapshot.data!.docs.first,
                                             matchDocId: widget.matchDocId,
                                             userDoc: curUserDoc,
-                                            userId: widget.user.uid,
+                                            userId: widget.user,
                                             index: index),
                                       );
                                     },
@@ -234,8 +235,7 @@ class _PhotoPageState extends State<PhotoPage> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       CommentPage(
-                                                          userId:
-                                                              widget.user.uid,
+                                                          userId: widget.user,
                                                           matchDocId:
                                                               widget.matchDocId,
                                                           user: curUserDoc,
