@@ -448,4 +448,34 @@ class MatchController extends GetxController {
       print(e.toString());
     }
   }
+
+  Future getUserNameById(userId, docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['userMaps'][userId]['name'];
+      });
+    } catch (e) {
+      print('getUserNameById error');
+      print(e.toString());
+    }
+  }
+
+  Future getUserImageById(userId, docId) async {
+    try {
+      return await firestore
+          .collection('matches')
+          .doc(docId)
+          .get()
+          .then((DocumentSnapshot ds) {
+        return ds['userMaps'][userId]['profilePicture'];
+      });
+    } catch (e) {
+      print('getUserImageById error');
+      print(e.toString());
+    }
+  }
 }

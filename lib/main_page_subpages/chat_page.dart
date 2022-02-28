@@ -45,6 +45,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget ChatMessageList(controller) {
+    print('user');
+    print(widget.user);
     return StreamBuilder<QuerySnapshot>(
         stream: getStream(),
         builder: (context, snapshot) {
@@ -70,6 +72,8 @@ class _ChatPageState extends State<ChatPage> {
                           widget.user)
                       ? true
                       : false,
+                  matchDocData: snapshot.data!.docs.first,
+                  userId: widget.user,
                 );
               },
             );

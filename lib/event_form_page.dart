@@ -31,10 +31,11 @@ class _EventFormState extends State<EventForm> {
     super.initState();
   }
 
-  void initialData() {
+  void initialData() async {
     if (widget.event != null) {
       title = widget.event['title'];
-      creator = widget.event['creator'];
+      creator = await MatchController.instance
+          .getUserNameById(widget.event['creator'], widget.matchDocId);
       due = widget.event['due'].toDate().toUtc();
       completed = widget.event['completed'];
       if (widget.event['description'] == null) {
@@ -61,6 +62,8 @@ class _EventFormState extends State<EventForm> {
 
   @override
   Widget build(BuildContext context) {
+    print('testing');
+    print(creator);
     return Scaffold(
       appBar: AppBar(),
       body: Form(

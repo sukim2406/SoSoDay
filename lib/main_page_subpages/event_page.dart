@@ -46,8 +46,15 @@ class _EventPageState extends State<EventPage> {
     return selectEvents[date] ?? [];
   }
 
+  Future getProfilePicture(uid) async {
+    var url =
+        await MatchController.instance.getUserImageById(uid, widget.matchDocId);
+
+    return url.toString();
+  }
+
   void saveUserName() async {
-    var data = await UserController.instance.getUsername(widget.user.uid);
+    var data = await UserController.instance.getUsername(widget.user);
     userName = data;
   }
 
@@ -82,7 +89,7 @@ class _EventPageState extends State<EventPage> {
   Stream<QuerySnapshot> getEventStream() async* {
     yield* FirebaseFirestore.instance
         .collection('matches')
-        .where('couple', arrayContains: widget.user.uid)
+        .where('couple', arrayContains: widget.user)
         .snapshots();
   }
 
@@ -154,13 +161,24 @@ class _EventPageState extends State<EventPage> {
     );
   }
 
-  Widget TileList() {
+  Future<Widget> TileList() async {
     return ListView.builder(
       itemCount: _getEventsFromDay(_selectedDay).length,
       itemBuilder: (context, index) {
         return EventTile(
             event: _getEventsFromDay(_selectedDay)[index],
-            matchDocId: widget.matchDocId);
+            matchDocId: widget.matchDocId,
+            // imageUrl: getProfilePicture(
+            //     _getEventsFromDay(_selectedDay)[index]['creator']),
+            imageUrl: MatchController.instance
+                .getUserImageById(
+                    _getEventsFromDay(_selectedDay)[index]['creator'],
+                    widget.matchDocId)
+                .then((data) {
+              print('gggggg');
+              print(data);
+              return data;
+            }));
       },
     );
   }
@@ -181,8 +199,20 @@ class _EventPageState extends State<EventPage> {
             itemCount: _getEventsFromDay(_selectedDay).length,
             itemBuilder: (context, index) {
               return EventTile(
-                  event: _getEventsFromDay(_selectedDay)[index],
-                  matchDocId: widget.matchDocId);
+                event: _getEventsFromDay(_selectedDay)[index],
+                matchDocId: widget.matchDocId,
+                // imageUrl: getProfilePicture(
+                //     _getEventsFromDay(_selectedDay)[index]['creator']),
+                imageUrl: MatchController.instance
+                    .getUserImageById(
+                        _getEventsFromDay(_selectedDay)[index]['creator'],
+                        widget.matchDocId)
+                    .then((data) {
+                  print('zzzzzz');
+                  print(data);
+                  return data;
+                }),
+              );
             },
           ),
         ),
@@ -236,7 +266,7 @@ class _EventPageState extends State<EventPage> {
                                   'title': '',
                                   'completed': false,
                                   'due': Timestamp.now(),
-                                  'creator': userName,
+                                  'creator': widget.user,
                                   'description': '',
                                 };
                                 Navigator.push(
@@ -260,7 +290,7 @@ class _EventPageState extends State<EventPage> {
                                   'title': _eventController.text,
                                   'completed': false,
                                   'due': Timestamp.now(),
-                                  'creator': userName,
+                                  'creator': widget.user,
                                   'description': '',
                                 };
                                 // if (selectedEvents[_selectedDay] != null) {
