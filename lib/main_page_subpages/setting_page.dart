@@ -16,7 +16,7 @@ class SettingPage extends StatelessWidget {
     Future<DocumentSnapshot> matchDoc =
         FirebaseFirestore.instance.collection('matches').doc(matchDocId).get();
     Future<DocumentSnapshot> userDoc =
-        FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        FirebaseFirestore.instance.collection('users').doc(user).get();
 
     return FutureBuilder(
         future: Future.wait([matchDoc, userDoc]),
@@ -34,16 +34,33 @@ class SettingPage extends StatelessWidget {
                       appBar: PreferredSize(
                         preferredSize: Size.fromHeight(kToolbarHeight),
                         child: Container(
-                          color: Colors.green,
+                          color: Color.fromRGBO(255, 222, 158, 1),
                           child: SafeArea(
                             child: Column(
                               children: <Widget>[
                                 Expanded(child: Container()),
                                 TabBar(
+                                  indicatorColor:
+                                      Color.fromRGBO(242, 236, 217, 1),
                                   tabs: [
-                                    Tab(icon: Icon(Icons.account_box_rounded)),
-                                    Tab(icon: Icon(Icons.vpn_key_rounded)),
-                                    Tab(icon: Icon(Icons.favorite))
+                                    Tab(
+                                      icon: Icon(
+                                        Icons.account_box_rounded,
+                                        color: Color.fromRGBO(85, 74, 53, 1),
+                                      ),
+                                    ),
+                                    Tab(
+                                      icon: Icon(
+                                        Icons.vpn_key_rounded,
+                                        color: Color.fromRGBO(85, 74, 53, 1),
+                                      ),
+                                    ),
+                                    Tab(
+                                      icon: Icon(
+                                        Icons.favorite,
+                                        color: Color.fromRGBO(85, 74, 53, 1),
+                                      ),
+                                    )
                                   ],
                                 )
                               ],

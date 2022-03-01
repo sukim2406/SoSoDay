@@ -25,25 +25,22 @@ class AccountInfoPage extends StatelessWidget {
     final emailController = TextEditingController();
     final screenNameController = TextEditingController();
 
-    var tempDoc;
-    var tempUserDocs = [];
+    var tempDoc = snapshot.data![0]['userMaps'][user];
+    var tempUserDocs;
 
     // print(snapshot.data![0]['userDocs'][0][user.uid]['name']);
-    print(user.uid);
-    print(snapshot.data![1]['name']);
+    // print(user.uid);
 
-    snapshot.data![0]['userDocs'].forEach((userDoc) {
-      if (userDoc[user.uid] != null) {
-        tempDoc = userDoc;
-      }
-    });
+    // snapshot.data![0]['userDocs'].forEach((userDoc) {
+    //   if (userDoc[user] != null) {
+    //     tempDoc = userDoc;
+    //   }
+    // });
     // snapshot.data![0]['userDocs'].forEach((userDoc) {
     //   if (userDoc[user.uid]['name'] == snapshot.data![1]['name']) {
     //     tempDoc = userDoc[user.uid];
     //   }
     // });
-
-    print(tempDoc);
 
     return Container(
         child: Column(
@@ -52,30 +49,36 @@ class AccountInfoPage extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.all(30),
-          child: Text('Account Settings',
-              style: TextStyle(
-                fontSize: 25,
-              )),
+          child: Text(
+            'Account Settings',
+            style: TextStyle(
+              fontSize: 25,
+              color: Color.fromRGBO(85, 74, 53, 1),
+            ),
+          ),
         ),
         Container(
             margin: EdgeInsets.all(15),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Profile Image'),
+              Text(
+                'Profile Image',
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
+              ),
               Row(
                 children: [
                   Expanded(child: Container()),
                   Column(
                     children: [
                       CircleAvatar(
-                          backgroundColor: Colors.grey[500],
+                          backgroundColor: Color.fromRGBO(242, 236, 217, 1),
                           radius: MediaQuery.of(context).size.width * .14,
-                          backgroundImage:
-                              (tempDoc[user.uid]['profilePicture'] == '')
-                                  ? AssetImage('img/profile.png')
-                                  : NetworkImage(
-                                          tempDoc[user.uid]['profilePicture'])
-                                      as ImageProvider),
+                          backgroundImage: (tempDoc['profilePicture'] == '')
+                              ? AssetImage('img/profile.png')
+                              : NetworkImage(tempDoc['profilePicture'])
+                                  as ImageProvider),
                       TextButton(
                         onPressed: () {
                           showDialog(
@@ -91,24 +94,35 @@ class AccountInfoPage extends StatelessWidget {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          snapshot.data![0]['userDocs']
-                                              .forEach((userDoc) {
-                                            if (userDoc[user.uid] != null) {
-                                              userDoc[user.uid]
-                                                  ['profilePicture'] = '';
-                                              tempUserDocs.add(userDoc);
-                                            } else
-                                              tempUserDocs.add(userDoc);
-                                          });
+                                          tempUserDocs =
+                                              snapshot.data![0]['userMaps'];
+                                          tempUserDocs[user]['profilePicture'] =
+                                              '';
                                           MatchController.instance
-                                              .updateMatchDocument(
-                                                  snapshot.data![0].id,
-                                                  'userDocs',
-                                                  tempUserDocs);
+                                              .updateMatchDocument(matchDocId,
+                                                  'userMaps', tempUserDocs);
                                           Get.offAll(() => MainPage(
                                               user: user,
                                               connected: true,
                                               matchDocId: matchDocId));
+                                          // snapshot.data![0]['userDocs']
+                                          //     .forEach((userDoc) {
+                                          //   if (userDoc[user] != null) {
+                                          //     userDoc[user]['profilePicture'] =
+                                          //         '';
+                                          //     tempUserDocs.add(userDoc);
+                                          //   } else
+                                          //     tempUserDocs.add(userDoc);
+                                          // });
+                                          // MatchController.instance
+                                          //     .updateMatchDocument(
+                                          //         snapshot.data![0].id,
+                                          //         'userDocs',
+                                          //         tempUserDocs);
+                                          // Get.offAll(() => MainPage(
+                                          //     user: user,
+                                          //     connected: true,
+                                          //     matchDocId: matchDocId));
                                         },
                                         child: Text(
                                           'OK',
@@ -119,7 +133,12 @@ class AccountInfoPage extends StatelessWidget {
 
                           // tempDoc[user.uid]['profilePicture'] = '';
                         },
-                        child: Text('unset'),
+                        child: Text(
+                          'click to unset',
+                          style: TextStyle(
+                            color: Color.fromRGBO(85, 74, 53, 1),
+                          ),
+                        ),
                       )
                     ],
                   ),
@@ -136,13 +155,25 @@ class AccountInfoPage extends StatelessWidget {
             children: [
               Text(
                 'E-mail',
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
               ),
-              LogInput(
-                inputIcon: Icon(Icons.email_rounded),
-                inputText: user.email,
-                controller: emailController,
-                obscure: false,
+              TextField(
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
                 enabled: false,
+                controller: emailController,
+                obscureText: false,
+                decoration: InputDecoration(
+                    hintText: tempDoc['email'],
+                    hintStyle: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color.fromRGBO(85, 74, 53, 1)))),
               ),
             ],
           ),
@@ -154,53 +185,73 @@ class AccountInfoPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Screen Name'),
-              LogInput(
-                inputIcon: Icon(Icons.email_rounded),
-                inputText: snapshot.data![1]['name'],
+              Text(
+                'Screen Name',
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
+              ),
+              TextField(
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
                 controller: screenNameController,
-                obscure: false,
+                obscureText: false,
+                decoration: InputDecoration(
+                    hintText: tempDoc['name'],
+                    hintStyle: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color.fromRGBO(85, 74, 53, 1)))),
               ),
             ],
           ),
         ),
         GestureDetector(
           onTap: () {
-            var userDocs = snapshot.data![0]['userDocs'];
-            userDocs.forEach((myDoc) {
-              if (myDoc[user.uid] != null) {
-                myDoc[user.uid]['name'] = screenNameController.text;
-              }
-            });
-            var screenNames = snapshot.data![0]['screenNames'];
-            var newScreenNames = [];
-            UserController.instance.updateUserDocument(
-                snapshot.data![1].id, 'name', screenNameController.text);
-            MatchController.instance
-                .updateMatchDocument(matchDocId, 'userDocs', userDocs);
-            screenNames.forEach((user) {
-              print('user');
-              print(user);
-              print(snapshot.data![1]['name']);
-              if (user == snapshot.data![1]['name']) {
-                newScreenNames.add(screenNameController.text);
-              } else {
-                newScreenNames.add(user);
-              }
-            });
+            // var userDocs = snapshot.data![0]['userDocs'];
+            // userDocs.forEach((myDoc) {
+            //   if (myDoc[user.uid] != null) {
+            //     myDoc[user.uid]['name'] = screenNameController.text;
+            //   }
+            // });
+            // var screenNames = snapshot.data![0]['screenNames'];
+            // var newScreenNames = [];
+            // UserController.instance.updateUserDocument(
+            //     snapshot.data![1].id, 'name', screenNameController.text);
+            // MatchController.instance
+            //     .updateMatchDocument(matchDocId, 'userDocs', userDocs);
+            // screenNames.forEach((user) {
+            //   print('user');
+            //   print(user);
+            //   print(snapshot.data![1]['name']);
+            //   if (user == snapshot.data![1]['name']) {
+            //     newScreenNames.add(screenNameController.text);
+            //   } else {
+            //     newScreenNames.add(user);
+            //   }
+            // });
+            var tempUserMaps = snapshot.data![0]['userMaps'];
+            tempUserMaps[user]['name'] = screenNameController.text;
             MatchController.instance.updateMatchDocument(
-                snapshot.data![0].id, 'screenNames', newScreenNames);
+                snapshot.data![0].id, 'userMaps', tempUserMaps);
+            UserController.instance
+                .updateUserDocument(user, 'name', screenNameController.text);
             Get.offAll(() =>
                 MainPage(user: user, connected: true, matchDocId: matchDocId));
           },
           child: Container(
             margin: EdgeInsets.all(30),
             alignment: Alignment.center,
-            child: LogBtn(
-                btnText: 'Update',
-                btnWidth: MediaQuery.of(context).size.width * .7,
-                btnHeight: MediaQuery.of(context).size.height * .05,
-                btnFontSize: 20),
+            child: Container(
+              height: MediaQuery.of(context).size.height * .04,
+              width: MediaQuery.of(context).size.width * .6,
+              child: Image(
+                image: AssetImage('img/save-btn.png'),
+              ),
+            ),
           ),
         ),
         GestureDetector(

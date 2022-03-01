@@ -18,6 +18,7 @@ class _EventFormState extends State<EventForm> {
   final formKey = GlobalKey<FormState>();
   String title = '';
   String creator = '';
+  String name = '';
   DateTime due = DateTime.now();
   String description = '';
   bool completed = false;
@@ -34,10 +35,12 @@ class _EventFormState extends State<EventForm> {
   void initialData() async {
     if (widget.event != null) {
       title = widget.event['title'];
-      creator = await MatchController.instance
-          .getUserNameById(widget.event['creator'], widget.matchDocId);
+      creator = widget.event['creator'];
+      // creator = await MatchController.instance
+      //     .getUserNameById(widget.event['creator'], widget.matchDocId);
       due = widget.event['due'].toDate().toUtc();
       completed = widget.event['completed'];
+      name = widget.event['userName'];
       if (widget.event['description'] == null) {
         description = '';
       } else {
@@ -65,7 +68,26 @@ class _EventFormState extends State<EventForm> {
     print('testing');
     print(creator);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('img/event-detail-app-bar.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        // backgroundColor: Color.fromRGBO(255, 222, 158, 1),
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(85, 74, 53, 1),
+        ),
+        // title: Text(
+        //   'EVENT DETAILS',
+        //   style: TextStyle(
+        //     color: Color.fromRGBO(85, 74, 53, 1),
+        //   ),
+        // ),
+      ),
       body: Form(
         key: this.formKey,
         child: Padding(
@@ -92,7 +114,7 @@ class _EventFormState extends State<EventForm> {
               ),
               TextFormField(
                   enabled: false,
-                  initialValue: creator,
+                  initialValue: name,
                   decoration: InputDecoration(labelText: 'Creator'),
                   onSaved: (val) {},
                   validator: (val) {
@@ -139,21 +161,26 @@ class _EventFormState extends State<EventForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   GestureDetector(
-                    onTap: () async {
+                    onTap: () {
                       MatchController.instance
                           .deleteEvent(widget.matchDocId, widget.event)
                           .then((result) {
                         Navigator.pop(context);
                       });
                     },
-                    child: LogBtn(
-                        btnText: 'Delete',
-                        btnWidth: MediaQuery.of(context).size.width * .3,
-                        btnHeight: MediaQuery.of(context).size.height * .03,
-                        btnFontSize: 20),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * .03,
+                        width: MediaQuery.of(context).size.width * .3,
+                        child: Image(
+                          image: AssetImage('img/backBtn.png'),
+                        ),
+                      ),
+                    ),
                   ),
                   GestureDetector(
-                    onTap: () async {
+                    onTap: () {
                       if (this.formKey.currentState!.validate()) {
                         Map<String, dynamic> newData = {
                           'title': title,
@@ -176,11 +203,16 @@ class _EventFormState extends State<EventForm> {
                         // Get.snackbar('Saved', 'Form Saved');
                       }
                     },
-                    child: LogBtn(
-                        btnText: 'Save',
-                        btnWidth: MediaQuery.of(context).size.width * .3,
-                        btnHeight: MediaQuery.of(context).size.height * .03,
-                        btnFontSize: 20),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * .03,
+                        width: MediaQuery.of(context).size.width * .3,
+                        child: Image(
+                          image: AssetImage('img/save-btn.png'),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

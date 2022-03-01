@@ -10,12 +10,14 @@ class EventTile extends StatelessWidget {
   final event;
   final matchDocId;
   final imageUrl;
-  const EventTile(
-      {Key? key,
-      required this.event,
-      required this.matchDocId,
-      required this.imageUrl})
-      : super(key: key);
+  final userName;
+  const EventTile({
+    Key? key,
+    required this.event,
+    required this.matchDocId,
+    required this.imageUrl,
+    required this.userName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,56 +29,78 @@ class EventTile extends StatelessWidget {
             return Text('Connection State None');
           case ConnectionState.active:
           case ConnectionState.waiting:
-            return CircularProgressIndicator();
+            return Row(
+              children: [
+                Expanded(child: Container()),
+                CircularProgressIndicator(),
+                Expanded(child: Container()),
+              ],
+            );
           case ConnectionState.done:
             if (snapshot.hasError) return Text('snapshot error');
             print('pleaseeee');
             print(snapshot.data);
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey,
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: ClipOval(
-                    child: snapshot.data == ''
-                        ? Image.asset('img/user.png')
-                        : Image.network(snapshot.data),
+            return GestureDetector(
+              onTap: () {
+                event['userName'] = userName;
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EventForm(
+                              matchDocId: matchDocId,
+                              event: event,
+                            ))).then((value) {
+                  // Navigator.pop(context);
+                });
+              },
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: ClipOval(
+                      child: snapshot.data == ''
+                          ? Image.asset('img/user.png')
+                          : Image.network(snapshot.data),
+                    ),
                   ),
                 ),
+                title: Text(event['title']),
+                enabled: event['completed'] ? false : true,
+                trailing: event['completed']
+                    ? null
+                    : TextButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text('Set as Completed?'),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('Ok'),
+                                        onPressed: () {
+                                          MatchController.instance
+                                              .setEventComplete(
+                                                  matchDocId, event);
+                                          event.completed = true;
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ));
+                        },
+                        child: Text('Finished'),
+                        style: TextButton.styleFrom(
+                            primary: Color.fromRGBO(85, 74, 53, 1)),
+                      ),
               ),
-              title: Text(event['title']),
-              enabled: event['completed'] ? false : true,
-              trailing: event['completed']
-                  ? null
-                  : TextButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: Text('Set as Completed?'),
-                                  actions: [
-                                    TextButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text('Ok'),
-                                      onPressed: () {
-                                        MatchController.instance
-                                            .setEventComplete(
-                                                matchDocId, event);
-                                        event.completed = true;
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                ));
-                      },
-                      child: Text('Finished'),
-                    ),
             );
         }
       },

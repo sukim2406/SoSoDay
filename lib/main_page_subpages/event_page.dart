@@ -134,6 +134,16 @@ class _EventPageState extends State<EventPage> {
         });
 
         return TableCalendar(
+          calendarStyle: CalendarStyle(
+            markerDecoration: BoxDecoration(
+                color: Color.fromRGBO(255, 222, 158, 1),
+                shape: BoxShape.circle),
+            todayDecoration: BoxDecoration(
+                color: Color.fromRGBO(242, 236, 217, 1),
+                shape: BoxShape.circle),
+            selectedDecoration: BoxDecoration(
+                color: Color.fromRGBO(85, 74, 53, 1), shape: BoxShape.circle),
+          ),
           firstDay: DateTime.utc(2020, 01, 01),
           lastDay: DateTime.utc(2030, 12, 31),
           focusedDay: DateTime.now(),
@@ -141,6 +151,9 @@ class _EventPageState extends State<EventPage> {
             return isSameDay(_selectedDay, day);
           },
           onDaySelected: (selectedDay, focusedDay) {
+            print('onDaySelected');
+            print(selectedDay);
+            print(focusedDay);
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
@@ -153,6 +166,9 @@ class _EventPageState extends State<EventPage> {
             });
           },
           onPageChanged: (focusedDay) {
+            print('onPageChanged');
+            print(_selectedDay);
+            print(focusedDay);
             _focusedDay = focusedDay;
           },
           eventLoader: _getEventsFromDay,
@@ -163,22 +179,25 @@ class _EventPageState extends State<EventPage> {
 
   Future<Widget> TileList() async {
     return ListView.builder(
+      // shrinkWrap: true,
       itemCount: _getEventsFromDay(_selectedDay).length,
       itemBuilder: (context, index) {
         return EventTile(
-            event: _getEventsFromDay(_selectedDay)[index],
-            matchDocId: widget.matchDocId,
-            // imageUrl: getProfilePicture(
-            //     _getEventsFromDay(_selectedDay)[index]['creator']),
-            imageUrl: MatchController.instance
-                .getUserImageById(
-                    _getEventsFromDay(_selectedDay)[index]['creator'],
-                    widget.matchDocId)
-                .then((data) {
-              print('gggggg');
-              print(data);
-              return data;
-            }));
+          event: _getEventsFromDay(_selectedDay)[index],
+          matchDocId: widget.matchDocId,
+          // imageUrl: getProfilePicture(
+          //     _getEventsFromDay(_selectedDay)[index]['creator']),
+          imageUrl: MatchController.instance
+              .getUserImageById(
+                  _getEventsFromDay(_selectedDay)[index]['creator'],
+                  widget.matchDocId)
+              .then((data) {
+            print('gggggg');
+            print(data);
+            return data;
+          }),
+          userName: userName,
+        );
       },
     );
   }
@@ -188,32 +207,67 @@ class _EventPageState extends State<EventPage> {
     return Container(
         child: Column(
       children: [
-        SizedBox(height: 150),
+        SizedBox(height: 100),
         Container(
           child: Calendar(),
         ),
-        ConstrainedBox(
-          constraints: new BoxConstraints(minHeight: 0, maxHeight: 200),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _getEventsFromDay(_selectedDay).length,
-            itemBuilder: (context, index) {
-              return EventTile(
-                event: _getEventsFromDay(_selectedDay)[index],
-                matchDocId: widget.matchDocId,
-                // imageUrl: getProfilePicture(
-                //     _getEventsFromDay(_selectedDay)[index]['creator']),
-                imageUrl: MatchController.instance
-                    .getUserImageById(
-                        _getEventsFromDay(_selectedDay)[index]['creator'],
-                        widget.matchDocId)
-                    .then((data) {
-                  print('zzzzzz');
-                  print(data);
-                  return data;
-                }),
-              );
-            },
+        SizedBox(height: 30),
+        Container(
+          color: Color.fromRGBO(242, 236, 217, 1),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 20, bottom: 10),
+                // child: Text(_selectedDay.toString().substring(0, 10)),
+                child: Row(
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: 'events on ',
+                        style: TextStyle(
+                          color: Color.fromRGBO(85, 74, 53, 1),
+                        ),
+                        children: [
+                          TextSpan(
+                            text: _selectedDay.toString().substring(0, 10),
+                            style: TextStyle(
+                                color: Color.fromRGBO(85, 74, 53, 1),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              ConstrainedBox(
+                constraints: new BoxConstraints(minHeight: 0, maxHeight: 200),
+                child: ListView.builder(
+                  // shrinkWrap: true,
+                  reverse: true,
+                  itemCount: _getEventsFromDay(_selectedDay).length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      child: EventTile(
+                        event: _getEventsFromDay(_selectedDay)[index],
+                        matchDocId: widget.matchDocId,
+                        // imageUrl: getProfilePicture(
+                        //     _getEventsFromDay(_selectedDay)[index]['creator']),
+                        imageUrl: MatchController.instance
+                            .getUserImageById(
+                                _getEventsFromDay(_selectedDay)[index]
+                                    ['creator'],
+                                widget.matchDocId)
+                            .then((data) {
+                          return data;
+                        }),
+                        userName: userName,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         // Container(
@@ -244,90 +298,96 @@ class _EventPageState extends State<EventPage> {
         //         matchDocId: widget.matchDocId,
         //       ),
         //     )),
-        FloatingActionButton.extended(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text('Add Event'),
-                        content: TextFormField(
-                          controller: _eventController,
-                        ),
-                        actions: [
-                          TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () => Navigator.pop(context)),
-                          TextButton(
-                              child: Text('Detailed View'),
-                              onPressed: () {
-                                Map<String, dynamic> event = {
-                                  'selectedDay':
-                                      Timestamp.fromDate(_selectedDay),
-                                  'title': '',
-                                  'completed': false,
-                                  'due': Timestamp.now(),
-                                  'creator': widget.user,
-                                  'description': '',
-                                };
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EventForm(
-                                              matchDocId: widget.matchDocId,
-                                              event: event,
-                                            ))).then((value) {
-                                  Navigator.pop(context);
-                                });
-                              }),
-                          TextButton(
-                            child: Text('Quick Save'),
-                            onPressed: () {
-                              if (_eventController.text.isEmpty) {
-                              } else {
-                                Map<String, dynamic> event = {
-                                  'selectedDay':
-                                      Timestamp.fromDate(_selectedDay),
-                                  'title': _eventController.text,
-                                  'completed': false,
-                                  'due': Timestamp.now(),
-                                  'creator': widget.user,
-                                  'description': '',
-                                };
-                                // if (selectedEvents[_selectedDay] != null) {
-                                //   selectedEvents[_selectedDay]?.add(Event(
-                                //       _eventController.text,
-                                //       false,
-                                //       event['due'],
-                                //       userName,
-                                //       event['description']));
-                                // } else {
-                                //   selectedEvents[_selectedDay] = [
-                                //     Event(
-                                //         _eventController.text,
-                                //         false,
-                                //         event['due'],
-                                //         userName,
-                                //         event['description'])
-                                //   ];
-                                // }
-                                MatchController.instance
-                                    .addEvent(widget.matchDocId, event)
-                                    .then((result) {
-                                  // setState(() {
-                                  //   saveAsSelectedEvents();
-                                  // });
-                                });
-                              }
-                              Navigator.pop(context);
-                              _eventController.clear();
-                              return;
-                            },
+        Container(
+          padding: EdgeInsets.only(top: 30),
+          child: FloatingActionButton.extended(
+              backgroundColor: Color.fromRGBO(85, 74, 53, 1),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text('Add Event'),
+                          content: TextFormField(
+                            controller: _eventController,
                           ),
-                        ],
-                      ));
-            },
-            label: Text('add event'),
-            icon: Icon(Icons.add)),
+                          actions: [
+                            TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () => Navigator.pop(context)),
+                            TextButton(
+                                child: Text('Detailed View'),
+                                onPressed: () {
+                                  Map<String, dynamic> event = {
+                                    'selectedDay':
+                                        Timestamp.fromDate(_selectedDay),
+                                    'title': '',
+                                    'completed': false,
+                                    'due': Timestamp.now(),
+                                    'creator': widget.user,
+                                    'userName': userName,
+                                    'description': '',
+                                  };
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EventForm(
+                                                matchDocId: widget.matchDocId,
+                                                event: event,
+                                              ))).then((value) {
+                                    Navigator.pop(context);
+                                  });
+                                }),
+                            TextButton(
+                              child: Text('Quick Save'),
+                              onPressed: () {
+                                if (_eventController.text.isEmpty) {
+                                } else {
+                                  Map<String, dynamic> event = {
+                                    'selectedDay':
+                                        Timestamp.fromDate(_selectedDay),
+                                    'title': _eventController.text,
+                                    'completed': false,
+                                    'due': Timestamp.now(),
+                                    'creator': widget.user,
+                                    'userName': userName,
+                                    'description': '',
+                                  };
+                                  // if (selectedEvents[_selectedDay] != null) {
+                                  //   selectedEvents[_selectedDay]?.add(Event(
+                                  //       _eventController.text,
+                                  //       false,
+                                  //       event['due'],
+                                  //       userName,
+                                  //       event['description']));
+                                  // } else {
+                                  //   selectedEvents[_selectedDay] = [
+                                  //     Event(
+                                  //         _eventController.text,
+                                  //         false,
+                                  //         event['due'],
+                                  //         userName,
+                                  //         event['description'])
+                                  //   ];
+                                  // }
+                                  MatchController.instance
+                                      .addEvent(widget.matchDocId, event)
+                                      .then((result) {
+                                    // setState(() {
+                                    //   saveAsSelectedEvents();
+                                    // });
+                                  });
+                                }
+                                Navigator.pop(context);
+                                _eventController.clear();
+                                return;
+                              },
+                            ),
+                          ],
+                        ));
+              },
+              label: Text('add event'),
+              icon: Icon(Icons.add)),
+        ),
       ],
     ));
   }
