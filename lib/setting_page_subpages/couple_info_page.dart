@@ -67,7 +67,13 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
         children: [
           Container(
             margin: EdgeInsets.all(30),
-            child: Text('Between Us', style: TextStyle(fontSize: 25)),
+            child: Text(
+              'Between Us',
+              style: TextStyle(
+                fontSize: 25,
+                color: Color.fromRGBO(85, 74, 53, 1),
+              ),
+            ),
           ),
           Container(
               margin: EdgeInsets.all(15),
@@ -76,45 +82,60 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                 children: [
                   Row(
                     children: [
-                      Text('Background Image'),
+                      Text(
+                        'Background Image',
+                        style: TextStyle(
+                          color: Color.fromRGBO(85, 74, 53, 1),
+                        ),
+                      ),
                       Expanded(child: Container()),
                       TextButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                        title: Text('Unset Background Image?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              MatchController.instance
-                                                  .updateMatchDocument(
-                                                      widget.matchDocID,
-                                                      'backgroundImage',
-                                                      '');
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('OK'),
-                                          )
-                                        ]));
-                          },
-                          child: Text('unset'))
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                      title: Text('Unset Background Image?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            MatchController.instance
+                                                .updateMatchDocument(
+                                                    widget.matchDocID,
+                                                    'backgroundImage',
+                                                    '');
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('OK'),
+                                        )
+                                      ]));
+                        },
+                        child: Text(
+                          'click to unset',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            color: Color.fromRGBO(85, 74, 53, 1),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   // Text(widget.snapshot.data![0]['backgroundImage']),
                   Container(
                     height: MediaQuery.of(context).size.height * .2,
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(color: Colors.grey),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(242, 236, 217, 1),
+                    ),
                     child: Image(
                       image: (widget.snapshot.data![0]['backgroundImage'] == '')
-                          ? AssetImage('img/signup.png')
+                          ? AssetImage('img/welcomepage.png')
                           : NetworkImage(
                                   widget.snapshot.data![0]['backgroundImage'])
                               as ImageProvider,
@@ -131,15 +152,51 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('In love since...'),
-                      LogInput(
-                        inputIcon: Icon(Icons.calendar_today),
-                        inputText:
-                            selectedDate.toLocal().toString().substring(0, 10),
-                        controller: sinceController,
-                        obscure: false,
-                        enabled: false,
+                      Text(
+                        'In love since...',
+                        style: TextStyle(
+                          color: Color.fromRGBO(85, 74, 53, 1),
+                        ),
                       ),
+                      TextField(
+                        style: TextStyle(
+                          color: Color.fromRGBO(85, 74, 53, 1),
+                        ),
+                        enabled: false,
+                        controller: sinceController,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          hintText: selectedDate
+                              .toLocal()
+                              .toString()
+                              .substring(0, 10),
+                          prefixIcon: Icon(
+                            Icons.password,
+                            color: Color.fromRGBO(85, 74, 53, 1),
+                          ),
+                          hintStyle: TextStyle(
+                            color: Color.fromRGBO(85, 74, 53, 1),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromRGBO(85, 74, 53, 1),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromRGBO(85, 74, 53, 1),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // LogInput(
+                      //   inputIcon: Icon(Icons.calendar_today),
+                      //   inputText:
+                      //       selectedDate.toLocal().toString().substring(0, 10),
+                      //   controller: sinceController,
+                      //   obscure: false,
+                      //   enabled: false,
+                      // ),
                       GestureDetector(
                         onTap: () {
                           _selectDate(context);
@@ -150,6 +207,7 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                           child: Text('modify',
                               textAlign: TextAlign.right,
                               style: TextStyle(
+                                  color: Color.fromRGBO(85, 74, 53, 1),
                                   fontWeight: FontWeight.bold,
                                   decoration: TextDecoration.underline)),
                         ),
@@ -168,52 +226,93 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                   matchDocId: widget.matchDocID));
             },
             child: Container(
-              margin: EdgeInsets.all(15),
+              margin: EdgeInsets.all(30),
               alignment: Alignment.center,
-              child: LogBtn(
-                btnText: 'Update',
-                btnWidth: MediaQuery.of(context).size.width * .7,
-                btnHeight: MediaQuery.of(context).size.height * .05,
-                btnFontSize: 15,
+              child: Container(
+                height: MediaQuery.of(context).size.height * .04,
+                width: MediaQuery.of(context).size.width * .4,
+                child: Image(
+                  image: AssetImage('img/update-btn.png'),
+                ),
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text('Clear all data'),
-                        content: Text(
-                            'Clearing data cannot be undone, are you sure?'),
-                        actions: [
-                          TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              MatchController.instance
-                                  .clearAllData(widget.matchDocID);
-                              Navigator.pop(context);
-                            },
-                          )
-                        ],
-                      ));
-            },
-            child: Container(
-              margin: EdgeInsets.all(15),
-              alignment: Alignment.center,
-              child: LogBtn(
-                btnText: 'Clear All Data',
-                btnWidth: MediaQuery.of(context).size.width * .7,
-                btnHeight: MediaQuery.of(context).size.height * .05,
-                btnFontSize: 15,
+          Row(
+            children: [
+              Expanded(
+                child: Container(),
               ),
-            ),
+              TextButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('Clear all data'),
+                            content: Text(
+                                'Clearing data cannot be undone, are you sure?'),
+                            actions: [
+                              TextButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  MatchController.instance
+                                      .clearAllData(widget.matchDocID);
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          ));
+                },
+                child: Text(
+                  'Clear all data',
+                  style: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
           )
+          // GestureDetector(
+          //   onTap: () {
+          //     showDialog(
+          //         context: context,
+          //         builder: (context) => AlertDialog(
+          //               title: Text('Clear all data'),
+          //               content: Text(
+          //                   'Clearing data cannot be undone, are you sure?'),
+          //               actions: [
+          //                 TextButton(
+          //                     child: Text('Cancel'),
+          //                     onPressed: () {
+          //                       Navigator.pop(context);
+          //                     }),
+          //                 TextButton(
+          //                   child: Text('OK'),
+          //                   onPressed: () {
+          //                     MatchController.instance
+          //                         .clearAllData(widget.matchDocID);
+          //                     Navigator.pop(context);
+          //                   },
+          //                 )
+          //               ],
+          //             ));
+          //   },
+          //   child: Container(
+          //     margin: EdgeInsets.all(15),
+          //     alignment: Alignment.center,
+          //     child: LogBtn(
+          //       btnText: 'Clear All Data',
+          //       btnWidth: MediaQuery.of(context).size.width * .7,
+          //       btnHeight: MediaQuery.of(context).size.height * .05,
+          //       btnFontSize: 15,
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

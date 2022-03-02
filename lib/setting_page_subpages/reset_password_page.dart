@@ -6,7 +6,10 @@ import '../controllers/auth_controller.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   final user;
-  const ResetPasswordPage({Key? key, required this.user}) : super(key: key);
+  final snapshot;
+  const ResetPasswordPage(
+      {Key? key, required this.user, required this.snapshot})
+      : super(key: key);
 
   @override
   _ResetPasswordPageState createState() => _ResetPasswordPageState();
@@ -42,22 +45,57 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       children: [
         Container(
           margin: EdgeInsets.all(30),
-          child: Text('Reset Password',
-              style: TextStyle(
-                fontSize: 25,
-              )),
+          child: Text(
+            'Reset Password',
+            style: TextStyle(
+              fontSize: 25,
+              color: Color.fromRGBO(85, 74, 53, 1),
+            ),
+          ),
         ),
         Container(
           margin: EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('New Password'),
-              LogInput(
-                  inputIcon: Icon(Icons.password),
-                  inputText: 'new password',
-                  controller: newPasswordController,
-                  obscure: true),
+              Text(
+                'New Password',
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
+              ),
+              TextField(
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
+                controller: newPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  // hintText: ,
+                  prefixIcon: Icon(
+                    Icons.password,
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                  hintStyle: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  ),
+                ),
+              ),
+              // LogInput(
+              //     inputIcon: Icon(Icons.password),
+              //     inputText: 'new password',
+              //     controller: newPasswordController,
+              //     obscure: true),
             ],
           ),
         ),
@@ -66,13 +104,45 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Confirm password'),
-              LogInput(
-                inputIcon: Icon(Icons.password),
-                inputText: 'confirm new password',
+              Text(
+                'Confirm password',
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
+              ),
+              TextField(
+                style: TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
                 controller: confirmPasswordController,
-                obscure: true,
-              )
+                obscureText: true,
+                decoration: InputDecoration(
+                  // hintText: ,
+                  prefixIcon: Icon(
+                    Icons.password,
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                  hintStyle: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  ),
+                ),
+              ),
+              // LogInput(
+              //   inputIcon: Icon(Icons.password),
+              //   inputText: 'confirm new password',
+              //   controller: confirmPasswordController,
+              //   obscure: true,
+              // )
             ],
           ),
         ),
@@ -92,12 +162,44 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Re authenticate with current password'),
-                LogInput(
-                    inputIcon: Icon(Icons.password),
-                    inputText: 'current password',
-                    controller: currentPasswordController,
-                    obscure: true)
+                Text(
+                  'Re authenticate with current password',
+                  style: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                ),
+                TextField(
+                  style: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                  controller: currentPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    // hintText: ,
+                    prefixIcon: Icon(
+                      Icons.password,
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                    hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromRGBO(85, 74, 53, 1),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromRGBO(85, 74, 53, 1),
+                      ),
+                    ),
+                  ),
+                ),
+                // LogInput(
+                //     inputIcon: Icon(Icons.password),
+                //     inputText: 'current password',
+                //     controller: currentPasswordController,
+                //     obscure: true)
               ],
             ),
           ),
@@ -107,18 +209,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         Visibility(
             child: GestureDetector(
               onTap: () {
-                AuthController.instance.updatePassword(widget.user.email,
-                    currentPasswordController.text, newPasswordController.text);
+                AuthController.instance.updatePassword(
+                    widget.snapshot.data![0]['userMaps'][widget.user]['email'],
+                    currentPasswordController.text,
+                    newPasswordController.text);
               },
               child: Container(
-                  margin: EdgeInsets.all(30),
-                  alignment: Alignment.center,
-                  child: LogBtn(
-                    btnText: 'Reset',
-                    btnWidth: MediaQuery.of(context).size.width * .7,
-                    btnHeight: MediaQuery.of(context).size.height * .05,
-                    btnFontSize: 20,
-                  )),
+                margin: EdgeInsets.all(30),
+                alignment: Alignment.center,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * .04,
+                  width: MediaQuery.of(context).size.width * .4,
+                  child: Image(
+                    image: AssetImage('img/reset-btn.png'),
+                  ),
+                ),
+              ),
             ),
             visible: (newPasswordController.text ==
                     confirmPasswordController.text) &&

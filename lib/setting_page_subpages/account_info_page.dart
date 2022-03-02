@@ -201,7 +201,8 @@ class AccountInfoPage extends StatelessWidget {
                     hintText: tempDoc['name'],
                     hintStyle: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white)),
+                        borderSide:
+                            BorderSide(color: Color.fromRGBO(85, 74, 53, 1))),
                     focusedBorder: UnderlineInputBorder(
                         borderSide:
                             BorderSide(color: Color.fromRGBO(85, 74, 53, 1)))),
@@ -259,12 +260,15 @@ class AccountInfoPage extends StatelessWidget {
             AuthController.instance.logout();
           },
           child: Container(
+            margin: EdgeInsets.all(30),
             alignment: Alignment.center,
-            child: LogBtn(
-                btnText: 'Log Out',
-                btnWidth: MediaQuery.of(context).size.width * .5,
-                btnHeight: MediaQuery.of(context).size.height * .04,
-                btnFontSize: 15),
+            child: Container(
+              height: MediaQuery.of(context).size.height * .04,
+              width: MediaQuery.of(context).size.width * .4,
+              child: Image(
+                image: AssetImage('img/log-out-btn.png'),
+              ),
+            ),
           ),
         )
       ],

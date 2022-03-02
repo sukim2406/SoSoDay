@@ -74,6 +74,9 @@ class _ChatPageState extends State<ChatPage> {
                       : false,
                   matchDocData: snapshot.data!.docs.first,
                   userId: widget.user,
+                  time: snapshot.data!.docs.first['chats'][
+                          snapshot.data!.docs.first['chats'].length - 1 - index]
+                      ['time'],
                 );
               },
             );
@@ -112,6 +115,7 @@ class _ChatPageState extends State<ChatPage> {
                     onTap: () {
                       if (messageController.text.isNotEmpty) {
                         sendMessage(widget.matchDocId);
+                        messageController.text = '';
                       }
                     },
                     child: Icon(

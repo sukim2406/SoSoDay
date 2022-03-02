@@ -77,55 +77,58 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
               style: TextStyle(color: Color.fromRGBO(255, 222, 158, 1)))
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(15),
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Title',
-              ),
-              onChanged: (val) {
-                setState(() {
-                  title = val;
-                });
-              },
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(15),
-            child: Image.file(File(widget.path)),
-          ),
-          Container(
-            padding: EdgeInsets.all(15),
-            child: TextFormField(
-              style: const TextStyle(
-                color: Color.fromRGBO(85, 74, 53, 1),
-              ),
-              cursorColor: Color.fromRGBO(85, 74, 53, 1),
-              keyboardType: TextInputType.multiline,
-              maxLines: 10,
-              decoration: InputDecoration(
-                labelText: '...',
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Color.fromRGBO(242, 236, 217, 1),
-                labelStyle: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(15),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Title',
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color.fromRGBO(85, 74, 53, 1)),
-                ),
+                onChanged: (val) {
+                  setState(() {
+                    title = val;
+                  });
+                },
               ),
-              onChanged: (val) {
-                setState(() {
-                  about = val;
-                });
-              },
             ),
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.all(15),
+              child: Image.file(File(widget.path)),
+            ),
+            Container(
+              padding: EdgeInsets.all(15),
+              child: TextFormField(
+                style: const TextStyle(
+                  color: Color.fromRGBO(85, 74, 53, 1),
+                ),
+                cursorColor: Color.fromRGBO(85, 74, 53, 1),
+                keyboardType: TextInputType.multiline,
+                maxLines: 10,
+                decoration: InputDecoration(
+                  labelText: '...',
+                  border: InputBorder.none,
+                  filled: true,
+                  fillColor: Color.fromRGBO(242, 236, 217, 1),
+                  labelStyle: TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromRGBO(85, 74, 53, 1)),
+                  ),
+                ),
+                onChanged: (val) {
+                  setState(() {
+                    about = val;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -76,6 +76,7 @@ class SettingPage extends StatelessWidget {
                               matchDocId: matchDocId),
                           ResetPasswordPage(
                             user: user,
+                            snapshot: snapshot,
                           ),
                           CoupleInfoPage(
                             user: user,
