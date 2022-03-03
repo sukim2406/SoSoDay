@@ -65,13 +65,9 @@ class _ChatPageState extends State<ChatPage> {
                   message: snapshot.data!.docs.first['chats'][
                           snapshot.data!.docs.first['chats'].length - 1 - index]
                       ['message'],
-                  isMyMessage: (snapshot.data!.docs.first['chats'][
-                              snapshot.data!.docs.first['chats'].length -
-                                  1 -
-                                  index]['sender'] ==
-                          widget.user)
-                      ? true
-                      : false,
+                  isMyMessage: snapshot.data!.docs.first['chats'][
+                          snapshot.data!.docs.first['chats'].length - 1 - index]
+                      ['sender'],
                   matchDocData: snapshot.data!.docs.first,
                   userId: widget.user,
                   time: snapshot.data!.docs.first['chats'][

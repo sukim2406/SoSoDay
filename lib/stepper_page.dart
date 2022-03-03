@@ -47,7 +47,7 @@ class _StepperPageState extends State<StepperPage> {
                   controller: usernameController,
                   obscureText: false,
                   decoration: InputDecoration(
-                      hintText: 'Email',
+                      hintText: 'Screen Name',
                       hintStyle:
                           TextStyle(color: Color.fromRGBO(85, 74, 53, 1)),
                       enabledBorder: UnderlineInputBorder(

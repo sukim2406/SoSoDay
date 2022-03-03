@@ -29,10 +29,21 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
 
   _selectDate(BuildContext context) async {
     final DateTime? selected = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1990),
-        lastDate: DateTime(2025));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1990),
+      lastDate: DateTime(2025),
+      builder: (context, child) => Theme(
+        child: child!,
+        data: ThemeData().copyWith(
+          colorScheme: ColorScheme.dark(
+            primary: Color.fromRGBO(255, 222, 158, 1),
+            surface: Color.fromRGBO(255, 222, 158, 1),
+            onSurface: Color.fromRGBO(85, 74, 53, 1),
+          ),
+        ),
+      ),
+    );
 
     if (selected != null && selected != selectedDate) {
       setState(() {
@@ -94,13 +105,21 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
+                                      backgroundColor:
+                                          Color.fromRGBO(242, 236, 217, 1),
                                       title: Text('Unset Background Image?'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: Text('Cancel'),
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(85, 74, 53, 1),
+                                            ),
+                                          ),
                                         ),
                                         TextButton(
                                           onPressed: () {
@@ -111,7 +130,13 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                                                     '');
                                             Navigator.pop(context);
                                           },
-                                          child: Text('OK'),
+                                          child: Text(
+                                            'OK',
+                                            style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(85, 74, 53, 1),
+                                            ),
+                                          ),
                                         )
                                       ]));
                         },
@@ -247,17 +272,30 @@ class _CoupleInfoPageState extends State<CoupleInfoPage> {
                   showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromRGBO(242, 236, 217, 1),
                             title: Text('Clear all data'),
                             content: Text(
-                                'Clearing data cannot be undone, are you sure?'),
+                              'Clearing data cannot be undone, are you sure?',
+                              style: TextStyle(
+                                color: Color.fromRGBO(85, 74, 53, 1),
+                              ),
+                            ),
                             actions: [
                               TextButton(
-                                  child: Text('Cancel'),
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(85, 74, 53, 1),
+                                    ),
+                                  ),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   }),
                               TextButton(
-                                child: Text('OK'),
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(color: Colors.redAccent),
+                                ),
                                 onPressed: () {
                                   MatchController.instance
                                       .clearAllData(widget.matchDocID);

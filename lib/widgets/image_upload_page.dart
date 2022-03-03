@@ -85,6 +85,19 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
               child: TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Title',
+                  labelStyle: TextStyle(
+                    color: Color.fromRGBO(85, 74, 53, 1),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromRGBO(85, 74, 53, 1),
+                    ),
+                  ),
                 ),
                 onChanged: (val) {
                   setState(() {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MessageTile extends StatelessWidget {
   final String message;
-  final bool isMyMessage;
+  final isMyMessage;
   final matchDocData;
   final userId;
   final time;
@@ -27,48 +27,62 @@ class MessageTile extends StatelessWidget {
     return Container(
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: !isMyMessage
-              ? [
-                  Container(
-                    padding: EdgeInsets.only(left: 12),
-                    child: CircleAvatar(
-                        backgroundImage: NetworkImage(matchDocData['userMaps']
-                            [profilePicture]['profilePicture'])
-                        // backgroundImage: AssetImage('img/profile.png'),
-                        ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 12, right: 0),
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    width: MediaQuery.of(context).size.width * .6,
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(85, 74, 53, 1),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(23),
-                          topRight: Radius.circular(23),
-                          bottomRight: Radius.circular(23),
+          children: !(isMyMessage == userId)
+              ? isMyMessage == 'System'
+                  ? [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.only(bottom: 15),
+                        child: Text(
+                          message,
+                          style: TextStyle(color: Colors.grey[500]),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      child: Text(
-                        message,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                    ]
+                  : [
+                      Container(
+                        padding: EdgeInsets.only(left: 12),
+                        child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                matchDocData['userMaps'][profilePicture]
+                                    ['profilePicture'])
+                            // backgroundImage: AssetImage('img/profile.png'),
+                            ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 5),
-                    width: MediaQuery.of(context).size.width * .2,
-                    child: Text(
-                      time.toDate().toString().substring(5, 16),
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
-                ]
+                      Container(
+                        padding: EdgeInsets.only(left: 12, right: 0),
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        width: MediaQuery.of(context).size.width * .6,
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(85, 74, 53, 1),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(23),
+                              topRight: Radius.circular(23),
+                              bottomRight: Radius.circular(23),
+                            ),
+                          ),
+                          child: Text(
+                            message,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        width: MediaQuery.of(context).size.width * .2,
+                        child: Text(
+                          time.toDate().toString().substring(5, 16),
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      )
+                    ]
               : [
                   Container(
                     padding: EdgeInsets.only(left: 15),

@@ -306,16 +306,32 @@ class _EventPageState extends State<EventPage> {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                          title: Text('Add Event'),
+                          backgroundColor: Color.fromRGBO(242, 236, 217, 1),
+                          title: Text(
+                            'Add Event',
+                            style: TextStyle(
+                              color: Color.fromRGBO(85, 74, 53, 1),
+                            ),
+                          ),
                           content: TextFormField(
                             controller: _eventController,
                           ),
                           actions: [
                             TextButton(
-                                child: Text('Cancel'),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(85, 74, 53, 1),
+                                  ),
+                                ),
                                 onPressed: () => Navigator.pop(context)),
                             TextButton(
-                                child: Text('Detailed View'),
+                                child: Text(
+                                  'Detailed View',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(85, 74, 53, 1),
+                                  ),
+                                ),
                                 onPressed: () {
                                   Map<String, dynamic> event = {
                                     'selectedDay':
@@ -338,7 +354,12 @@ class _EventPageState extends State<EventPage> {
                                   });
                                 }),
                             TextButton(
-                              child: Text('Quick Save'),
+                              child: Text(
+                                'Quick Save',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(85, 74, 53, 1),
+                                ),
+                              ),
                               onPressed: () {
                                 if (_eventController.text.isEmpty) {
                                 } else {
