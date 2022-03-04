@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 
 class BottomNavbar extends StatelessWidget {
   var currentIndex;
   final Function setCurIndex;
-  BottomNavbar(
-      {Key? key, required this.currentIndex, required this.setCurIndex})
-      : super(key: key);
+  var matchDocData;
+
+  BottomNavbar({
+    Key? key,
+    required this.currentIndex,
+    required this.setCurIndex,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // print('hi');
+    // print(matchDocData['userMaps']);
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Color.fromRGBO(255, 222, 158, 1),
@@ -22,10 +29,22 @@ class BottomNavbar extends StatelessWidget {
             icon: Icon(Icons.home),
             label: 'Home',
             backgroundColor: Colors.grey[500]),
-        BottomNavigationBarItem(icon: Icon(Icons.photo), label: 'Photo'),
-        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'favorites'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'settings')
+        BottomNavigationBarItem(
+          icon: Icon(Icons.photo),
+          label: 'Photo',
+        ),
+        BottomNavigationBarItem(
+          icon: Badge(badgeContent: Text('9'), child: Icon(Icons.chat)),
+          label: 'Chat',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          label: 'favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'settings',
+        )
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 import './widgets/bottom_navbar.dart';
+import './main_page_subpages/welcome_page_final.dart';
 import './main_page_subpages/welcome_page.dart';
 import './main_page_subpages/photo_page.dart';
 import './main_page_subpages/chat_page.dart';
@@ -13,6 +14,7 @@ import './main_page_subpages/onhold_page.dart';
 import './controllers/match_controller.dart';
 import './controllers/auth_controller.dart';
 import './controllers/user_controller.dart';
+import './main_page_subpages/photo_page_final.dart';
 
 class MainPage extends StatefulWidget {
   final user;
@@ -60,6 +62,7 @@ class _MainPageState extends State<MainPage> {
   void _setCurIndex(int index) {
     setState(() {
       _curIndex = index;
+      print('_curIndex ?');
       print(_curIndex);
     });
   }
@@ -71,16 +74,72 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: widget.connected
-            ? _screens[_curIndex]
-            : OnholdPage(user: widget.user),
-      ),
-      bottomNavigationBar: BottomNavbar(
-        currentIndex: _curIndex,
-        setCurIndex: _setCurIndex,
-      ),
+    // return Scaffold(
+    //   body: Center(
+    //     child: widget.connected
+    //         ? _screens[_curIndex]
+    //         : OnholdPage(user: widget.user),
+    //   ),
+    //   bottomNavigationBar: BottomNavbar(
+    //     currentIndex: _curIndex,
+    //     setCurIndex: _setCurIndex,
+    //   ),
+    // );
+
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('matches')
+          .doc(widget.matchDocId)
+          .snapshots(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError)
+          return Text('error');
+        else if (!snapshot.hasData) return Text('empty');
+        print('comes here?');
+        return Scaffold(
+          body: Center(
+            child: widget.connected
+                ? _curIndex == 0
+                    ? Center(
+                        child: WelComePageFinal(
+                          matchDoc: snapshot.data,
+                        ),
+                      )
+                    : _curIndex == 1
+                        ? Center(
+                            child: PhotoPageFinal(
+                              matchDoc: snapshot.data,
+                              matchDocId: widget.matchDocId,
+                              myUid: widget.user.uid,
+                            ),
+                          )
+                        : _screens[_curIndex]
+                : OnholdPage(user: widget.user),
+          ),
+          bottomNavigationBar: BottomNavbar(
+            currentIndex: _curIndex,
+            setCurIndex: _setCurIndex,
+          ),
+        );
+      },
     );
+    // bottomNavigationBar: StreamBuilder(
+    //     stream: FirebaseFirestore.instance
+    //         .collection('matches')
+    //         .doc(widget.matchDocId)
+    //         .snapshots(),
+    //     builder:
+    //         (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+    //       if (snapshot.hasError || !snapshot.hasData) {
+    //         return Text('Bottom Nav Bar Stream Builder Error');
+    //       }
+    //       return BottomNavbar(
+    //         currentIndex: _curIndex,
+    //         setCurIndex: _setCurIndex,
+    //         matchDocData: snapshot.data!,
+    //       );
+    //     }),
+    // );
   }
 }

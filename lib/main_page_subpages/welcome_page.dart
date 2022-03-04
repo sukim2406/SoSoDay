@@ -60,13 +60,14 @@ class WelcomePage extends StatelessWidget {
               width: width,
               height: height * .60,
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                image: (data['backgroundImage'] == '')
-                    ? AssetImage('img/welcomepage.png')
-                    : NetworkImage(data['backgroundImage']) as ImageProvider,
-                // image: AssetImage('img/signup.png'),
-                fit: BoxFit.cover,
-              )),
+                image: DecorationImage(
+                  image: (data['backgroundImage'] == '')
+                      ? AssetImage('img/welcomepage.png')
+                      : NetworkImage(data['backgroundImage']) as ImageProvider,
+                  // image: AssetImage('img/signup.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
               // child: Column(
               //   children: [
               //     SizedBox(
