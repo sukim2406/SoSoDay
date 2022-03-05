@@ -5,7 +5,6 @@ import '../globals.dart' as globals;
 import '../indiviual_widgets/dropdown_menu.dart';
 import '../indiviual_widgets/appbar_padding.dart';
 import '../indiviual_widgets/comment.dart';
-import '../indiviual_widgets/show_dialog.dart';
 import '../controllers/match_controller.dart';
 
 class Comments extends StatefulWidget {
@@ -43,6 +42,7 @@ class _CommentsState extends State<Comments> {
           'Comments',
           style: TextStyle(
             color: globals.secondaryColor,
+            fontSize: 15,
           ),
         ),
         actions: [
@@ -111,7 +111,7 @@ class _CommentsState extends State<Comments> {
               ),
             ),
             Container(
-              color: globals.primaryColor,
+              color: globals.tertiaryColor,
               child: Container(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
                 child: Row(
@@ -137,14 +137,56 @@ class _CommentsState extends State<Comments> {
                             'time': Timestamp.now(),
                             'creator': widget.myUid,
                           };
-                          ShowDialog(
-                            title: 'Post Comment',
-                            function: MatchController.instance.updateComments(
-                                widget.matchDocId, widget.index, commentData),
-                            icon: Icons.send,
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: globals.tertiaryColor,
+                              title: Text(
+                                'Post Comment',
+                                style: TextStyle(
+                                  color: globals.secondaryColor,
+                                ),
+                              ),
+                              content: Text(commentData['comment']),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: globals.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    await MatchController.instance
+                                        .updateComments(widget.matchDocId,
+                                            widget.index, commentData)
+                                        .then((result) {
+                                      commentController.clear();
+                                    });
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                      color: globals.secondaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         }
                       },
+                      child: Icon(
+                        Icons.send,
+                        color: globals.secondaryColor,
+                      ),
                     ),
                   ],
                 ),

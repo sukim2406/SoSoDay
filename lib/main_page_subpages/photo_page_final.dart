@@ -9,9 +9,9 @@ import '../indiviual_widgets/single_image_tile.dart';
 import '../subpages/comments.dart';
 
 class PhotoPageFinal extends StatefulWidget {
-  final matchDocId;
-  final myUid;
-  final matchDoc;
+  final String matchDocId;
+  final String myUid;
+  final Map matchDoc;
 
   const PhotoPageFinal({
     Key? key,
@@ -36,7 +36,6 @@ class _PhotoPageFinalState extends State<PhotoPageFinal> {
 
   @override
   Widget build(BuildContext context) {
-    print('????');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: globals.primaryColor,
@@ -104,7 +103,7 @@ class _PhotoPageFinalState extends State<PhotoPageFinal> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               height: globals.getHeight(context) * .75,
               child: (listView)
                   ? ListView.builder(
@@ -128,7 +127,7 @@ class _PhotoPageFinalState extends State<PhotoPageFinal> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        mainAxisExtent: 10,
+                        mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
                       ),
                       itemBuilder: (context, index) {
@@ -147,8 +146,12 @@ class _PhotoPageFinalState extends State<PhotoPageFinal> {
                               ),
                             );
                           },
-                          child: Image.network(
-                            widget.matchDoc['images'][index]['downloadUrl'],
+                          child: Container(
+                            decoration:
+                                BoxDecoration(color: globals.tertiaryColor),
+                            child: Image.network(
+                              widget.matchDoc['images'][index]['downloadUrl'],
+                            ),
                           ),
                         );
                       },

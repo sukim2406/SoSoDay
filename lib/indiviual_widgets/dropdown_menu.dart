@@ -24,25 +24,40 @@ class DropdownMenu extends StatelessWidget {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                  title: const Text('Set as profile picture?'),
+                  backgroundColor: globals.tertiaryColor,
+                  title: Text(
+                    'Set as profile picture?',
+                    style: TextStyle(
+                      color: globals.secondaryColor,
+                    ),
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: globals.primaryColor),
+                      ),
                     ),
                     TextButton(
-                        onPressed: () async {
-                          var tempUserMaps = matchDoc['userMaps'];
-                          tempUserMaps[myUid]['profilePicture'] =
-                              matchDoc['images'][index]['downloadUrl'];
+                      onPressed: () async {
+                        var tempUserMaps = matchDoc['userMaps'];
+                        tempUserMaps[myUid]['profilePicture'] =
+                            matchDoc['images'][index]['downloadUrl'];
 
-                          MatchController.instance.updateMatchDocument(
-                              matchDocId, 'userMaps', tempUserMaps);
-                          Navigator.pop(context);
-                        },
-                        child: const Text('OK'))
+                        MatchController.instance.updateMatchDocument(
+                            matchDocId, 'userMaps', tempUserMaps);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'OK',
+                        style: TextStyle(
+                          color: globals.secondaryColor,
+                        ),
+                      ),
+                    )
                   ],
                 ));
       },
@@ -50,44 +65,74 @@ class DropdownMenu extends StatelessWidget {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                    title: const Text('Set as background picture?'),
+                    backgroundColor: globals.tertiaryColor,
+                    title: Text(
+                      'Set as background picture?',
+                      style: TextStyle(
+                        color: globals.secondaryColor,
+                      ),
+                    ),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text('Cancel'),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: globals.primaryColor,
+                          ),
+                        ),
                       ),
                       TextButton(
-                          onPressed: () async {
-                            MatchController.instance.updateMatchDocument(
-                                matchDocId,
-                                'backgroundImage',
-                                matchDoc['images'][index]['downloadUrl']);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'))
+                        onPressed: () async {
+                          MatchController.instance.updateMatchDocument(
+                              matchDocId,
+                              'backgroundImage',
+                              matchDoc['images'][index]['downloadUrl']);
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'OK',
+                          style: TextStyle(
+                            color: globals.secondaryColor,
+                          ),
+                        ),
+                      )
                     ]));
       },
       () {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                  title: const Text('Delete this iamge?'),
+                  backgroundColor: globals.tertiaryColor,
+                  title: Text(
+                    'Delete this iamge?',
+                    style: TextStyle(
+                      color: globals.secondaryColor,
+                    ),
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: globals.primaryColor),
+                      ),
                     ),
                     TextButton(
-                        onPressed: () async {
-                          MatchController.instance.deleteAnImage(matchDocId,
-                              matchDoc['images'][index]['downloadUrl']);
-                          Navigator.pop(context);
-                        },
-                        child: const Text('OK')),
+                      onPressed: () async {
+                        MatchController.instance.deleteAnImage(matchDocId,
+                            matchDoc['images'][index]['downloadUrl']);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'OK',
+                        style: TextStyle(color: globals.secondaryColor),
+                      ),
+                    ),
                   ],
                 ));
       },
@@ -105,14 +150,28 @@ class DropdownMenu extends StatelessWidget {
                 'Delete image'
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
-                    value: value, child: Text(value));
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      color: globals.secondaryColor,
+                    ),
+                  ),
+                );
               }).toList()
             : [
                 'Set as profile image',
                 'Set as background image',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
-                    value: value, child: Text(value));
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      color: globals.secondaryColor,
+                    ),
+                  ),
+                );
               }).toList(),
         onChanged: (String? newValue) {
           if (newValue == 'Set as profile image') {

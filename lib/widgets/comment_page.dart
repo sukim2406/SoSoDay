@@ -62,10 +62,9 @@ class _CommentPageState extends State<CommentPage> {
         ),
         actions: [
           DropdownMenu(
-              userId: widget.userId,
+              myUid: widget.userId,
               matchDocId: widget.matchDocId,
-              user: widget.user,
-              data: widget.data,
+              matchDoc: widget.data,
               index: widget.index),
           Text(
             'pa',

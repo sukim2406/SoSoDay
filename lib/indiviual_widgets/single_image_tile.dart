@@ -5,7 +5,7 @@ import 'package:soso_day/controllers/match_controller.dart';
 import '../globals.dart' as globals;
 import '../indiviual_widgets/dropdown_menu.dart';
 import '../indiviual_widgets/circle_profile_picture.dart';
-import '../indiviual_widgets/show_dialog.dart';
+import '../subpages/comments.dart';
 
 class SingleImageTile extends StatelessWidget {
   final Map matchDoc;
@@ -26,7 +26,7 @@ class SingleImageTile extends StatelessWidget {
     TextEditingController commentController = TextEditingController();
 
     return Container(
-      color: globals.primaryColor,
+      color: globals.tertiaryColor,
       child: Column(
         children: [
           Container(
@@ -107,7 +107,7 @@ class SingleImageTile extends StatelessWidget {
                                 backgroundImage: matchDoc['userMaps'][
                                     matchDoc['images'][index]['comments'][0]
                                         ['creator']]['profilePicture'],
-                                radius: 15,
+                                radius: 15.0,
                               ),
                               Container(
                                 padding: const EdgeInsets.only(left: 10),
@@ -124,7 +124,7 @@ class SingleImageTile extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: globals.getwidth(context) * .25,
                                 child: RichText(
                                   text: TextSpan(
@@ -141,16 +141,52 @@ class SingleImageTile extends StatelessWidget {
                               (matchDoc['images'][index]['comments'][0]
                                           ['creator'] ==
                                       myUid)
-                                  ? ShowDialog(
-                                      title: 'Delete Comment?',
-                                      function: MatchController.instance
-                                          .deleteComments(matchDocId, index, 0),
-                                      icon: Icons.delete)
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text('Delete Comment'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await MatchController.instance
+                                                      .deleteComments(
+                                                          matchDocId, index, 0);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: const Icon(Icons.delete),
+                                    )
                                   : Container(),
                             ],
                           )
                         : TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Comments(
+                                    matchDocId: matchDocId,
+                                    matchDoc: matchDoc,
+                                    index: index,
+                                    myUid: myUid,
+                                    image: matchDoc['images'][index],
+                                  ),
+                                ),
+                              );
+                            },
                             child: RichText(
                               text: TextSpan(
                                 text: 'View all ',
@@ -207,17 +243,59 @@ class SingleImageTile extends StatelessWidget {
                         'time': Timestamp.now(),
                         'creator': myUid,
                       };
-                      ShowDialog(
-                        title: 'Post Comment',
-                        function: MatchController.instance
-                            .updateComments(matchDocId, index, commentData)
-                            .then((value) {
-                          Navigator.pop(context);
-                        }),
-                        icon: Icons.send,
+
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: globals.tertiaryColor,
+                          title: Text(
+                            'Post Comment',
+                            style: TextStyle(
+                              color: globals.secondaryColor,
+                            ),
+                          ),
+                          content: Text(commentData['comment']),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: globals.primaryColor,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await MatchController.instance
+                                    .updateComments(
+                                        matchDocId, index, commentData)
+                                    .then(
+                                  (result) {
+                                    commentController.clear();
+                                  },
+                                );
+
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'OK',
+                                style: TextStyle(
+                                  color: globals.secondaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }
                   },
+                  child: Icon(
+                    Icons.send,
+                    color: globals.secondaryColor,
+                  ),
                 ),
               ],
             ),

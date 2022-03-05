@@ -15,6 +15,7 @@ import './controllers/match_controller.dart';
 import './controllers/auth_controller.dart';
 import './controllers/user_controller.dart';
 import './main_page_subpages/photo_page_final.dart';
+import './main_page_subpages/chat_page_final.dart';
 
 class MainPage extends StatefulWidget {
   final user;
@@ -62,8 +63,6 @@ class _MainPageState extends State<MainPage> {
   void _setCurIndex(int index) {
     setState(() {
       _curIndex = index;
-      print('_curIndex ?');
-      print(_curIndex);
     });
   }
 
@@ -93,28 +92,38 @@ class _MainPageState extends State<MainPage> {
           .snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError)
-          return Text('error');
-        else if (!snapshot.hasData) return Text('empty');
-        print('comes here?');
+        if (snapshot.hasError) {
+          return const Text('error');
+        } else if (!snapshot.hasData) {
+          return const Text('empty');
+        }
+
         return Scaffold(
           body: Center(
             child: widget.connected
                 ? _curIndex == 0
                     ? Center(
                         child: WelComePageFinal(
-                          matchDoc: snapshot.data,
+                          matchDoc: snapshot.data?.data(),
                         ),
                       )
                     : _curIndex == 1
                         ? Center(
                             child: PhotoPageFinal(
-                              matchDoc: snapshot.data,
+                              matchDoc: snapshot.data?.data() as Map,
                               matchDocId: widget.matchDocId,
-                              myUid: widget.user.uid,
+                              myUid: widget.user,
                             ),
                           )
-                        : _screens[_curIndex]
+                        : _curIndex == 2
+                            ? Center(
+                                child: ChatPageFinal(
+                                  matchDoc: snapshot.data?.data() as Map,
+                                  matchDocId: widget.matchDocId,
+                                  myUid: widget.user,
+                                ),
+                              )
+                            : _screens[_curIndex]
                 : OnholdPage(user: widget.user),
           ),
           bottomNavigationBar: BottomNavbar(

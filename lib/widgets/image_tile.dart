@@ -42,10 +42,9 @@ class ImageTile extends StatelessWidget {
                   child: Container(),
                 ),
                 DropdownMenu(
-                    userId: userId,
+                    myUid: userId,
                     matchDocId: matchDocId,
-                    user: userDoc,
-                    data: data,
+                    matchDoc: data,
                     index: index)
               ],
             ),

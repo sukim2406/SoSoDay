@@ -34,7 +34,7 @@ class Comment extends StatelessWidget {
             child: CircleProfilePicture(
               backgroundImage: matchDoc['userMaps']
                   [image['comments'][index]['creator']]['profilePicture'],
-              radius: 20,
+              radius: 20.0,
             ),
           ),
           Column(
@@ -51,7 +51,7 @@ class Comment extends StatelessWidget {
                   children: [
                     Text(
                       image['comments'][index]['time']
-                          .toDate
+                          .toDate()
                           .toString()
                           .substring(0, 16),
                       style: TextStyle(
@@ -66,13 +66,58 @@ class Comment extends StatelessWidget {
               ),
             ],
           ),
-          (image['comments'][index]['creator'] == myUid)
-              ? ShowDialog(
-                  title: 'Delete Comment?',
-                  function: MatchController.instance
-                      .deleteComments(matchDocId, imageIndex, index),
-                  icon: Icons.delete)
-              : const Icon(Icons.access_alarm),
+          image['comments'][index]['creator'] == myUid
+              ? GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: globals.tertiaryColor,
+                        title: Text(
+                          'Delete Comment?',
+                          style: TextStyle(
+                            color: globals.secondaryColor,
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: globals.primaryColor,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await MatchController.instance.deleteComments(
+                                  matchDocId, imageIndex, index);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: globals.secondaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Icon(
+                    Icons.delete,
+                    color: globals.secondaryColor,
+                  ),
+                )
+              : Icon(
+                  Icons.favorite,
+                  color: globals.secondaryColor,
+                ),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -8,9 +9,9 @@ import '../controllers/match_controller.dart';
 import '../indiviual_widgets/appbar_padding.dart';
 
 class ImageUpload extends StatefulWidget {
-  final filePicker;
-  final myUid;
-  final matchDocId;
+  final FilePickerResult filePicker;
+  final String myUid;
+  final String matchDocId;
 
   const ImageUpload({
     Key? key,
@@ -47,7 +48,7 @@ class _ImageUploadState extends State<ImageUpload> {
             onTap: () async {
               String downloadUrl = '';
               StorageController.instance
-                  .uploadFile(widget.filePicker.files.single.path,
+                  .uploadFile(widget.filePicker.files.single.path!,
                       widget.filePicker.files.single.name)
                   .then((value) async {
                 downloadUrl = await StorageController.instance
@@ -75,41 +76,47 @@ class _ImageUploadState extends State<ImageUpload> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(15),
-              child: TextFormField(
-                decoration: globals.textFieldDecoration('title'),
-                onChanged: (val) {
-                  setState(() {
-                    title = val;
-                  });
-                },
+        child: Container(
+          color: globals.tertiaryColor,
+          height: globals.getHeight(context),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  decoration: globals.textFieldDecoration('title'),
+                  onChanged: (val) {
+                    setState(() {
+                      title = val;
+                    });
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(15),
-              child: Image.file(
-                File(widget.filePicker.files.single.path),
+              Container(
+                padding: const EdgeInsets.all(15),
+                height: globals.getHeight(context) * .4,
+                child: Image.file(
+                  File(widget.filePicker.files.single.path!),
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(15),
-              child: TextFormField(
-                style: TextStyle(color: globals.secondaryColor),
-                cursorColor: globals.secondaryColor,
-                keyboardType: TextInputType.multiline,
-                maxLines: 10,
-                decoration: globals.textFieldDecoration('...'),
-                onChanged: (val) {
-                  setState(() {
-                    about = val;
-                  });
-                },
+              Container(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  style: TextStyle(color: globals.secondaryColor),
+                  cursorColor: globals.secondaryColor,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 10,
+                  decoration: globals.textFieldDecoration('...'),
+                  onChanged: (val) {
+                    setState(() {
+                      about = val;
+                    });
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

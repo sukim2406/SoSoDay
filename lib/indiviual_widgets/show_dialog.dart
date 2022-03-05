@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../globals.dart' as globals;
+
 class ShowDialog extends StatelessWidget {
   final String title;
   final Future function;
@@ -15,7 +17,7 @@ class ShowDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -38,7 +40,7 @@ class ShowDialog extends StatelessWidget {
           ),
         );
       },
-      child: Icon(icon),
+      child: Icon(icon, color: globals.secondaryColor),
     );
   }
 }
