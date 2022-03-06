@@ -76,7 +76,7 @@ class _ChatPageFinalState extends State<ChatPageFinal> {
                       MatchController.instance
                           .sendMessage(widget.matchDocId, messageMap);
                       scrollController.animateTo(
-                        scrollController.position.maxScrollExtent + 300,
+                        scrollController.position.minScrollExtent,
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeOut,
                       );

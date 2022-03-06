@@ -16,6 +16,7 @@ import './controllers/auth_controller.dart';
 import './controllers/user_controller.dart';
 import './main_page_subpages/photo_page_final.dart';
 import './main_page_subpages/chat_page_final.dart';
+import './main_page_subpages/event_page_final.dart';
 
 class MainPage extends StatefulWidget {
   final user;
@@ -123,7 +124,15 @@ class _MainPageState extends State<MainPage> {
                                   myUid: widget.user,
                                 ),
                               )
-                            : _screens[_curIndex]
+                            : _curIndex == 3
+                                ? Center(
+                                    child: EventPageFinal(
+                                      myUid: widget.user,
+                                      matchDoc: snapshot.data?.data() as Map,
+                                      matchDocId: widget.matchDocId,
+                                    ),
+                                  )
+                                : _screens[_curIndex]
                 : OnholdPage(user: widget.user),
           ),
           bottomNavigationBar: BottomNavbar(
