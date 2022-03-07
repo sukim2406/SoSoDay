@@ -48,7 +48,7 @@ class MatchController extends GetxController {
     }
   }
 
-  void updateMatchDocument(docId, key, value) async {
+  Future<void> updateMatchDocument(docId, key, value) async {
     try {
       await firestore.collection('matches').doc(docId).update({key: value});
     } catch (e) {

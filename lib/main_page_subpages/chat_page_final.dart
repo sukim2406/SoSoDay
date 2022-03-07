@@ -25,6 +25,26 @@ class _ChatPageFinalState extends State<ChatPageFinal> {
   ScrollController scrollController = ScrollController();
   TextEditingController messageController = TextEditingController();
 
+  increaseMessageCount() async {
+    var targetUid;
+    var tempUserMaps = widget.matchDoc['userMaps'];
+    widget.matchDoc['couple'].forEach((uid) {
+      if (uid != widget.myUid) {
+        targetUid = uid;
+      }
+    });
+    tempUserMaps[targetUid]['unseenMessage'] += 1;
+    await MatchController.instance
+        .updateMatchDocument(widget.matchDocId, 'userMaps', tempUserMaps);
+  }
+
+  resetMessageCount() async {
+    var tempUserMaps = widget.matchDoc['userMaps'];
+    tempUserMaps[widget.myUid]['unseenMessage'] = 0;
+    await MatchController.instance
+        .updateMatchDocument(widget.matchDocId, 'userMaps', tempUserMaps);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -38,6 +58,7 @@ class _ChatPageFinalState extends State<ChatPageFinal> {
             reverse: true,
             itemCount: widget.matchDoc['chats'].length,
             itemBuilder: (context, index) {
+              resetMessageCount();
               return Message(
                   matchDoc: widget.matchDoc,
                   messageData: widget.matchDoc['chats']
@@ -75,6 +96,7 @@ class _ChatPageFinalState extends State<ChatPageFinal> {
 
                       MatchController.instance
                           .sendMessage(widget.matchDocId, messageMap);
+                      increaseMessageCount();
                       scrollController.animateTo(
                         scrollController.position.minScrollExtent,
                         duration: const Duration(milliseconds: 300),

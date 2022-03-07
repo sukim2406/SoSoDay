@@ -10,6 +10,7 @@ class EventTile extends StatelessWidget {
   final Map event;
   final String myUid;
   final Map matchDoc;
+  final Function setSelectEvent;
 
   const EventTile({
     Key? key,
@@ -17,18 +18,22 @@ class EventTile extends StatelessWidget {
     required this.myUid,
     required this.matchDocId,
     required this.matchDoc,
+    required this.setSelectEvent,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        event['userName'] = matchDoc['userMaps'][myUid]['name'];
+        event['name'] = matchDoc['userMaps'][myUid]['name'];
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                EventDetail(matchDocId: matchDocId, event: event),
+            builder: (context) => EventDetail(
+              matchDocId: matchDocId,
+              event: event,
+              setSelectEvent: setSelectEvent,
+            ),
           ),
         );
       },

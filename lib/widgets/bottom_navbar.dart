@@ -4,12 +4,15 @@ import 'package:badges/badges.dart';
 class BottomNavbar extends StatelessWidget {
   var currentIndex;
   final Function setCurIndex;
-  var matchDocData;
+  final Map matchDoc;
+  final String myUid;
 
   BottomNavbar({
     Key? key,
     required this.currentIndex,
     required this.setCurIndex,
+    required this.myUid,
+    required this.matchDoc,
   }) : super(key: key);
 
   @override
@@ -33,10 +36,19 @@ class BottomNavbar extends StatelessWidget {
           icon: Icon(Icons.photo),
           label: 'Photo',
         ),
-        BottomNavigationBarItem(
-          icon: Badge(badgeContent: Text('9'), child: Icon(Icons.chat)),
-          label: 'Chat',
-        ),
+        (matchDoc['userMaps'][myUid]['unseenMessage'] > 0)
+            ? BottomNavigationBarItem(
+                icon: Badge(
+                    badgeContent: Text(matchDoc['userMaps'][myUid]
+                            ['unseenMessage']
+                        .toString()),
+                    child: Icon(Icons.chat)),
+                label: 'Chat',
+              )
+            : BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: 'Chat',
+              ),
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
           label: 'favorites',

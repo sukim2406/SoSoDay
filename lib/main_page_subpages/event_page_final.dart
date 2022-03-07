@@ -26,8 +26,8 @@ class EventPageFinal extends StatefulWidget {
 class _EventPageFinalState extends State<EventPageFinal> {
   late Map<DateTime, List<Map>> selectEvents;
   late DateTime _selectedDay = DateTime.now();
-  late DateTime _focusedDay;
-  TextEditingController _eventController = TextEditingController();
+  late DateTime _focusedDay = DateTime.now();
+  final TextEditingController _eventController = TextEditingController();
 
   @override
   void initState() {
@@ -38,21 +38,24 @@ class _EventPageFinalState extends State<EventPageFinal> {
   }
 
   void setSelectEvents() {
-    widget.matchDoc['events'].forEach((event) {
-      if (selectEvents[event['selectedDay'].toDate().toUtc()] == null) {
-        selectEvents[event['selectedDay'].toDate().toUtc()] = [event];
-      } else {
-        bool duplicateCheck = false;
-        selectEvents[event['selectedDay'].toDate().toUtc()]!.forEach((data) {
-          if (data['due'] == event['due']) {
-            duplicateCheck = true;
+    widget.matchDoc['events'].forEach(
+      (event) {
+        if (selectEvents[event['selectedDay'].toDate().toUtc()] == null) {
+          selectEvents[event['selectedDay'].toDate().toUtc()] = [event];
+        } else {
+          bool duplicateCheck = false;
+          selectEvents[event['selectedDay'].toDate().toUtc()]!.forEach((data) {
+            if (data['due'] == event['due']) {
+              duplicateCheck = true;
+            }
+          });
+          if (!duplicateCheck) {
+            selectEvents[event['selectedDay'].toDate().toUtc()]!.add(event);
           }
-        });
-        if (!duplicateCheck) {
-          selectEvents[event['selectedDay'].toDate().toUtc()]!.add(event);
         }
-      }
-    });
+      },
+    );
+    setState(() {});
   }
 
   List<Map> getEventsFromDay(DateTime date) {
@@ -114,10 +117,12 @@ class _EventPageFinalState extends State<EventPageFinal> {
                     itemCount: getEventsFromDay(_selectedDay).length,
                     itemBuilder: (context, index) {
                       return EventTile(
-                          event: getEventsFromDay(_selectedDay)[index],
-                          myUid: widget.myUid,
-                          matchDocId: widget.matchDocId,
-                          matchDoc: widget.matchDoc);
+                        event: getEventsFromDay(_selectedDay)[index],
+                        myUid: widget.myUid,
+                        matchDocId: widget.matchDocId,
+                        matchDoc: widget.matchDoc,
+                        setSelectEvent: setSelectEvents,
+                      );
                     },
                   ),
                 )
@@ -166,9 +171,13 @@ class _EventPageFinalState extends State<EventPageFinal> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EventDetail(
-                                  matchDocId: widget.matchDocId, event: event),
+                                matchDocId: widget.matchDocId,
+                                event: event,
+                                setSelectEvent: setSelectEvents,
+                              ),
                             ),
                           ).then((value) {
+                            setSelectEvents();
                             Navigator.pop(context);
                           });
                         },
@@ -193,8 +202,12 @@ class _EventPageFinalState extends State<EventPageFinal> {
                                     [widget.myUid]['name'],
                               };
                               MatchController.instance
-                                  .addEvent(widget.matchDocId, event);
+                                  .addEvent(widget.matchDocId, event)
+                                  .then((result) {
+                                setSelectEvents();
+                              });
                             }
+                            // setSelectEvents();
                             _eventController.clear();
                             Navigator.pop(context);
                             return;

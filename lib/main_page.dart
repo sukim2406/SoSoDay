@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-import './widgets/bottom_navbar.dart';
+// import './widgets/bottom_navbar.dart';
 import './main_page_subpages/welcome_page_final.dart';
 import './main_page_subpages/welcome_page.dart';
 import './main_page_subpages/photo_page.dart';
@@ -17,6 +17,8 @@ import './controllers/user_controller.dart';
 import './main_page_subpages/photo_page_final.dart';
 import './main_page_subpages/chat_page_final.dart';
 import './main_page_subpages/event_page_final.dart';
+import './main_page_subpages/settings_page_final.dart';
+import './indiviual_widgets/bottom_navbar.dart';
 
 class MainPage extends StatefulWidget {
   final user;
@@ -70,22 +72,11 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     _setScreens();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   body: Center(
-    //     child: widget.connected
-    //         ? _screens[_curIndex]
-    //         : OnholdPage(user: widget.user),
-    //   ),
-    //   bottomNavigationBar: BottomNavbar(
-    //     currentIndex: _curIndex,
-    //     setCurIndex: _setCurIndex,
-    //   ),
-    // );
-
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('matches')
@@ -132,32 +123,23 @@ class _MainPageState extends State<MainPage> {
                                       matchDocId: widget.matchDocId,
                                     ),
                                   )
-                                : _screens[_curIndex]
+                                : Center(
+                                    child: SettingsPageFinal(
+                                      myUid: widget.user,
+                                      matchDoc: snapshot.data?.data() as Map,
+                                      matchDocId: widget.matchDocId,
+                                    ),
+                                  )
                 : OnholdPage(user: widget.user),
           ),
           bottomNavigationBar: BottomNavbar(
             currentIndex: _curIndex,
             setCurIndex: _setCurIndex,
+            myUid: widget.user,
+            matchDoc: snapshot.data?.data() as Map,
           ),
         );
       },
     );
-    // bottomNavigationBar: StreamBuilder(
-    //     stream: FirebaseFirestore.instance
-    //         .collection('matches')
-    //         .doc(widget.matchDocId)
-    //         .snapshots(),
-    //     builder:
-    //         (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-    //       if (snapshot.hasError || !snapshot.hasData) {
-    //         return Text('Bottom Nav Bar Stream Builder Error');
-    //       }
-    //       return BottomNavbar(
-    //         currentIndex: _curIndex,
-    //         setCurIndex: _setCurIndex,
-    //         matchDocData: snapshot.data!,
-    //       );
-    //     }),
-    // );
   }
 }

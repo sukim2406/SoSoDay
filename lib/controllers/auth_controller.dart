@@ -43,6 +43,7 @@ class AuthController extends GetxController {
 
             (await UserController.instance.getUserDoc(user.uid).then((data) {
               data['profilePicture'] = '';
+              data['unseenMessage'] = 0;
               userDoc = {user.uid: data};
             }));
 
@@ -96,6 +97,7 @@ class AuthController extends GetxController {
             var userDoc;
             await UserController.instance.getUserDoc(user.uid).then((data) {
               data['profilePicture'] = '';
+              data['unseenMessage'] = 0;
               userDoc = {user.uid: data};
             });
 

@@ -7,11 +7,13 @@ import '../controllers/match_controller.dart';
 class EventDetail extends StatefulWidget {
   final String matchDocId;
   final Map event;
+  final Function setSelectEvent;
 
   const EventDetail({
     Key? key,
     required this.matchDocId,
     required this.event,
+    required this.setSelectEvent,
   }) : super(key: key);
 
   @override
@@ -92,7 +94,7 @@ class _EventDetailState extends State<EventDetail> {
               ),
               TextFormField(
                 enabled: false,
-                initialValue: due.toString(),
+                initialValue: due.toString().substring(0, 10),
                 decoration: const InputDecoration(
                   labelText: 'Due Date',
                 ),
@@ -162,11 +164,18 @@ class _EventDetailState extends State<EventDetail> {
                           };
 
                           if (widget.event['title'].isNotEmpty) {
-                            MatchController.instance.modifyEvent(
-                                widget.matchDocId, widget.event, newData);
+                            MatchController.instance
+                                .modifyEvent(
+                                    widget.matchDocId, widget.event, newData)
+                                .then((result) {
+                              widget.setSelectEvent();
+                            });
                           } else {
                             MatchController.instance
-                                .addEvent(widget.matchDocId, newData);
+                                .addEvent(widget.matchDocId, newData)
+                                .then((result) {
+                              widget.setSelectEvent();
+                            });
                           }
                           Navigator.pop(context);
                         }
