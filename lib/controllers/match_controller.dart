@@ -9,6 +9,16 @@ class MatchController extends GetxController {
   static MatchController instance = Get.find();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<Stream<DocumentSnapshot<Object>>?> getStream(matchDocId) async {
+    try {
+      var temp =
+          await firestore.collection('matches').doc(matchDocId).snapshots();
+      return temp;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   void createMatchDocument(matchMap) async {
     try {
       await firestore.collection('matches').add(matchMap);

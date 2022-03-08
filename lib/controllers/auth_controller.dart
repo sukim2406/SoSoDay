@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../main_pages/login.dart';
 import '../login_page.dart';
 import '../stepper_page.dart';
 import './user_controller.dart';
 import '../main_page.dart';
 import './match_controller.dart';
+import '../main_pages/connecting_step.dart';
+import '../main_pages/main_landing.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
@@ -25,7 +28,7 @@ class AuthController extends GetxController {
   _initialScreen(User? user) async {
     if (user == null) {
       print('login page');
-      Get.offAll(() => const LoginPage());
+      Get.offAll(() => const LogIn());
     } else {
       print('main page');
       if (await UserController.instance.findUserDocument()) {
@@ -131,13 +134,14 @@ class AuthController extends GetxController {
             (await MatchController.instance.getMatchDocument(user.uid))
                 .docs[0]
                 .id;
-        Get.offAll(() => MainPage(
-              user: user.uid,
+        Get.offAll(() => MainLanding(
+              user: user,
+              myUid: user.uid,
               connected: connected,
               matchDocId: matchDocId,
             ));
       } else {
-        Get.offAll(() => StepperPage(user: user));
+        Get.offAll(() => ConnectingStep(user: user));
       }
     }
   }
@@ -193,6 +197,11 @@ class AuthController extends GetxController {
   String? getCurUserUid() {
     final user = auth.currentUser;
     return user?.uid;
+  }
+
+  Future getCurUser() async {
+    var user = await auth.currentUser;
+    return user;
   }
 
   void updatePassword(email, curPassword, newPassword) async {

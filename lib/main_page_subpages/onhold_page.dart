@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:soso_day/controllers/auth_controller.dart';
-import '../stepper_page.dart';
+// import '../stepper_page.dart';
+import '../main_pages/connecting_step.dart';
 
 class OnholdPage extends StatelessWidget {
+  final String myUid;
   final user;
-  const OnholdPage({Key? key, required this.user}) : super(key: key);
+  const OnholdPage({
+    Key? key,
+    required this.myUid,
+    required this.user,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('img/app-bar.png'),
               fit: BoxFit.cover,
@@ -23,7 +29,9 @@ class OnholdPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.skip_previous, color: Colors.black),
           onPressed: () {
-            Get.to(() => StepperPage(user: user));
+            Get.to(
+              () => ConnectingStep(user: myUid),
+            );
           },
         ),
         actions: <Widget>[
@@ -55,7 +63,9 @@ class OnholdPage extends StatelessWidget {
             children: [
               Text(
                 'Waiting for him / her...',
-                style: TextStyle(fontSize: 25),
+                style: TextStyle(
+                  fontSize: 25,
+                ),
               ),
             ],
           ),
