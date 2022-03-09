@@ -6,18 +6,20 @@ import '../indiviual_widgets/circle_profile_picture.dart';
 import '../controllers/match_controller.dart';
 import '../controllers/user_controller.dart';
 import '../controllers/auth_controller.dart';
-import '../main_page.dart';
+import '../main_pages/main_landing.dart';
 
 class AccountInfo extends StatelessWidget {
   final Map matchDoc;
   final String matchDocId;
   final String myUid;
+  final user;
 
   const AccountInfo({
     Key? key,
     required this.matchDoc,
     required this.myUid,
     required this.matchDocId,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -94,8 +96,9 @@ class AccountInfo extends StatelessWidget {
                                         .updateMatchDocument(matchDocId,
                                             'userMaps', tempUserMaps);
                                     Get.offAll(
-                                      () => MainPage(
+                                      () => MainLanding(
                                         user: myUid,
+                                        myUid: myUid,
                                         connected: true,
                                         matchDocId: matchDocId,
                                       ),
@@ -190,8 +193,12 @@ class AccountInfo extends StatelessWidget {
             UserController.instance
                 .updateUserDocument(myUid, 'name', nameController.text);
             Get.offAll(
-              () => MainPage(
-                  user: myUid, connected: true, matchDocId: matchDocId),
+              () => MainLanding(
+                user: user,
+                connected: true,
+                matchDocId: matchDocId,
+                myUid: myUid,
+              ),
             );
           },
           child: Container(

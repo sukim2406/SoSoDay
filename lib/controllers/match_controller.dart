@@ -1,29 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:soso_day/controllers/auth_controller.dart';
-import 'package:soso_day/controllers/user_controller.dart';
+import 'package:flutter/material.dart';
 
+import 'package:soso_day/controllers/auth_controller.dart';
 import '../controllers/storage_controller.dart';
 
 class MatchController extends GetxController {
   static MatchController instance = Get.find();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<Stream<DocumentSnapshot<Object>>?> getStream(matchDocId) async {
-    try {
-      var temp =
-          await firestore.collection('matches').doc(matchDocId).snapshots();
-      return temp;
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   void createMatchDocument(matchMap) async {
     try {
       await firestore.collection('matches').add(matchMap);
     } catch (e) {
-      print(e.toString());
+      Get.snackbar(
+        'createMatchDocument',
+        'Error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -43,7 +46,20 @@ class MatchController extends GetxController {
         }
       });
     } catch (e) {
-      print(e.toString());
+      Get.snackbar(
+        'findMatchDocument',
+        'Error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -54,7 +70,20 @@ class MatchController extends GetxController {
           .where('couple', arrayContains: uid)
           .get();
     } catch (e) {
-      print(e.toString());
+      Get.snackbar(
+        'getMatchDocument',
+        'Error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -62,7 +91,20 @@ class MatchController extends GetxController {
     try {
       await firestore.collection('matches').doc(docId).update({key: value});
     } catch (e) {
-      print(e.toString());
+      Get.snackbar(
+        'updateMatchDocument',
+        'Error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -75,7 +117,20 @@ class MatchController extends GetxController {
           .doc(docId)
           .update({'chats': chatList});
     } catch (e) {
-      print(e.toString());
+      Get.snackbar(
+        'sendMessage',
+        'Error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -89,52 +144,78 @@ class MatchController extends GetxController {
         return ds['chats'];
       });
     } catch (e) {
-      print(e.toString());
+      Get.snackbar(
+        'getMessages',
+        'Error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
-  Future getMessageStream(docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .collection('chats');
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // Future getMessageStream(docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .collection('chats');
+  //   } catch (e) {
+  //     Get.snackbar(
+  //       'getMessageStream',
+  //       'Error',
+  //       backgroundColor: Colors.redAccent,
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       titleText: Text(
+  //         e.toString(),
+  //         style: const TextStyle(color: Colors.white),
+  //       ),
+  //       messageText: Text(
+  //         e.toString(),
+  //         style: const TextStyle(color: Colors.white),
+  //       ),
+  //     );
+  //   }
+  // }
 
-  getConversationMessages(docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .collection('chats')
-          .snapshots();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // getConversationMessages(docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .collection('chats')
+  //         .snapshots();
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
-  getMyScreenName(docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .collection('couple')
-          .snapshots();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // getMyScreenName(docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .collection('couple')
+  //         .snapshots();
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
-  getMatchDocById(matchDocId) async {
-    try {
-      return await firestore.collection('matches').doc(matchDocId).get();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // getMatchDocById(matchDocId) async {
+  //   try {
+  //     return await firestore.collection('matches').doc(matchDocId).get();
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   Future getCoupleIds(docId) async {
     try {
@@ -151,19 +232,19 @@ class MatchController extends GetxController {
     }
   }
 
-  Future getProfileUrl(docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .get()
-          .then((DocumentSnapshot ds) {
-        return ds['profileImage'];
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // Future getProfileUrl(docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .get()
+  //         .then((DocumentSnapshot ds) {
+  //       return ds['profileImage'];
+  //     });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   Future getImages(docId) async {
     try {
@@ -444,48 +525,48 @@ class MatchController extends GetxController {
     }
   }
 
-  Future getUserDocs(docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .get()
-          .then((DocumentSnapshot ds) {
-        return ds['userDocs'];
-      });
-    } catch (e) {
-      print('getUserDocs error');
-      print(e.toString());
-    }
-  }
+  // Future getUserDocs(docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .get()
+  //         .then((DocumentSnapshot ds) {
+  //       return ds['userDocs'];
+  //     });
+  //   } catch (e) {
+  //     print('getUserDocs error');
+  //     print(e.toString());
+  //   }
+  // }
 
-  Future getUserNameById(userId, docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .get()
-          .then((DocumentSnapshot ds) {
-        return ds['userMaps'][userId]['name'];
-      });
-    } catch (e) {
-      print('getUserNameById error');
-      print(e.toString());
-    }
-  }
+  // Future getUserNameById(userId, docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .get()
+  //         .then((DocumentSnapshot ds) {
+  //       return ds['userMaps'][userId]['name'];
+  //     });
+  //   } catch (e) {
+  //     print('getUserNameById error');
+  //     print(e.toString());
+  //   }
+  // }
 
-  Future getUserImageById(userId, docId) async {
-    try {
-      return await firestore
-          .collection('matches')
-          .doc(docId)
-          .get()
-          .then((DocumentSnapshot ds) {
-        return ds['userMaps'][userId]['profilePicture'];
-      });
-    } catch (e) {
-      print('getUserImageById error');
-      print(e.toString());
-    }
-  }
+  // Future getUserImageById(userId, docId) async {
+  //   try {
+  //     return await firestore
+  //         .collection('matches')
+  //         .doc(docId)
+  //         .get()
+  //         .then((DocumentSnapshot ds) {
+  //       return ds['userMaps'][userId]['profilePicture'];
+  //     });
+  //   } catch (e) {
+  //     print('getUserImageById error');
+  //     print(e.toString());
+  //   }
+  // }
 }

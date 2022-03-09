@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import './auth_controller.dart';
-import '../main_page.dart';
+import '../main_pages/main_landing.dart';
 
 class UserController extends GetxController {
   static UserController instance = Get.find();
@@ -15,8 +15,9 @@ class UserController extends GetxController {
           .doc(AuthController.instance.getCurUserUid())
           .set(userMap)
           .then((result) {
-        Get.offAll(() => MainPage(
+        Get.offAll(() => MainLanding(
               user: AuthController.instance.auth.currentUser,
+              myUid: AuthController.instance.auth.currentUser!.uid,
               connected: false,
               matchDocId: '',
             ));
@@ -61,16 +62,16 @@ class UserController extends GetxController {
     }
   }
 
-  Future getUserDocumentByEmail(email) async {
-    try {
-      return await firestore
-          .collection('users')
-          .where('email', isEqualTo: email)
-          .get();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // Future getUserDocumentByEmail(email) async {
+  //   try {
+  //     return await firestore
+  //         .collection('users')
+  //         .where('email', isEqualTo: email)
+  //         .get();
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   void updateUserDocument(docId, key, value) async {
     try {
@@ -80,19 +81,19 @@ class UserController extends GetxController {
     }
   }
 
-  Future getUsername(uid) async {
-    try {
-      return await firestore
-          .collection('users')
-          .doc(uid)
-          .get()
-          .then((DocumentSnapshot ds) {
-        return ds['name'];
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // Future getUsername(uid) async {
+  //   try {
+  //     return await firestore
+  //         .collection('users')
+  //         .doc(uid)
+  //         .get()
+  //         .then((DocumentSnapshot ds) {
+  //       return ds['name'];
+  //     });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   Future getUserDoc(uid) async {
     try {

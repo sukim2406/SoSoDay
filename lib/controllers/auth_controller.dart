@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../main_pages/login.dart';
-import '../login_page.dart';
-import '../stepper_page.dart';
 import './user_controller.dart';
-import '../main_page.dart';
 import './match_controller.dart';
 import '../main_pages/connecting_step.dart';
 import '../main_pages/main_landing.dart';
@@ -21,21 +18,21 @@ class AuthController extends GetxController {
   void onReady() {
     super.onReady();
     _user = Rx<User?>(auth.currentUser);
-    _user.bindStream(auth.userChanges());
+    _user.bindStream(
+      auth.userChanges(),
+    );
     ever(_user, _initialScreen);
   }
 
   _initialScreen(User? user) async {
     if (user == null) {
-      print('login page');
       Get.offAll(() => const LogIn());
     } else {
-      print('main page');
       if (await UserController.instance.findUserDocument()) {
         if (!await MatchController.instance.findMatchDocument(user.uid)) {
           if (!await MatchController.instance.findMatchDocument(user.email)) {
-            var halfEmail;
-            var userScreenName;
+            var halfEmail = '';
+            var userScreenName = '';
             var userDoc;
             (await UserController.instance.getUserDocument())
                 .docs
@@ -151,18 +148,20 @@ class AuthController extends GetxController {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
     } catch (e) {
-      print('register error');
-      Get.snackbar('About User', 'User message',
-          backgroundColor: Colors.redAccent,
-          snackPosition: SnackPosition.BOTTOM,
-          titleText: const Text(
-            'Account creation faild',
-            style: TextStyle(color: Colors.white),
-          ),
-          messageText: Text(
-            e.toString(),
-            style: TextStyle(color: Colors.white),
-          ));
+      Get.snackbar(
+        'About User',
+        'User message',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: const Text(
+          'Account creation faild',
+          style: TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -170,18 +169,20 @@ class AuthController extends GetxController {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (e) {
-      print('login error');
-      Get.snackbar('About Login', 'Login message',
-          backgroundColor: Colors.redAccent,
-          snackPosition: SnackPosition.BOTTOM,
-          titleText: const Text(
-            'Login faild',
-            style: TextStyle(color: Colors.white),
-          ),
-          messageText: Text(
-            e.toString(),
-            style: const TextStyle(color: Colors.white),
-          ));
+      Get.snackbar(
+        'login',
+        'Login message',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: const Text(
+          'Login faild',
+          style: TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 
@@ -199,11 +200,6 @@ class AuthController extends GetxController {
     return user?.uid;
   }
 
-  Future getCurUser() async {
-    var user = await auth.currentUser;
-    return user;
-  }
-
   void updatePassword(email, curPassword, newPassword) async {
     try {
       var credential =
@@ -212,6 +208,20 @@ class AuthController extends GetxController {
       await auth.currentUser?.updatePassword(newPassword);
     } catch (e) {
       print(e.toString());
+      Get.snackbar(
+        'updatePassword',
+        'error',
+        backgroundColor: Colors.redAccent,
+        snackPosition: SnackPosition.BOTTOM,
+        titleText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+        messageText: Text(
+          e.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
     }
   }
 }

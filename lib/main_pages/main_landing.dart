@@ -38,30 +38,9 @@ class _MainLandingState extends State<MainLanding> {
     });
   }
 
-  getStream() async {
-    await MatchController.instance.getStream(widget.matchDocId);
-  }
-
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder(
-    //   future: AuthController.instance.getCurUser(),
-    //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    //     switch (snapshot.connectionState) {
-    //       case ConnectionState.none:
-    //         return const Text('Connection State None');
-    //       case ConnectionState.active:
-    //       case ConnectionState.waiting:
-    //         return SizedBox(
-    //           height: globals.getHeight(context) * .8,
-    //           width: globals.getwidth(context),
-    //           child: const Center(
-    //             child: CircularProgressIndicator(),
-    //           ),
-    //         );
-    //       case ConnectionState.done:
     return StreamBuilder(
-      // stream: getStream(),
       stream: FirebaseFirestore.instance
           .collection('matches')
           .doc(widget.matchDocId)
@@ -106,6 +85,7 @@ class _MainLandingState extends State<MainLanding> {
                                     )
                                   : Center(
                                       child: SettingsPageFinal(
+                                        user: widget.user,
                                         matchDoc: snapshot.data?.data() as Map,
                                         matchDocId: widget.matchDocId,
                                         myUid: widget.myUid,
@@ -127,7 +107,4 @@ class _MainLandingState extends State<MainLanding> {
       },
     );
   }
-  //     },
-  //   );
-  // }
 }

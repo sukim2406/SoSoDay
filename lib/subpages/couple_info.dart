@@ -4,15 +4,17 @@ import 'package:get/get.dart';
 
 import '../globals.dart' as globals;
 import '../controllers/match_controller.dart';
-import '../main_page.dart';
+import '../main_pages/main_landing.dart';
 
 class CoupleInfo extends StatefulWidget {
   final String matchDocId;
   final Map matchDoc;
   final String myUid;
+  final user;
 
   const CoupleInfo({
     Key? key,
+    required this.user,
     required this.matchDoc,
     required this.matchDocId,
     required this.myUid,
@@ -196,8 +198,9 @@ class _CoupleInfoState extends State<CoupleInfo> {
               Timestamp.fromDate(selectedDate),
             );
             Get.offAll(
-              () => MainPage(
-                  user: widget.myUid,
+              () => MainLanding(
+                  user: widget.user,
+                  myUid: widget.myUid,
                   connected: false,
                   matchDocId: widget.matchDocId),
             );

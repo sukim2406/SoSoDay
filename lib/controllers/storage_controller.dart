@@ -9,16 +9,16 @@ class StorageController extends GetxController {
   static StorageController instance = Get.find();
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  Future<void> printList() async {
-    try {
-      ListResult result = await storage.ref().listAll();
-      result.items.forEach((element) {
-        print('File = $element');
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // Future<void> printList() async {
+  //   try {
+  //     ListResult result = await storage.ref().listAll();
+  //     result.items.forEach((element) {
+  //       print('File = $element');
+  //     });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   Future<void> uploadFile(String filePath, String fileName) async {
     File file = File(filePath);
@@ -31,15 +31,15 @@ class StorageController extends GetxController {
     }
   }
 
-  Future<ListResult> listFiles() async {
-    ListResult results = await storage.ref('pictures').listAll();
+  // Future<ListResult> listFiles() async {
+  //   ListResult results = await storage.ref('pictures').listAll();
 
-    results.items.forEach((Reference ref) {
-      print('file ref: $ref');
-    });
+  //   results.items.forEach((Reference ref) {
+  //     print('file ref: $ref');
+  //   });
 
-    return results;
-  }
+  //   return results;
+  // }
 
   Future<String> downloadUrl(String imageName) async {
     String downloadUrl =
@@ -56,11 +56,5 @@ class StorageController extends GetxController {
       print('deleteImage error');
       print(e.toString());
     }
-    // Reference ref = storage.refFromURL(url);
-    // ref.delete().then((result) {
-    //   print('success');
-    // }).catchError((error) {
-    //   print(error.toString());
-    // });
   }
 }

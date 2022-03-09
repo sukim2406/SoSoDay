@@ -9,9 +9,11 @@ class SettingsPageFinal extends StatelessWidget {
   final Map matchDoc;
   final String matchDocId;
   final String myUid;
+  final user;
 
   const SettingsPageFinal({
     Key? key,
+    required this.user,
     required this.matchDoc,
     required this.matchDocId,
     required this.myUid,
@@ -67,6 +69,7 @@ class SettingsPageFinal extends StatelessWidget {
                     matchDoc: matchDoc,
                     matchDocId: matchDocId,
                     myUid: myUid,
+                    user: user,
                   ),
                 ),
               ),
@@ -82,6 +85,7 @@ class SettingsPageFinal extends StatelessWidget {
                 child: CoupleInfo(
                   matchDoc: matchDoc,
                   myUid: myUid,
+                  user: user,
                   matchDocId: matchDocId,
                 ),
               ),
