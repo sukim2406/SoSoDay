@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import './auth_controller.dart';
-import '../main_pages/main_landing.dart';
+import '../globals.dart' as globals;
 
 class UserController extends GetxController {
   static UserController instance = Get.find();
@@ -13,17 +13,9 @@ class UserController extends GetxController {
       await firestore
           .collection('users')
           .doc(AuthController.instance.getCurUserUid())
-          .set(userMap)
-          .then((result) {
-        Get.offAll(() => MainLanding(
-              user: AuthController.instance.auth.currentUser,
-              myUid: AuthController.instance.auth.currentUser!.uid,
-              connected: false,
-              matchDocId: '',
-            ));
-      });
+          .set(userMap);
     } catch (e) {
-      print(e.toString());
+      globals.printErrorSnackBar('createUserDocument', e);
     }
   }
 
@@ -41,7 +33,7 @@ class UserController extends GetxController {
         }
       });
     } catch (e) {
-      print(e.toString());
+      globals.printErrorSnackBar('findUserDocument', e);
     }
   }
 
@@ -58,7 +50,7 @@ class UserController extends GetxController {
       //   });
       // });
     } catch (e) {
-      print(e.toString());
+      globals.printErrorSnackBar('getUserDocument', e);
     }
   }
 
@@ -77,23 +69,9 @@ class UserController extends GetxController {
     try {
       await firestore.collection('users').doc(docId).update({key: value});
     } catch (e) {
-      print(e.toString());
+      globals.printErrorSnackBar('updateUserDocument', e);
     }
   }
-
-  // Future getUsername(uid) async {
-  //   try {
-  //     return await firestore
-  //         .collection('users')
-  //         .doc(uid)
-  //         .get()
-  //         .then((DocumentSnapshot ds) {
-  //       return ds['name'];
-  //     });
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
 
   Future getUserDoc(uid) async {
     try {
@@ -105,8 +83,7 @@ class UserController extends GetxController {
         return ds.data();
       });
     } catch (e) {
-      print('getUserDoc error');
-      print(e.toString());
+      globals.printErrorSnackBar('getUserDoc', e);
     }
   }
 }

@@ -4,6 +4,7 @@ import '../globals.dart' as globals;
 import '../subpages/account_info.dart';
 import '../subpages/reset_password.dart';
 import '../subpages/couple_info.dart';
+import '../subpages/about.dart';
 
 class SettingsPageFinal extends StatelessWidget {
   final Map matchDoc;
@@ -23,7 +24,7 @@ class SettingsPageFinal extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: PreferredSize(
@@ -51,10 +52,17 @@ class SettingsPageFinal extends StatelessWidget {
                         ),
                       ),
                       Tab(
-                          icon: Icon(
-                        Icons.favorite,
-                        color: globals.secondaryColor,
-                      )),
+                        icon: Icon(
+                          Icons.favorite,
+                          color: globals.secondaryColor,
+                        ),
+                      ),
+                      Tab(
+                        icon: Icon(
+                          Icons.contact_mail,
+                          color: globals.secondaryColor,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -88,6 +96,9 @@ class SettingsPageFinal extends StatelessWidget {
                   user: user,
                   matchDocId: matchDocId,
                 ),
+              ),
+              const SingleChildScrollView(
+                child: About(),
               ),
             ],
           ),

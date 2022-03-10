@@ -59,7 +59,6 @@ class AuthController extends GetxController {
               'couple': [user.uid, halfEmail],
               'connected': false,
               'chats': chatInitData,
-              // 'screenNames': [userScreenName],
               'userDocs': [userDoc],
               'userMaps': userDoc,
               'since': DateTime.now(),
@@ -85,9 +84,6 @@ class AuthController extends GetxController {
                 (await MatchController.instance.getMatchDocument(user.email))
                     .docs[0]['couple'];
             var newCouple = [];
-            // var screenNames =
-            //     (await MatchController.instance.getMatchDocument(user.email))
-            //         .docs[0]['screenNames'];
             var userDocs =
                 (await MatchController.instance.getMatchDocument(user.email))
                     .docs[0]['userDocs'];
@@ -115,8 +111,6 @@ class AuthController extends GetxController {
                 .updateMatchDocument(docId, 'couple', newCouple);
             MatchController.instance
                 .updateMatchDocument(docId, 'connected', true);
-            // MatchController.instance
-            //     .updateMatchDocument(docId, 'screenNames', screenNames);
             MatchController.instance
                 .updateMatchDocument(docId, 'userDocs', userDocs);
             MatchController.instance
@@ -207,7 +201,6 @@ class AuthController extends GetxController {
       await auth.currentUser?.reauthenticateWithCredential(credential);
       await auth.currentUser?.updatePassword(newPassword);
     } catch (e) {
-      print(e.toString());
       Get.snackbar(
         'updatePassword',
         'error',

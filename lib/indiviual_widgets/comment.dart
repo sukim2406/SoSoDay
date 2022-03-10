@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../globals.dart' as globals;
 import './circle_profile_picture.dart';
-import './show_dialog.dart';
 import '../controllers/match_controller.dart';
 
 class Comment extends StatelessWidget {

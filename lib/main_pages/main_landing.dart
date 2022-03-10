@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// import '../globals.dart' as globals;
-import '../controllers/match_controller.dart';
-// import '../controllers/auth_controller.dart';
 import '../main_page_subpages/welcome_page_final.dart';
 import '../main_page_subpages/photo_page_final.dart';
 import '../main_page_subpages/chat_page_final.dart';
