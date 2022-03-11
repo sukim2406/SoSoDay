@@ -23,6 +23,7 @@ class About extends StatelessWidget {
               fontSize: 30,
             ),
           ),
+          const Text('Ver 1.0.0'),
           const SizedBox(
             height: 50,
           ),
